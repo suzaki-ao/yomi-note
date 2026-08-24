@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <link rel="icon" type="image/png" href="アイコン.png">
+  <link rel="icon" type="image/png" href="アイコン.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v2.8 ― 手書き・読み上げノート</title>
+<title>読みノート v2.9 ― 手書き・読み上げノート</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -439,7 +439,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v2.8</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v2.9</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
     </div>
     <div class="group" id="mobileMenuBtns">
       <button class="icon-btn" id="openLeftbarBtn" title="ツール一覧を開く">☰</button>
@@ -452,7 +452,8 @@
     <input type="file" id="fileInput" accept="application/pdf,image/*" multiple style="display:none;">
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
-    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v0.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi%20note%20home%20v0.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v1.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <div class="divider"></div>
     <div class="group">
       <button class="icon-btn" id="undoBtn" title="元に戻す (Ctrl+Z)" disabled>↩</button>
@@ -676,7 +677,7 @@
     <div class="cmd-panel" id="cmdPanel">
       <div class="cmd-panel-header">
         <span class="cmd-mode-label">コマンド <span id="cmdModeLabel">@0</span></span>
-        <a class="cmd-help-link" href="./command-list-v1.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
+        <a class="cmd-help-link" href="./command-list-v2.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
         <button class="cmd-close-btn" id="cmdCloseBtn" title="閉じる">✕</button>
       </div>
       <div class="cmd-log" id="cmdLog"></div>
@@ -694,7 +695,20 @@
 
       <div class="tab-panel" id="tab-ocr">
         <div class="panel-row">
-          <label><input type="checkbox" id="pageVerticalToggle"> このページは縦書き</label>
+          <label style="font-size:11.5px;">このページの向き：</label>
+          <select id="pageOrientationSelect" style="font-size:11.5px;">
+            <option value="auto">自動判定</option>
+            <option value="horizontal">横書き</option>
+            <option value="vertical">縦書き</option>
+          </select>
+        </div>
+        <div class="panel-row">
+          <label style="font-size:11.5px;">部分OCR（🔎ツール）の向き：</label>
+          <select id="partialOcrOrientation" style="font-size:11.5px;">
+            <option value="auto" selected>自動判定</option>
+            <option value="horizontal">横書き</option>
+            <option value="vertical">縦書き</option>
+          </select>
         </div>
         <button class="btn primary" id="runOcrBtn" style="justify-content:center;">🔍 このページをOCR認識</button>
         <button class="btn" id="runSlideOcrBtn" style="justify-content:center;">🌀 スライドOCRで認識</button>
@@ -731,7 +745,7 @@
         </p>
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
-          <a href="./riyoukiyakuv1.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
+          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v1.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
         </div>
       </div>
     </aside>
@@ -784,6 +798,7 @@ function newPage(w, h, bgImage){
     bgImage: bgImage || null,
     ink: null,
     vertical: false,
+    orientationMode: 'auto',
     textBoxes: [],
     ocrBlocks: [],
     excludeZones: [],
@@ -1015,6 +1030,7 @@ function loadPage(idx){
   page.excludeZones = page.excludeZones || [];
   page.mediaObjects = page.mediaObjects || [];
   page.manualDividers = page.manualDividers || [];
+  page.orientationMode = page.orientationMode || 'auto';
   const pageEl = document.getElementById('pageEl');
   pageEl.style.width = page.width + 'px';
   pageEl.style.height = page.height + 'px';
@@ -1038,7 +1054,7 @@ function loadPage(idx){
   const rp = document.getElementById('rulerPreview');
   rp.width = page.width; rp.height = page.height;
 
-  document.getElementById('pageVerticalToggle').checked = page.vertical;
+  document.getElementById('pageOrientationSelect').value = page.orientationMode || 'auto';
 
   readerQueue = []; readerIdx = -1; readerContinuous = false;
   speechSynthesis && speechSynthesis.cancel && speechSynthesis.cancel();
@@ -2182,6 +2198,68 @@ function buildOcrBlocksFromWords(data, scale, vertical, dividers){
 }
 
 /* ============================================================
+   文字の向き（縦書き／横書き）の自動判定
+   OCRを実際に走らせず、画像の黒画素の「行方向・列方向のヒストグラム」から
+   判定する（空白システムの応用）。
+   ・横書き：行（Y軸）を下るにつれて「文字の帯」と「行間の空白」が
+     周期的に繰り返される → Y方向の明暗の切り替わりが多い
+   ・縦書き：列（X軸）を進むにつれて「文字の列」と「列間の空白」が
+     周期的に繰り返される → X方向の明暗の切り替わりが多い
+   どちらの切り替わりが多いかを比較して、向きを推定する。
+============================================================ */
+function detectTextOrientation(imgEl, pageW, pageH){
+  try {
+    const maxSample = 500;
+    const scale = Math.min(1, maxSample / Math.max(pageW, pageH));
+    const cw = Math.max(1, Math.round(pageW * scale));
+    const ch = Math.max(1, Math.round(pageH * scale));
+    const c = document.createElement('canvas'); c.width = cw; c.height = ch;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(imgEl, 0, 0, cw, ch);
+    const data = ctx.getImageData(0, 0, cw, ch).data;
+    const rowDark = new Array(ch).fill(0);
+    const colDark = new Array(cw).fill(0);
+    for (let y = 0; y < ch; y++){
+      for (let x = 0; x < cw; x++){
+        const i = (y*cw + x) * 4;
+        const g = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+        if (g < 200){ rowDark[y]++; colDark[x]++; }
+      }
+    }
+    function countTransitions(arr, threshold){
+      let transitions = 0, prevDark = false;
+      for (let i = 0; i < arr.length; i++){
+        const isCurDark = arr[i] > threshold;
+        if (isCurDark !== prevDark) transitions++;
+        prevDark = isCurDark;
+      }
+      return transitions;
+    }
+    const rowThreshold = Math.max(1, cw * 0.02);
+    const colThreshold = Math.max(1, ch * 0.02);
+    const rowTransitions = countTransitions(rowDark, rowThreshold);
+    const colTransitions = countTransitions(colDark, colThreshold);
+    if (rowTransitions === 0 && colTransitions === 0) return null;
+    /* 差が小さすぎる場合は判定に自信が持てないため、無理に判定しない（誤判定防止） */
+    const total = rowTransitions + colTransitions;
+    if (Math.abs(rowTransitions - colTransitions) / total < 0.12) return null;
+    return rowTransitions >= colTransitions ? 'horizontal' : 'vertical';
+  } catch(e){ return null; }
+}
+/* ページの向き設定(orientationMode)に応じて、実際にOCRで使う page.vertical を確定する。
+   'auto' の場合はここで自動判定を行い、判定できればUIにも反映する。 */
+async function resolvePageOrientation(page, img, isCurrent){
+  if (page.orientationMode === 'horizontal'){ page.vertical = false; }
+  else if (page.orientationMode === 'vertical'){ page.vertical = true; }
+  else {
+    const detected = detectTextOrientation(img, page.width, page.height);
+    if (detected){ page.vertical = (detected === 'vertical'); }
+  }
+  if (isCurrent){ /* 自動判定の結果は呼び出し元のステータス表示に反映する */ }
+  return page.vertical;
+}
+
+/* ============================================================
    区切り線（上下・左右の分割）の自動検出とブロック分割
    ページ画像を走査し、ほぼ横一直線／縦一直線に濃い画素が連続する箇所を
    罫線・区切り線とみなす。OCRの段落認識がこの線をまたいで文章を
@@ -2506,15 +2584,23 @@ async function runOcr(pageIndex){
   document.getElementById('runOcrBtn').disabled = true;
   document.getElementById('runOcrAllBtn').disabled = true;
   try {
-    const result = await runOcrOnDataUrl(page.bgImage, page.vertical, false, p => setOcrStatus('認識中... ' + p + '%'), page.excludeZones);
+    /* 区切り線・向きの自動判定には先に画像を読み込んでおく必要があるため、
+       OCR実行前に一度だけ画像をロードする */
+    let img = null, dividers = { horizontal: [], vertical: [] };
+    let orientationNote = '';
+    try {
+      img = await loadImageAsync(page.bgImage);
+      if (page.orientationMode === 'auto'){
+        const before = page.vertical;
+        await resolvePageOrientation(page, img, pageIndex === currentPageIndex);
+        if (page.vertical !== before) orientationNote = '自動判定：' + (page.vertical ? '縦書き' : '横書き') + 'と判断しました。';
+      }
+      dividers = detectDividerLines(img, page.width, page.height);
+    } catch(e){ /* 画像読み込み失敗時は区切り線・向きの自動判定をスキップ */ }
+    const result = await runOcrOnDataUrl(page.bgImage, page.vertical, false, p => setOcrStatus((orientationNote?orientationNote+' ':'') + '認識中... ' + p + '%'), page.excludeZones);
     /* 区切り線（自動検知した罫線 ＋ ユーザーが手動配置した区切り線）は、ブロックの
        抽出そのものに渡して使う。以前は抽出後に別関数で使おうとしていたが、
        単語ベース抽出（通常はこちらが使われる）には反映されない無駄な処理になっていた。 */
-    let img = null, dividers = { horizontal: [], vertical: [] };
-    try {
-      img = await loadImageAsync(page.bgImage);
-      dividers = detectDividerLines(img, page.width, page.height);
-    } catch(e){ /* 画像読み込み失敗時は区切り線検出をスキップ */ }
     dividers = mergeManualDividers(page, dividers);
     const extracted = extractBlocksFromOcrData(result.data, result.scale, page.vertical, dividers);
     let blocks = extracted.blocks;
@@ -2522,7 +2608,7 @@ async function runOcr(pageIndex){
     if (!blocks.length){
       const keep = page.ocrBlocks.filter(b => b.source !== 'auto');
       page.ocrBlocks = keep;
-      setOcrStatus('文字を十分に認識できませんでした。「部分OCR」または「手動登録」でテキストを追加してください。');
+      setOcrStatus(orientationNote + '文字を十分に認識できませんでした。「部分OCR」または「手動登録」でテキストを追加してください。');
     } else {
       if (extracted.rawParagraphs){
         /* words情報が無くparagraphsにフォールバックした場合のみ、旧来の分割処理を補助的に使う */
@@ -2533,7 +2619,7 @@ async function runOcr(pageIndex){
       if (img) graphicBlockCount = purgeGraphicBlocks(page, img);
       const analysis = img ? await autoAnalyzeLayout(pageIndex, img) : null;
       const avgConf = blocks.reduce((s,b)=>s+b.confidence,0) / blocks.length;
-      let msg = '認識完了：' + page.ocrBlocks.filter(b=>b.source==='auto').length + 'ブロック（平均信頼度 ' + Math.round(avgConf) + '%）';
+      let msg = orientationNote + '認識完了：' + page.ocrBlocks.filter(b=>b.source==='auto').length + 'ブロック（平均信頼度 ' + Math.round(avgConf) + '%）';
       const extra = [];
       if (graphicBlockCount) extra.push('図・写真の可能性がある範囲 ' + graphicBlockCount + '件を読み上げ対象外に（右パネルでオン/オフ切替可）');
       if (analysis){
@@ -2565,12 +2651,13 @@ async function runOcrAllPages(){
     if (!page.bgImage){ skipCount++; setOcrStatus('(' + (i+1) + '/' + total + ') 背景画像がないためスキップ'); continue; }
     setOcrStatus('一括OCR実行中... (' + (i+1) + '/' + total + 'ページ)');
     try {
-      const result = await runOcrOnDataUrl(page.bgImage, page.vertical, false, null, page.excludeZones);
       let img = null, dividers = { horizontal: [], vertical: [] };
       try {
         img = await loadImageAsync(page.bgImage);
+        if (page.orientationMode === 'auto') await resolvePageOrientation(page, img, i === currentPageIndex);
         dividers = detectDividerLines(img, page.width, page.height);
       } catch(e){ /* skip */ }
+      const result = await runOcrOnDataUrl(page.bgImage, page.vertical, false, null, page.excludeZones);
       dividers = mergeManualDividers(page, dividers);
       const extracted = extractBlocksFromOcrData(result.data, result.scale, page.vertical, dividers);
       let blocks = extracted.blocks;
@@ -2647,9 +2734,10 @@ async function runSlideOcr(pageIndex, opts){
   btns.forEach(b => { if (b) b.disabled = true; });
   try {
     const img = await loadImageAsync(page.bgImage);
+    const isCurrent = pageIndex === currentPageIndex;
+    if (page.orientationMode === 'auto') await resolvePageOrientation(page, img, isCurrent);
     const stripCount = clampNum(Math.round(page.width / 200), 4, 12);
     const stripWidth = page.width / stripCount;
-    const isCurrent = pageIndex === currentPageIndex;
     if (isCurrent) showSlideSweepLine(true);
     const allWords = [];
     for (let i = 0; i < stripCount; i++){
@@ -2746,10 +2834,26 @@ async function ocrSelectionAndRead(rect){
   flashToast('選択範囲をOCR認識中...');
   try {
     const cropped = await cropPageRegion(page, rect);
+    /* 部分OCRの向きは専用の設定（自動判定／横書き／縦書き）に従う。
+       自動判定の場合は、選択した範囲の画像だけを使って空白システムで向きを推定する
+       （ページ全体の設定とは別に、その場で選んだ範囲ごとに正しく判定できるようにするため）。 */
+    const orientSetting = document.getElementById('partialOcrOrientation').value;
+    let vertical;
+    let orientationNote = '';
+    if (orientSetting === 'horizontal') vertical = false;
+    else if (orientSetting === 'vertical') vertical = true;
+    else {
+      try {
+        const cropImg = await loadImageAsync(cropped);
+        const detected = detectTextOrientation(cropImg, rect.w, rect.h);
+        vertical = detected === 'vertical' ? true : (detected === 'horizontal' ? false : page.vertical);
+        if (detected) orientationNote = '（自動判定：' + (detected === 'vertical' ? '縦書き' : '横書き') + '）';
+      } catch(e){ vertical = page.vertical; }
+    }
     /* @2システムコマンド /note mode @5 が有効な場合、部分OCRを普段よりも強めに
        拡大・高解像度化して認識精度を優先する（その代わり画像/動画/URL/グラフ挿入は使えない） */
     const boostOpts = ocrPrecisionBoost ? { targetMin: 1800, maxScale: 8 } : undefined;
-    const result = await runOcrOnDataUrl(cropped, page.vertical, true, null, null, boostOpts);
+    const result = await runOcrOnDataUrl(cropped, vertical, true, null, null, boostOpts);
     const data = result.data;
     const text = (data.text || '').trim();
     if (!text){ flashToast('この範囲から文字を認識できませんでした。手動登録をお試しください。'); return; }
@@ -2759,6 +2863,7 @@ async function ocrSelectionAndRead(rect){
     };
     page.ocrBlocks.push(block);
     renderOcrList(); renderHighlights();
+    if (orientationNote) flashToast('選択範囲を認識しました' + orientationNote);
     const queue = buildSentenceQueue(page, new Set([block.id]));
     if (!queue.length) { flashToast('文として認識できませんでした'); return; }
     readerQueue = queue; readerIdx = 0; readerContinuous = true;
@@ -3196,8 +3301,12 @@ document.getElementById('toggleExcludeZones').addEventListener('change', renderE
 document.getElementById('toggleDividers').addEventListener('change', renderDividers);
 document.getElementById('autoExcludeFiguresToggle').addEventListener('change', e => { autoSettings.excludeFigures = e.target.checked; });
 document.getElementById('autoBlankBoxesToggle').addEventListener('change', e => { autoSettings.blankBoxes = e.target.checked; });
-document.getElementById('pageVerticalToggle').addEventListener('change', e => {
-  notestate.pages[currentPageIndex].vertical = e.target.checked;
+document.getElementById('pageOrientationSelect').addEventListener('change', e => {
+  const page = notestate.pages[currentPageIndex];
+  page.orientationMode = e.target.value;
+  if (e.target.value === 'horizontal') page.vertical = false;
+  else if (e.target.value === 'vertical') page.vertical = true;
+  /* 'auto' の場合は次回OCR実行時に自動判定してpage.verticalが更新される */
 });
 
 /* ============================================================
