@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v2.9 ― 手書き・読み上げノート</title>
+<title>読みノート v3.0 ― 手書き・読み上げノート</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -138,9 +138,11 @@
   .tool-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
 
   /* ---------- ツールバーを上端表示にする（/tool up コマンド） ---------- */
+  #centerCol{flex:1;display:flex;flex-direction:column;min-height:0;min-width:0;}
   .top-toolbar{
     display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 12px;
     background:var(--white);border-bottom:1px solid var(--line);flex-shrink:0;
+    max-height:34vh;overflow-y:auto;
   }
   .top-toolbar.hidden{display:none;}
   .top-toolbar #toolSectionWrap{
@@ -161,6 +163,25 @@
     width:20px;height:20px;border-radius:50%;border:2px solid transparent;padding:0;
   }
   .swatches button.active{border-color:var(--accent);}
+
+  /* ---------- canvas area 内・右上の読み上げボタン ----------
+     右サイドバー(#rightpanel)の認識結果一覧まで手を伸ばさなくても、
+     画面（キャンバス）内からすぐ読み上げを開始/停止できるようにするための
+     フローティングボタン。#canvasArea自体がスクロールコンテナのため、
+     position:fixedにしてスクロールしても常に画面内の右上に留まるようにする。 */
+  #canvasReadBtn{
+    position:fixed; z-index:60; top:70px; right:290px;
+    display:flex; align-items:center; gap:6px;
+    background:var(--ink); color:#fff; border:none; border-radius:22px;
+    padding:9px 16px; font-size:13px; font-weight:700; cursor:pointer;
+    box-shadow:0 4px 16px rgba(34,38,46,0.35);
+    transition:background .15s, transform .1s;
+  }
+  #canvasReadBtn:hover{transform:translateY(-1px);}
+  #canvasReadBtn:active{transform:translateY(0);}
+  #canvasReadBtn.playing{background:var(--accent);}
+  #canvasReadBtn .glyph{font-size:15px;}
+  @media (max-width:900px){ #canvasReadBtn{ right:16px; top:66px; padding:8px 12px; font-size:12px; } }
 
   /* ---------- canvas area ---------- */
   #canvasArea{flex:1;overflow:auto;background:
@@ -439,7 +460,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v2.9</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v3.0</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
     </div>
     <div class="group" id="mobileMenuBtns">
       <button class="icon-btn" id="openLeftbarBtn" title="ツール一覧を開く">☰</button>
@@ -452,8 +473,8 @@
     <input type="file" id="fileInput" accept="application/pdf,image/*" multiple style="display:none;">
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi%20note%20home%20v0.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
-    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v1.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi%20note%20home%20v1.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v2.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <div class="divider"></div>
     <div class="group">
       <button class="icon-btn" id="undoBtn" title="元に戻す (Ctrl+Z)" disabled>↩</button>
@@ -537,6 +558,7 @@
       </div>
     </aside>
 
+    <div id="centerCol">
     <div id="topToolBar" class="top-toolbar hidden"></div>
 
     <div id="canvasArea">
@@ -673,11 +695,12 @@
         </div>
       </div>
     </div>
+    </div><!-- /#centerCol -->
 
     <div class="cmd-panel" id="cmdPanel">
       <div class="cmd-panel-header">
         <span class="cmd-mode-label">コマンド <span id="cmdModeLabel">@0</span></span>
-        <a class="cmd-help-link" href="./command-list-v2.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
+        <a class="cmd-help-link" href="./command-list-v3.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
         <button class="cmd-close-btn" id="cmdCloseBtn" title="閉じる">✕</button>
       </div>
       <div class="cmd-log" id="cmdLog"></div>
@@ -745,7 +768,7 @@
         </p>
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
-          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v1.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
+          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v2.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
         </div>
       </div>
     </aside>
@@ -971,11 +994,12 @@ function playAll(){
   if (!readerQueue.length){ flashToast('読み上げるテキストがありません'); return; }
   readerContinuous = true;
   speechSynthesis.cancel();
+  updateCanvasReadBtn();
   playContinuousFrom(0);
 }
 function playContinuousFrom(i){
   if (!readerContinuous) return;
-  if (i >= readerQueue.length){ readerContinuous = false; clearHighlight(); flashToast('読み上げが終わりました'); return; }
+  if (i >= readerQueue.length){ readerContinuous = false; clearHighlight(); flashToast('読み上げが終わりました'); updateCanvasReadBtn(); return; }
   readerIdx = i;
   updateSentencePreview();
   speakSentence(readerQueue[i], () => { if (readerContinuous) playContinuousFrom(i+1); });
@@ -984,6 +1008,29 @@ function stopReading(){
   readerContinuous = false;
   if ('speechSynthesis' in window) speechSynthesis.cancel();
   clearHighlight();
+  updateCanvasReadBtn();
+}
+/* 画面内・右上の読み上げボタンの見た目（再生中かどうか）を更新する */
+function updateCanvasReadBtn(){
+  const btn = document.getElementById('canvasReadBtn');
+  const label = document.getElementById('canvasReadBtnLabel');
+  if (!btn) return;
+  btn.classList.toggle('playing', !!readerContinuous);
+  if (label) label.textContent = readerContinuous ? '停止' : '読み上げ';
+  btn.querySelector('.glyph').textContent = readerContinuous ? '⏹' : '🔊';
+}
+/* 右サイドバー(#rightpanel)がデスクトップ表示で常時270px分の幅を占めている間は
+   その分だけボタンを左にずらし、右サイドバーが無い/ドロワー化している幅では
+   画面右端ぎりぎりに寄せる。 */
+function repositionCanvasReadBtn(){
+  const btn = document.getElementById('canvasReadBtn');
+  if (!btn) return;
+  const rp = document.getElementById('rightpanel');
+  if (rp && window.innerWidth > 900){
+    btn.style.right = (rp.offsetWidth + 20) + 'px';
+  } else {
+    btn.style.right = '16px';
+  }
 }
 function readSelection(rect){
   const page = notestate.pages[currentPageIndex];
@@ -1199,7 +1246,7 @@ function updateUndoRedoButtons(){
   if (ub) ub.disabled = undoStack.length === 0;
   if (rb) rb.disabled = redoStack.length === 0;
 }
-function strokeAt(a,b){
+function strokeAt(a,b,pressure){
   const ctx = document.getElementById('inkCanvas').getContext('2d');
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   if (currentTool === 'eraser'){
@@ -1208,9 +1255,42 @@ function strokeAt(a,b){
   } else {
     ctx.globalCompositeOperation = 'source-over';
     ctx.strokeStyle = penColor;
-    ctx.lineWidth = penWidth;
+    /* 【改善】筆圧に対応した端末（Apple Pencil等のスタイラス）では、筆圧に応じて
+       線の太さをわずかに変化させ、実際のペンに近い書き味にする。マウスやタッチなど
+       筆圧が取れない場合は常に1.0として扱われるため、これまでと同じ太さになる。 */
+    const p = (typeof pressure === 'number' && pressure > 0) ? pressure : 1;
+    const widthScale = 0.7 + 0.6 * Math.min(1, p);
+    ctx.lineWidth = penWidth * widthScale;
   }
   ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+}
+/* 【改善】これまでは pointermove ごとに前回位置からの直線を1本ずつ描いていたため、
+   特に速く書いたときに線がカクカクとした折れ線になり書きにくかった。
+   直近3点の中点を通る2次ベジェ曲線でつなぐ「移動平均スムージング」を行い、
+   手書き文字がなめらかな線として描けるようにする。 */
+let smoothPts = [];
+function midPoint(p1, p2){ return { x: (p1.x+p2.x)/2, y: (p1.y+p2.y)/2 }; }
+function strokeSmoothSegment(pressure){
+  const ctx = document.getElementById('inkCanvas').getContext('2d');
+  const n = smoothPts.length;
+  if (n < 3) return;
+  const p0 = smoothPts[n-3], p1 = smoothPts[n-2], p2 = smoothPts[n-1];
+  const start = midPoint(p0, p1);
+  const end = midPoint(p1, p2);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  if (currentTool === 'eraser'){
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineWidth = eraserWidth;
+  } else {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.strokeStyle = penColor;
+    const p = (typeof pressure === 'number' && pressure > 0) ? pressure : 1;
+    ctx.lineWidth = penWidth * (0.7 + 0.6 * Math.min(1, p));
+  }
+  ctx.beginPath();
+  ctx.moveTo(start.x, start.y);
+  ctx.quadraticCurveTo(p1.x, p1.y, end.x, end.y);
+  ctx.stroke();
 }
 function previewRuler(a,b){
   lastRulerPoint = b;
@@ -1240,13 +1320,22 @@ document.addEventListener('pointerdown', e => {
   const p = getPagePoint(e);
   if (currentTool === 'ruler'){ rulerStart = p; lastRulerPoint = p; drawing = true; return; }
   drawing = true; lastPt = p;
-  strokeAt(p,p);
+  smoothPts = [p, p, p];
+  strokeAt(p,p,e.pressure);
 });
 document.addEventListener('pointermove', e => {
   if (!drawing) return;
-  const p = getPagePoint(e);
-  if (currentTool === 'ruler'){ previewRuler(rulerStart, p); return; }
-  strokeAt(lastPt, p); lastPt = p;
+  /* スタイラスの場合、ブラウザによっては間引かれた座標だけでなく
+     getCoalescedEvents() でより細かい実際の軌跡を取得できるため、
+     取れる場合はそれも使ってさらになめらかに描く。 */
+  const events = (e.getCoalescedEvents && e.getCoalescedEvents()) || [e];
+  events.forEach(ev => {
+    const p = getPagePoint(ev);
+    if (currentTool === 'ruler'){ previewRuler(rulerStart, p); return; }
+    smoothPts.push(p);
+    strokeSmoothSegment(ev.pressure);
+    lastPt = p;
+  });
 });
 document.addEventListener('pointerup', () => {
   if (!drawing) return;
@@ -1255,7 +1344,12 @@ document.addEventListener('pointerup', () => {
     commitRulerLine(rulerStart, lastRulerPoint || rulerStart);
     rulerStart = null;
     clearRulerPreview();
+  } else if (lastPt){
+    /* 最後の1点までスムージング曲線が届くよう、終点をもう一度押し込んで締めくくる */
+    smoothPts.push(lastPt);
+    strokeSmoothSegment(1);
   }
+  smoothPts = [];
 });
 
 /* ============================================================
@@ -1991,12 +2085,32 @@ function preprocessImageForOcr(srcDataUrl, excludeZones, targetMinOverride, maxS
       try {
         const imgData = ctx.getImageData(0, 0, cw, ch);
         const d = imgData.data;
-        let min = 255, max = 0;
+        /* 【修正】以前は画像内の「最も暗い1画素」と「最も明るい1画素」だけを基準に
+           コントラストを引き伸ばしていた。スキャンしたPDFのような均一な白背景の
+           画像ではこれでも問題なかったが、カメラで撮った写真は影・照明のムラ・
+           反射（グレア）で、本文と無関係などく一部の画素が極端に暗い/明るいことが
+           多く、その外れ値のせいでコントラスト補正がほとんど効かなかったり、
+           逆に本文がつぶれてしまう原因になっていた。
+           そこで、ヒストグラムを取り「暗い側1%・明るい側99%」のパーセンタイルを
+           基準にする方式（外れ値に強いコントラスト伸張）に変更する。 */
+        const hist = new Array(256).fill(0);
+        let total = 0;
         for (let i = 0; i < d.length; i += 4){
-          const gray = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
-          if (gray < min) min = gray;
-          if (gray > max) max = gray;
+          const gray = Math.round(0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2]);
+          hist[Math.max(0, Math.min(255, gray))]++;
+          total++;
         }
+        function percentile(p){
+          const target = total * p;
+          let acc = 0;
+          for (let v = 0; v < 256; v++){
+            acc += hist[v];
+            if (acc >= target) return v;
+          }
+          return 255;
+        }
+        const min = percentile(0.01);
+        const max = percentile(0.99);
         const range = Math.max(1, max - min);
         for (let i = 0; i < d.length; i += 4){
           const gray = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
@@ -2217,8 +2331,8 @@ function detectTextOrientation(imgEl, pageW, pageH){
     const ctx = c.getContext('2d');
     ctx.drawImage(imgEl, 0, 0, cw, ch);
     const data = ctx.getImageData(0, 0, cw, ch).data;
-    const rowDark = new Array(ch).fill(0);
-    const colDark = new Array(cw).fill(0);
+    let rowDark = new Array(ch).fill(0);
+    let colDark = new Array(cw).fill(0);
     for (let y = 0; y < ch; y++){
       for (let x = 0; x < cw; x++){
         const i = (y*cw + x) * 4;
@@ -2226,6 +2340,26 @@ function detectTextOrientation(imgEl, pageW, pageH){
         if (g < 200){ rowDark[y]++; colDark[x]++; }
       }
     }
+    /* 【修正】カメラ撮影画像はPDFのページ画像と違い、周囲に机や余白・影などの
+       背景が写り込む。この背景部分をヒストグラムに含めたまま解析すると、本文と
+       無関係な明暗の切り替わりを拾ってしまい、向きの誤判定の主な原因になっていた。
+       そこで先に「実際に文字がありそうな範囲」だけを求め、その範囲だけを対象に
+       行・列の切り替わりを数え直す。 */
+    function findContentRange(arr, threshold){
+      let start = -1, end = -1;
+      for (let i = 0; i < arr.length; i++){
+        if (arr[i] > threshold){ if (start === -1) start = i; end = i; }
+      }
+      return { start: start, end: end };
+    }
+    const bgRowThreshold = Math.max(1, cw * 0.01);
+    const bgColThreshold = Math.max(1, ch * 0.01);
+    const rowRange = findContentRange(rowDark, bgRowThreshold);
+    const colRange = findContentRange(colDark, bgColThreshold);
+    if (rowRange.start === -1 || colRange.start === -1) return null;
+    /* 余白判定にはある程度マージンを残しつつ、本文範囲だけに絞り込む */
+    rowDark = rowDark.slice(rowRange.start, rowRange.end + 1);
+    colDark = colDark.slice(colRange.start, colRange.end + 1);
     function countTransitions(arr, threshold){
       let transitions = 0, prevDark = false;
       for (let i = 0; i < arr.length; i++){
@@ -3643,6 +3777,10 @@ document.getElementById('sentenceNextBtn').addEventListener('click', sentenceNex
 document.getElementById('sentencePrevBtn').addEventListener('click', sentencePrev);
 document.getElementById('playAllBtn').addEventListener('click', playAll);
 document.getElementById('stopReadBtn').addEventListener('click', stopReading);
+document.getElementById('canvasReadBtn').addEventListener('click', () => {
+  if (readerContinuous) stopReading(); else playAll();
+});
+window.addEventListener('resize', repositionCanvasReadBtn);
 document.getElementById('titleInput').addEventListener('input', e => { notestate.title = e.target.value; });
 
 /* ============================================================
@@ -3732,6 +3870,9 @@ function listAllCommands(){
       '/note mode @5 ― 部分OCRの精度を優先（画像・動画・URL・グラフ挿入は使用不可）',
       '/tool up ― ツールバーを上端表示に切り替える（ページ一覧が見やすくなる）',
       '/tool side ― ツールバーを左（通常）表示に戻す',
+      '/import dlc ― 追加DLC（.jsファイル）を選んで取り込む',
+      '/dlc on ― 取り込み済みのDLCを有効にする',
+      '/dlc off ― DLCを無効にする',
       '/all command ― このコマンド一覧を表示'
     ]
   };
@@ -3848,6 +3989,18 @@ async function handleCommand2(input){
     cmdLog('ツールバーを左（通常）表示に切り替えました', 'cmd-ok');
     return;
   }
+  if (/^\/import\s+dlc\s*$/i.test(input)){
+    await importDlcFile();
+    return;
+  }
+  if (/^\/dlc\s+on\s*$/i.test(input)){
+    setDlcEnabled(true);
+    return;
+  }
+  if (/^\/dlc\s+off\s*$/i.test(input)){
+    setDlcEnabled(false);
+    return;
+  }
   cmdLog('不明なコマンドです: ' + input + '（/all command で一覧を確認できます）', 'cmd-error');
 }
 async function handleCommandNew(input){
@@ -3955,6 +4108,98 @@ function setToolbarPosition(pos){
     leftbar.appendChild(wrap);
     topBar.classList.add('hidden');
   }
+}
+
+/* ============================================================
+   追加DLC（ディスレクシア支援パック等）の取り込み・オン/オフ
+   ------------------------------------------------------------
+   選んだ .js ファイルの中身をブラウザの localStorage に保存しておき、
+   次回このノートを開いたときも自動的に同じ内容を読み込んで実行する。
+   DLCファイルはノートの中身に自由にアクセスできるプログラムのため、
+   取り込み時に必ず確認ダイアログを挟み、信頼できる配布元のものだけを
+   取り込むよう案内する。
+============================================================ */
+const DLC_KEY_SRC = 'yomiDlcScriptSrc';
+const DLC_KEY_NAME = 'yomiDlcFileName';
+const DLC_KEY_ENABLED = 'yomiDlcEnabled';
+
+function importDlcFile(){
+  return new Promise(resolve => {
+    cmdLog('DLC（追加コンテンツ）の.jsファイルを選んでください。index.htmlと同じフォルダに入れておくと、後から場所が分からなくならず安心です。', 'cmd-ok');
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.js,text/javascript,application/javascript';
+    input.style.display = 'none';
+    document.body.appendChild(input);
+    input.addEventListener('change', () => {
+      const file = input.files && input.files[0];
+      if (input.parentNode) input.parentNode.removeChild(input);
+      if (!file){ resolve(); return; }
+      if (!/\.js$/i.test(file.name)){
+        cmdLog('.js ファイルを選択してください', 'cmd-error');
+        resolve(); return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const src = String(reader.result || '');
+        if (!src.trim()){
+          cmdLog('ファイルの中身を読み取れませんでした', 'cmd-error');
+          resolve(); return;
+        }
+        const ok = window.confirm(
+          '「' + file.name + '」を取り込みます。\n\n' +
+          'DLCファイルは、このノートの中身（ページ・OCR結果など）に自由にアクセスできる' +
+          'プログラムです。信頼できる配布元のファイルだけを取り込んでください。\n\n' +
+          '続けますか？'
+        );
+        if (!ok){ cmdLog('取り込みをキャンセルしました', 'cmd-error'); resolve(); return; }
+        try {
+          localStorage.setItem(DLC_KEY_SRC, src);
+          localStorage.setItem(DLC_KEY_NAME, file.name);
+          localStorage.setItem(DLC_KEY_ENABLED, 'true');
+        } catch(e){
+          cmdLog('保存に失敗しました：' + (e && e.message ? e.message : String(e)), 'cmd-error');
+          resolve(); return;
+        }
+        cmdLog('「' + file.name + '」を取り込みました。次回このノートを開いたときも自動的に読み込まれます（/dlc off でオフにできます）。適用のため再読み込みします…', 'cmd-ok');
+        setTimeout(() => location.reload(), 900);
+        resolve();
+      };
+      reader.onerror = () => { cmdLog('ファイルの読み込みに失敗しました', 'cmd-error'); resolve(); };
+      reader.readAsText(file);
+    }, { once: true });
+    input.click();
+  });
+}
+
+function setDlcEnabled(enabled){
+  let hasSrc = false;
+  try { hasSrc = !!localStorage.getItem(DLC_KEY_SRC); } catch(e){}
+  if (!hasSrc){
+    cmdLog('取り込み済みのDLCがありません。先に /import dlc で取り込んでください。', 'cmd-error');
+    return;
+  }
+  try { localStorage.setItem(DLC_KEY_ENABLED, enabled ? 'true' : 'false'); }
+  catch(e){ cmdLog('設定の保存に失敗しました', 'cmd-error'); return; }
+  cmdLog('DLCを' + (enabled ? 'オン' : 'オフ') + 'にしました。適用のため再読み込みします…', 'cmd-ok');
+  setTimeout(() => location.reload(), 700);
+}
+
+/* アプリ起動時に、有効化済みのDLCがあれば自動で読み込む。
+   let/constで宣言されたページ内のグローバル変数・関数（notestate等）へ
+   そのままアクセスできるよう、evalではなく実際の<script>要素として挿入する。 */
+function loadStoredDlcIfEnabled(){
+  try {
+    const enabled = localStorage.getItem(DLC_KEY_ENABLED) === 'true';
+    const src = localStorage.getItem(DLC_KEY_SRC);
+    if (enabled && src){
+      const s = document.createElement('script');
+      s.textContent = src;
+      document.body.appendChild(s);
+      const name = localStorage.getItem(DLC_KEY_NAME) || 'DLC';
+      flashToast('DLC「' + name + '」を読み込みました（/dlc off でオフにできます）');
+    }
+  } catch(e){ console.error(e); }
 }
 /* 手書き風の書体（Klee One）でテキストを画像化する（/ofset text 用） */
 function renderHandwrittenText(text, fontSize){
@@ -4145,7 +4390,25 @@ window.addEventListener('DOMContentLoaded', () => {
   renderThumbnails();
   renderSavedList();
   setTool('pen');
+  repositionCanvasReadBtn();
+  loadStoredDlcIfEnabled();
 });
 </script>
+
+<!--
+  追加DLC「ディスレクシア支援パック」を有効にする方法は2通りあります。
+
+  【方法1（かんたん・おすすめ）】
+  アプリ内のコマンドパレットを開き、@2（システムコマンド）モードで
+  「/import dlc」と入力し、dyslexia-support-pack-v0.0.js を選択してください。
+  一度取り込めば、次回このノートを開いたときも自動的に読み込まれます。
+  オフにしたいときは「/dlc off」、再度オンにしたいときは「/dlc on」です。
+
+  【方法2（手動）】
+  dyslexia-support-pack-v0.0.js をこのファイル（index.html）と同じフォルダに置き、
+  下の行のコメントを外してください（本体のメインscriptタグより必ず後ろに置くこと）。
+
+  <script src="dyslexia-support-pack-v0.0.js"></script>
+-->
 </body>
 </html>
