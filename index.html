@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v3.0 ― 手書き・読み上げノート</title>
+<title>読みノート v3.1 ― 手書き・読み上げノート</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -164,25 +164,6 @@
   }
   .swatches button.active{border-color:var(--accent);}
 
-  /* ---------- canvas area 内・右上の読み上げボタン ----------
-     右サイドバー(#rightpanel)の認識結果一覧まで手を伸ばさなくても、
-     画面（キャンバス）内からすぐ読み上げを開始/停止できるようにするための
-     フローティングボタン。#canvasArea自体がスクロールコンテナのため、
-     position:fixedにしてスクロールしても常に画面内の右上に留まるようにする。 */
-  #canvasReadBtn{
-    position:fixed; z-index:60; top:70px; right:290px;
-    display:flex; align-items:center; gap:6px;
-    background:var(--ink); color:#fff; border:none; border-radius:22px;
-    padding:9px 16px; font-size:13px; font-weight:700; cursor:pointer;
-    box-shadow:0 4px 16px rgba(34,38,46,0.35);
-    transition:background .15s, transform .1s;
-  }
-  #canvasReadBtn:hover{transform:translateY(-1px);}
-  #canvasReadBtn:active{transform:translateY(0);}
-  #canvasReadBtn.playing{background:var(--accent);}
-  #canvasReadBtn .glyph{font-size:15px;}
-  @media (max-width:900px){ #canvasReadBtn{ right:16px; top:66px; padding:8px 12px; font-size:12px; } }
-
   /* ---------- canvas area ---------- */
   #canvasArea{flex:1;overflow:auto;background:
     radial-gradient(circle at 20% 10%,rgba(181,67,46,0.05),transparent 45%),var(--paper-deep);
@@ -283,19 +264,35 @@
   .manual-editor-actions [data-act="ok"]{background:var(--accent);color:#fff;}
   .manual-editor-actions [data-act="cancel"]{background:var(--paper-deep);color:var(--ink-soft);}
 
-  .formula-editor textarea{font-family:"Courier New",monospace;}
-  .formula-palette{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;max-width:290px;}
+  /* ---------- 数式エディタ（ロイロノート風・タップで組み立てる方式） ---------- */
+  .formula-editor{width:400px !important;max-width:92vw;padding:10px;}
+  .formula-editor textarea{font-family:"Courier New",monospace;min-height:44px;}
+  .formula-tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
+  .formula-tab-btn{
+    border:1px solid var(--line);border-radius:14px;padding:4px 11px;font-size:11.5px;
+    background:var(--paper);color:var(--ink-soft);
+  }
+  .formula-tab-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .formula-palette{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;max-width:100%;}
   .formula-palette-btn{
-    min-width:30px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);
-    font-size:13px;color:var(--ink);line-height:1;
+    min-width:40px;min-height:34px;padding:5px 9px;border:1px solid var(--line);border-radius:7px;background:var(--paper);
+    font-size:14px;color:var(--ink);line-height:1;
   }
   .formula-palette-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
-  .formula-preview{
-    background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:6px;
-    margin-top:5px;min-height:34px;display:flex;align-items:center;justify-content:center;
-    font-size:11px;color:var(--ink-soft);overflow:hidden;
+  .formula-palette-btn.template-btn{font-size:11.5px;padding:6px 10px;min-width:auto;}
+  .formula-toolrow{display:flex;gap:6px;margin-top:5px;align-items:center;}
+  .formula-toolrow button{
+    border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink-soft);
+    font-size:11px;padding:5px 9px;
   }
-  .formula-preview img{max-width:100%;max-height:70px;}
+  .formula-toolrow button:hover{border-color:var(--teal);color:var(--teal);}
+  .formula-hint{font-size:10.5px;color:var(--ink-soft);margin-top:4px;}
+  .formula-preview{
+    background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:8px;
+    margin-top:5px;min-height:44px;display:flex;align-items:center;justify-content:center;
+    font-size:11px;color:var(--ink-soft);overflow:auto;
+  }
+  .formula-preview img{max-width:100%;max-height:100px;}
 
   /* ---------- 画像/グラフ/数式オブジェクト ---------- */
   .media-obj{
@@ -460,7 +457,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v3.0</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v3.1</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
     </div>
     <div class="group" id="mobileMenuBtns">
       <button class="icon-btn" id="openLeftbarBtn" title="ツール一覧を開く">☰</button>
@@ -473,8 +470,9 @@
     <input type="file" id="fileInput" accept="application/pdf,image/*" multiple style="display:none;">
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi%20note%20home%20v1.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi%20note%20home%20v2.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
     <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v2.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
     <div class="divider"></div>
     <div class="group">
       <button class="icon-btn" id="undoBtn" title="元に戻す (Ctrl+Z)" disabled>↩</button>
@@ -561,10 +559,6 @@
     <div id="centerCol">
     <div id="topToolBar" class="top-toolbar hidden"></div>
 
-    <button id="canvasReadBtn" type="button" title="このページのOCR済みテキストを読み上げ／停止">
-      <span class="glyph">🔊</span><span id="canvasReadBtnLabel">読み上げ</span>
-    </button>
-
     <div id="canvasArea">
       <div id="pageSizer">
         <div id="pageEl" class="page blank">
@@ -619,6 +613,27 @@
         <div class="modal-actions">
           <button class="btn" id="chartCancelBtn">キャンセル</button>
           <button class="btn primary" id="chartInsertBtn">挿入</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="dlcModal">
+      <div class="modal-box">
+        <h3>🧩 追加DLC（拡張機能）の管理</h3>
+        <div class="modal-row">
+          <label>状態</label>
+          <div id="dlcStatusText" style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;">未取り込みです</div>
+        </div>
+        <div class="modal-row" style="font-size:11.5px;color:var(--ink-soft);">
+          DLCファイルは、このノートの中身（ページ・OCR結果など）に自由にアクセスできる
+          プログラムです。信頼できる配布元のファイルだけを取り込んでください。
+          コマンドパレット（@2モード）から <code>/import dlc</code>・<code>/dlc on</code>・
+          <code>/dlc off</code> でも同じ操作ができます。
+        </div>
+        <div class="modal-actions">
+          <button class="btn" id="dlcCloseBtn">閉じる</button>
+          <button class="btn" id="dlcToggleBtn">オン/オフ切替</button>
+          <button class="btn primary" id="dlcImportBtn">📥 DLCを取り込む</button>
         </div>
       </div>
     </div>
@@ -998,12 +1013,11 @@ function playAll(){
   if (!readerQueue.length){ flashToast('読み上げるテキストがありません'); return; }
   readerContinuous = true;
   speechSynthesis.cancel();
-  updateCanvasReadBtn();
   playContinuousFrom(0);
 }
 function playContinuousFrom(i){
   if (!readerContinuous) return;
-  if (i >= readerQueue.length){ readerContinuous = false; clearHighlight(); flashToast('読み上げが終わりました'); updateCanvasReadBtn(); return; }
+  if (i >= readerQueue.length){ readerContinuous = false; clearHighlight(); flashToast('読み上げが終わりました'); return; }
   readerIdx = i;
   updateSentencePreview();
   speakSentence(readerQueue[i], () => { if (readerContinuous) playContinuousFrom(i+1); });
@@ -1012,29 +1026,6 @@ function stopReading(){
   readerContinuous = false;
   if ('speechSynthesis' in window) speechSynthesis.cancel();
   clearHighlight();
-  updateCanvasReadBtn();
-}
-/* 画面内・右上の読み上げボタンの見た目（再生中かどうか）を更新する */
-function updateCanvasReadBtn(){
-  const btn = document.getElementById('canvasReadBtn');
-  const label = document.getElementById('canvasReadBtnLabel');
-  if (!btn) return;
-  btn.classList.toggle('playing', !!readerContinuous);
-  if (label) label.textContent = readerContinuous ? '停止' : '読み上げ';
-  btn.querySelector('.glyph').textContent = readerContinuous ? '⏹' : '🔊';
-}
-/* 右サイドバー(#rightpanel)がデスクトップ表示で常時270px分の幅を占めている間は
-   その分だけボタンを左にずらし、右サイドバーが無い/ドロワー化している幅では
-   画面右端ぎりぎりに寄せる。 */
-function repositionCanvasReadBtn(){
-  const btn = document.getElementById('canvasReadBtn');
-  if (!btn) return;
-  const rp = document.getElementById('rightpanel');
-  if (rp && window.innerWidth > 900){
-    btn.style.right = (rp.offsetWidth + 20) + 'px';
-  } else {
-    btn.style.right = '16px';
-  }
 }
 function readSelection(rect){
   const page = notestate.pages[currentPageIndex];
@@ -3047,53 +3038,121 @@ async function renderFormulaToImage(latex, displayMode){
 }
 /* ロイロノート的に「ポチポチ」タップするだけで数式が組み立てられるパレット。
    ボタンを押すとカーソル位置にLaTeX断片が挿入される（LaTeXを直接知らなくても使える）。 */
-const FORMULA_PALETTE = [
-  { label:'x²',  insert:'^{}',        back:1 },
-  { label:'xₙ',  insert:'_{}',        back:1 },
-  { label:'分数', insert:'\\frac{}{}', back:3 },
-  { label:'√',   insert:'\\sqrt{}',   back:1 },
-  { label:'( )', insert:'()',         back:1 },
-  { label:'π',   insert:'\\pi' },
-  { label:'θ',   insert:'\\theta' },
-  { label:'α',   insert:'\\alpha' },
-  { label:'β',   insert:'\\beta' },
-  { label:'×',   insert:'\\times' },
-  { label:'÷',   insert:'\\div' },
-  { label:'±',   insert:'\\pm' },
-  { label:'・',  insert:'\\cdot' },
-  { label:'≤',   insert:'\\leq' },
-  { label:'≥',   insert:'\\geq' },
-  { label:'≠',   insert:'\\neq' },
-  { label:'≈',   insert:'\\approx' },
-  { label:'∞',   insert:'\\infty' },
-  { label:'Σ',   insert:'\\sum_{}^{}', back:4 },
-  { label:'∫',   insert:'\\int_{}^{}', back:4 },
-  { label:'→',   insert:'\\rightarrow' },
-  { label:'°',   insert:'^{\\circ}' }
+/* 数式パレット：ロイロノートのように「タップして組み立てる」方式。
+   テンプレートを押すと空欄（{}）付きの形がそのまま入り、最初の空欄にカーソルが
+   自動で移動する。入力したら「→ 次の空欄」ボタン（またはTabキー）で
+   次の空欄へ移動でき、LaTeXの記法を意識せずに数式を組み立てられる。 */
+const FORMULA_CATEGORIES = [
+  { name:'基本', items:[
+    { label:'x²',    insert:'^{}' },
+    { label:'xₙ',    insert:'_{}' },
+    { label:'分数',   insert:'\\frac{}{}' },
+    { label:'√',     insert:'\\sqrt{}' },
+    { label:'ⁿ√',    insert:'\\sqrt[]{}' },
+    { label:'( )',   insert:'()' },
+    { label:'|x|',   insert:'\\left|{}\\right|' }
+  ]},
+  { name:'記号', items:[
+    { label:'π', insert:'\\pi' }, { label:'θ', insert:'\\theta' },
+    { label:'α', insert:'\\alpha' }, { label:'β', insert:'\\beta' },
+    { label:'×', insert:'\\times' }, { label:'÷', insert:'\\div' },
+    { label:'±', insert:'\\pm' }, { label:'・', insert:'\\cdot' },
+    { label:'≤', insert:'\\leq' }, { label:'≥', insert:'\\geq' },
+    { label:'≠', insert:'\\neq' }, { label:'≈', insert:'\\approx' },
+    { label:'∞', insert:'\\infty' }, { label:'→', insert:'\\rightarrow' },
+    { label:'°', insert:'^{\\circ}' }
+  ]},
+  { name:'関数・微積分', items:[
+    { label:'Σ', insert:'\\sum_{}^{}' }, { label:'∫', insert:'\\int_{}^{}' },
+    { label:'lim', insert:'\\lim_{}' }, { label:'log', insert:'\\log_{}{}' },
+    { label:'ln', insert:'\\ln{}' }, { label:'sin', insert:'\\sin{}' },
+    { label:'cos', insert:'\\cos{}' }, { label:'tan', insert:'\\tan{}' },
+    { label:'d/dx', insert:'\\frac{d}{dx}{}' }
+  ]},
+  { name:'連立方程式・場合分け', items:[
+    { label:'連立方程式（2式）', insert:'\\begin{cases}{}\\\\{}\\end{cases}', template:true },
+    { label:'連立方程式（3式）', insert:'\\begin{cases}{}\\\\{}\\\\{}\\end{cases}', template:true },
+    { label:'場合分け（2つ）', insert:'\\begin{cases}{}&({})\\\\{}&({})\\end{cases}', template:true },
+    { label:'場合分け（3つ）', insert:'\\begin{cases}{}&({})\\\\{}&({})\\\\{}&({})\\end{cases}', template:true }
+  ]},
+  { name:'行列', items:[
+    { label:'2×2行列', insert:'\\begin{pmatrix}{}&{}\\\\{}&{}\\end{pmatrix}', template:true },
+    { label:'2×1（縦）', insert:'\\begin{pmatrix}{}\\\\{}\\end{pmatrix}', template:true }
+  ]}
 ];
-function insertAtCursor(textarea, text, backFromEnd){
+/* テキストエリア中の「空の {}」の位置（開き括弧の直後＝閉じ括弧の直前）を
+   すべて探し、その中にカーソル（幅0の選択範囲）を合わせるためのヘルパー。 */
+function findBlankPositions(text){
+  const positions = [];
+  for (let i = 0; i < text.length - 1; i++){
+    if (text[i] === '{' && text[i+1] === '}') positions.push(i + 1);
+  }
+  return positions;
+}
+function focusBlankAt(textarea, pos){
+  textarea.focus();
+  textarea.setSelectionRange(pos, pos);
+}
+function focusFirstBlank(textarea){
+  const positions = findBlankPositions(textarea.value);
+  if (positions.length) focusBlankAt(textarea, positions[0]);
+  else textarea.focus();
+}
+/* 「→ 次の空欄」：今のカーソル位置より後ろにある最初の空欄へ。
+   なければ先頭の空欄に戻る（一周する）。 */
+function focusNextBlank(textarea){
+  const positions = findBlankPositions(textarea.value);
+  if (!positions.length){ textarea.focus(); return false; }
+  const cur = textarea.selectionEnd == null ? 0 : textarea.selectionEnd;
+  const next = positions.find(p => p > cur);
+  focusBlankAt(textarea, next !== undefined ? next : positions[0]);
+  return true;
+}
+function insertAtCursor(textarea, text){
   const start = textarea.selectionStart == null ? textarea.value.length : textarea.selectionStart;
   const end = textarea.selectionEnd == null ? textarea.value.length : textarea.selectionEnd;
   const value = textarea.value;
   textarea.value = value.slice(0, start) + text + value.slice(end);
-  const newPos = start + text.length - (backFromEnd || 0);
   textarea.focus();
-  textarea.setSelectionRange(newPos, newPos);
+  /* 挿入した範囲の中に空欄があれば、その最初の空欄にカーソルを合わせる。
+     なければ挿入したテキストの直後にカーソルを置く。 */
+  const insertedPositions = findBlankPositions(text);
+  if (insertedPositions.length){
+    textarea.setSelectionRange(start + insertedPositions[0], start + insertedPositions[0]);
+  } else {
+    const newPos = start + text.length;
+    textarea.setSelectionRange(newPos, newPos);
+  }
 }
 function openFormulaEditor(x, y, existing){
   document.querySelectorAll('.formula-editor').forEach(el => el.remove());
   const wrap = document.createElement('div');
   wrap.className = 'manual-editor formula-editor';
-  wrap.style.left = x + 'px'; wrap.style.top = y + 'px'; wrap.style.width = '300px';
-  const paletteHtml = FORMULA_PALETTE.map((p,i) => '<button type="button" class="formula-palette-btn" data-idx="'+i+'">'+p.label+'</button>').join('');
+  wrap.style.left = x + 'px'; wrap.style.top = y + 'px';
+  let activeTab = 0;
+  function paletteHtmlFor(catIdx){
+    return FORMULA_CATEGORIES[catIdx].items.map((p, i) =>
+      '<button type="button" class="formula-palette-btn' + (p.template ? ' template-btn' : '') + '" data-idx="' + i + '">' + p.label + '</button>'
+    ).join('');
+  }
+  const tabsHtml = FORMULA_CATEGORIES.map((c, i) =>
+    '<button type="button" class="formula-tab-btn' + (i === 0 ? ' active' : '') + '" data-tab="' + i + '">' + c.name + '</button>'
+  ).join('');
   wrap.innerHTML =
-    '<div class="formula-palette">' + paletteHtml + '</div>' +
+    '<div class="formula-tabs">' + tabsHtml + '</div>' +
+    '<div class="formula-palette" id="formulaPaletteGrid">' + paletteHtmlFor(0) + '</div>' +
     '<textarea rows="2" placeholder="上のボタンをタップして組み立てるか、直接LaTeXを入力"></textarea>' +
+    '<div class="formula-toolrow">' +
+      '<button type="button" data-act="next-blank">→ 次の空欄</button>' +
+      '<button type="button" data-act="clear">クリア</button>' +
+    '</div>' +
+    '<div class="formula-hint">テンプレートをタップすると空欄に自動でカーソルが移動します。入力後は「→ 次の空欄」（またはTabキー）で次へ。</div>' +
     '<div class="formula-preview">数式プレビュー</div>' +
     '<div class="manual-editor-actions"><button data-act="cancel">取消</button><button data-act="ok">' + (existing ? '更新' : '挿入') + '</button></div>';
   document.getElementById('pageEl').appendChild(wrap);
   const ta = wrap.querySelector('textarea');
   const preview = wrap.querySelector('.formula-preview');
+  const paletteGrid = wrap.querySelector('#formulaPaletteGrid');
   if (existing && existing.latex) ta.value = existing.latex;
   ta.focus();
   let debounceTimer = null;
@@ -3107,12 +3166,33 @@ function openFormulaEditor(x, y, existing){
       preview.textContent = '(プレビューを表示できません。記法をご確認ください)';
     }
   }
-  wrap.querySelectorAll('.formula-palette-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const item = FORMULA_PALETTE[parseInt(btn.dataset.idx, 10)];
-      insertAtCursor(ta, item.insert, item.back || 0);
-      clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 250);
+  function wirePaletteButtons(){
+    paletteGrid.querySelectorAll('.formula-palette-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = FORMULA_CATEGORIES[activeTab].items[parseInt(btn.dataset.idx, 10)];
+        insertAtCursor(ta, item.insert);
+        clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 250);
+      });
     });
+  }
+  wrap.querySelectorAll('.formula-tab-btn').forEach(tabBtn => {
+    tabBtn.addEventListener('click', () => {
+      activeTab = parseInt(tabBtn.dataset.tab, 10);
+      wrap.querySelectorAll('.formula-tab-btn').forEach(b => b.classList.toggle('active', b === tabBtn));
+      paletteGrid.innerHTML = paletteHtmlFor(activeTab);
+      wirePaletteButtons();
+    });
+  });
+  wirePaletteButtons();
+  wrap.querySelector('[data-act="next-blank"]').addEventListener('click', () => focusNextBlank(ta));
+  wrap.querySelector('[data-act="clear"]').addEventListener('click', () => {
+    ta.value = ''; ta.focus(); updatePreview();
+  });
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Tab'){
+      e.preventDefault();
+      focusNextBlank(ta);
+    }
   });
   ta.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 450); });
   if (existing) updatePreview();
@@ -3781,10 +3861,6 @@ document.getElementById('sentenceNextBtn').addEventListener('click', sentenceNex
 document.getElementById('sentencePrevBtn').addEventListener('click', sentencePrev);
 document.getElementById('playAllBtn').addEventListener('click', playAll);
 document.getElementById('stopReadBtn').addEventListener('click', stopReading);
-document.getElementById('canvasReadBtn').addEventListener('click', () => {
-  if (readerContinuous) stopReading(); else playAll();
-});
-window.addEventListener('resize', repositionCanvasReadBtn);
 document.getElementById('titleInput').addEventListener('input', e => { notestate.title = e.target.value; });
 
 /* ============================================================
@@ -4127,9 +4203,15 @@ const DLC_KEY_SRC = 'yomiDlcScriptSrc';
 const DLC_KEY_NAME = 'yomiDlcFileName';
 const DLC_KEY_ENABLED = 'yomiDlcEnabled';
 
+/* コマンドパレットを開いていなくても（🧩ボタン経由でも）結果が分かるよう、
+   コマンドログとトースト通知の両方に出す小さなヘルパー。 */
+function dlcMsg(text, isError){
+  cmdLog(text, isError ? 'cmd-error' : 'cmd-ok');
+  flashToast(text);
+}
 function importDlcFile(){
   return new Promise(resolve => {
-    cmdLog('DLC（追加コンテンツ）の.jsファイルを選んでください。index.htmlと同じフォルダに入れておくと、後から場所が分からなくならず安心です。', 'cmd-ok');
+    dlcMsg('DLC（追加コンテンツ）の.jsファイルを選んでください。index.htmlと同じフォルダに入れておくと、後から場所が分からなくならず安心です。');
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.js,text/javascript,application/javascript';
@@ -4140,14 +4222,14 @@ function importDlcFile(){
       if (input.parentNode) input.parentNode.removeChild(input);
       if (!file){ resolve(); return; }
       if (!/\.js$/i.test(file.name)){
-        cmdLog('.js ファイルを選択してください', 'cmd-error');
+        dlcMsg('.js ファイルを選択してください', true);
         resolve(); return;
       }
       const reader = new FileReader();
       reader.onload = () => {
         const src = String(reader.result || '');
         if (!src.trim()){
-          cmdLog('ファイルの中身を読み取れませんでした', 'cmd-error');
+          dlcMsg('ファイルの中身を読み取れませんでした', true);
           resolve(); return;
         }
         const ok = window.confirm(
@@ -4156,20 +4238,20 @@ function importDlcFile(){
           'プログラムです。信頼できる配布元のファイルだけを取り込んでください。\n\n' +
           '続けますか？'
         );
-        if (!ok){ cmdLog('取り込みをキャンセルしました', 'cmd-error'); resolve(); return; }
+        if (!ok){ dlcMsg('取り込みをキャンセルしました', true); resolve(); return; }
         try {
           localStorage.setItem(DLC_KEY_SRC, src);
           localStorage.setItem(DLC_KEY_NAME, file.name);
           localStorage.setItem(DLC_KEY_ENABLED, 'true');
         } catch(e){
-          cmdLog('保存に失敗しました：' + (e && e.message ? e.message : String(e)), 'cmd-error');
+          dlcMsg('保存に失敗しました：' + (e && e.message ? e.message : String(e)), true);
           resolve(); return;
         }
-        cmdLog('「' + file.name + '」を取り込みました。次回このノートを開いたときも自動的に読み込まれます（/dlc off でオフにできます）。適用のため再読み込みします…', 'cmd-ok');
+        dlcMsg('「' + file.name + '」を取り込みました。次回このノートを開いたときも自動的に読み込まれます（/dlc off でオフにできます）。適用のため再読み込みします…');
         setTimeout(() => location.reload(), 900);
         resolve();
       };
-      reader.onerror = () => { cmdLog('ファイルの読み込みに失敗しました', 'cmd-error'); resolve(); };
+      reader.onerror = () => { dlcMsg('ファイルの読み込みに失敗しました', true); resolve(); };
       reader.readAsText(file);
     }, { once: true });
     input.click();
@@ -4180,12 +4262,12 @@ function setDlcEnabled(enabled){
   let hasSrc = false;
   try { hasSrc = !!localStorage.getItem(DLC_KEY_SRC); } catch(e){}
   if (!hasSrc){
-    cmdLog('取り込み済みのDLCがありません。先に /import dlc で取り込んでください。', 'cmd-error');
+    dlcMsg('取り込み済みのDLCがありません。先に「DLCを取り込む」（または /import dlc）で取り込んでください。', true);
     return;
   }
   try { localStorage.setItem(DLC_KEY_ENABLED, enabled ? 'true' : 'false'); }
-  catch(e){ cmdLog('設定の保存に失敗しました', 'cmd-error'); return; }
-  cmdLog('DLCを' + (enabled ? 'オン' : 'オフ') + 'にしました。適用のため再読み込みします…', 'cmd-ok');
+  catch(e){ dlcMsg('設定の保存に失敗しました', true); return; }
+  dlcMsg('DLCを' + (enabled ? 'オン' : 'オフ') + 'にしました。適用のため再読み込みします…');
   setTimeout(() => location.reload(), 700);
 }
 
@@ -4205,6 +4287,44 @@ function loadStoredDlcIfEnabled(){
     }
   } catch(e){ console.error(e); }
 }
+
+/* コマンドパレットを使わなくても、画面上部の🧩ボタンから取り込み・オンオフができるようにする */
+function updateDlcModalStatus(){
+  const el = document.getElementById('dlcStatusText');
+  if (!el) return;
+  let name = null, enabled = false;
+  try {
+    name = localStorage.getItem(DLC_KEY_NAME);
+    enabled = localStorage.getItem(DLC_KEY_ENABLED) === 'true';
+  } catch(e){}
+  if (!name){
+    el.textContent = 'まだ何も取り込まれていません。「DLCを取り込む」から .js ファイルを選んでください。';
+  } else {
+    el.textContent = '取り込み済み： ' + name + '　／　現在の状態： ' + (enabled ? '🟢 オン' : '⚪ オフ');
+  }
+}
+document.getElementById('dlcManageBtn').addEventListener('click', () => {
+  updateDlcModalStatus();
+  document.getElementById('dlcModal').classList.remove('hidden');
+});
+document.getElementById('dlcCloseBtn').addEventListener('click', () => {
+  document.getElementById('dlcModal').classList.add('hidden');
+});
+document.getElementById('dlcImportBtn').addEventListener('click', () => {
+  importDlcFile();
+});
+document.getElementById('dlcToggleBtn').addEventListener('click', () => {
+  let hasSrc = false, enabled = false;
+  try {
+    hasSrc = !!localStorage.getItem(DLC_KEY_SRC);
+    enabled = localStorage.getItem(DLC_KEY_ENABLED) === 'true';
+  } catch(e){}
+  if (!hasSrc){
+    flashToast('先に「DLCを取り込む」からファイルを選んでください');
+    return;
+  }
+  setDlcEnabled(!enabled);
+});
 /* 手書き風の書体（Klee One）でテキストを画像化する（/ofset text 用） */
 function renderHandwrittenText(text, fontSize){
   return new Promise(resolve => {
@@ -4225,20 +4345,26 @@ function renderHandwrittenText(text, fontSize){
 function openSymbolPickerModal(){
   const grid = document.getElementById('symbolGrid');
   grid.innerHTML = '';
-  FORMULA_PALETTE.forEach(item => {
-    const btn = document.createElement('button');
-    btn.type = 'button'; btn.className = 'formula-palette-btn';
-    btn.textContent = item.label;
-    btn.addEventListener('click', () => {
-      document.getElementById('symbolModal').classList.add('hidden');
-      const page = notestate.pages[currentPageIndex];
-      openFormulaEditor(page.width/2 - 90, page.height/2 - 40, null);
-      requestAnimationFrame(() => {
-        const ta = document.querySelector('.formula-editor textarea');
-        if (ta){ ta.value = item.insert; ta.dispatchEvent(new Event('input')); ta.focus(); }
+  FORMULA_CATEGORIES.forEach(cat => {
+    const heading = document.createElement('div');
+    heading.style.cssText = 'width:100%;font-size:11px;font-weight:700;color:var(--ink-soft);margin:8px 0 2px;';
+    heading.textContent = cat.name;
+    grid.appendChild(heading);
+    cat.items.forEach(item => {
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'formula-palette-btn' + (item.template ? ' template-btn' : '');
+      btn.textContent = item.label;
+      btn.addEventListener('click', () => {
+        document.getElementById('symbolModal').classList.add('hidden');
+        const page = notestate.pages[currentPageIndex];
+        openFormulaEditor(page.width/2 - 90, page.height/2 - 40, null);
+        requestAnimationFrame(() => {
+          const ta = document.querySelector('.formula-editor textarea');
+          if (ta){ ta.value = item.insert; ta.dispatchEvent(new Event('input')); focusFirstBlank(ta); }
+        });
       });
+      grid.appendChild(btn);
     });
-    grid.appendChild(btn);
   });
   document.getElementById('symbolModal').classList.remove('hidden');
 }
@@ -4394,7 +4520,6 @@ window.addEventListener('DOMContentLoaded', () => {
   renderThumbnails();
   renderSavedList();
   setTool('pen');
-  repositionCanvasReadBtn();
   loadStoredDlcIfEnabled();
 });
 </script>
@@ -4404,15 +4529,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
   【方法1（かんたん・おすすめ）】
   アプリ内のコマンドパレットを開き、@2（システムコマンド）モードで
-  「/import dlc」と入力し、dyslexia-support-pack-v0.0.js を選択してください。
+  「/import dlc」と入力し、dyslexia-support-pack-v0.1.js を選択してください。
   一度取り込めば、次回このノートを開いたときも自動的に読み込まれます。
   オフにしたいときは「/dlc off」、再度オンにしたいときは「/dlc on」です。
 
   【方法2（手動）】
-  dyslexia-support-pack-v0.0.js をこのファイル（index.html）と同じフォルダに置き、
+  dyslexia-support-pack-v0.1.js をこのファイル（index.html）と同じフォルダに置き、
   下の行のコメントを外してください（本体のメインscriptタグより必ず後ろに置くこと）。
 
-  <script src="dyslexia-support-pack-v0.0.js"></script>
+  <script src="dyslexia-support-pack-v0.1.js"></script>
 -->
 </body>
 </html>
