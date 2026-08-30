@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v3.1 ― 手書き・読み上げノート</title>
+<title>読みノート v3.3 ― 手書き・読み上げノート</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -224,6 +224,20 @@
   .ocr-rect.manual{border-color:rgba(181,67,46,0.6);background:rgba(181,67,46,0.06);}
   .ocr-rect.selection{border-color:rgba(47,95,168,0.65);background:rgba(47,95,168,0.07);}
   .ocr-rect.reading-excluded{border-style:dotted;opacity:.5;background:repeating-linear-gradient(45deg,rgba(122,127,138,0.06),rgba(122,127,138,0.06) 5px,rgba(122,127,138,0.14) 5px,rgba(122,127,138,0.14) 10px);}
+  /* 【追加】認識された範囲の右上に自動で付く読み上げボタン。
+     highlightLayer自体はpointer-events:noneだが、このボタンだけautoに戻して
+     クリックできるようにする（他の場所は今までどおりクリックが素通りする）。 */
+  .ocr-rect-speak{
+    position:absolute;top:-11px;right:-11px;width:24px;height:24px;border-radius:50%;
+    border:1.5px solid rgba(62,110,99,0.55);background:#fff;color:var(--teal);
+    font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;
+    padding:0;cursor:pointer;pointer-events:auto;box-shadow:0 2px 6px rgba(34,38,46,0.18);
+    z-index:5;
+  }
+  .ocr-rect-speak:hover{background:var(--teal);color:#fff;transform:scale(1.08);}
+  .ocr-rect-speak.playing{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .ocr-rect.manual .ocr-rect-speak{border-color:rgba(181,67,46,0.6);color:var(--accent);}
+  .ocr-rect.manual .ocr-rect-speak:hover{background:var(--accent);color:#fff;}
   .exclude-rect{
     position:absolute;border:1.5px dashed var(--accent);border-radius:3px;
     background-image:repeating-linear-gradient(45deg, rgba(181,67,46,0.14) 0 6px, rgba(181,67,46,0.03) 6px 12px);
@@ -264,35 +278,52 @@
   .manual-editor-actions [data-act="ok"]{background:var(--accent);color:#fff;}
   .manual-editor-actions [data-act="cancel"]{background:var(--paper-deep);color:var(--ink-soft);}
 
-  /* ---------- 数式エディタ（ロイロノート風・タップで組み立てる方式） ---------- */
-  .formula-editor{width:400px !important;max-width:92vw;padding:10px;}
-  .formula-editor textarea{font-family:"Courier New",monospace;min-height:44px;}
-  .formula-tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
+  /* ---------- 数式エディタ（ロイロノート風・タップで組み立てる方式）
+     見づらいという声を受けて、クリック位置に出す小さな浮きパネルではなく、
+     画面中央に大きく表示するモーダル形式に変更。子どもでも迷わないよう、
+     ボタン・文字・プレビューをすべて大きくしている。 ---------- */
+  .formula-backdrop{
+    position:fixed;inset:0;background:rgba(34,38,46,0.5);z-index:300;
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .formula-editor{
+    position:relative;width:min(760px,94vw) !important;max-width:94vw;
+    max-height:92vh;overflow-y:auto;padding:22px;border-radius:16px;
+    border-width:2px;
+  }
+  .formula-editor textarea{
+    font-family:"Courier New",monospace;min-height:54px;font-size:18px;padding:10px;
+  }
+  .formula-title{font-size:17px;font-weight:700;margin-bottom:10px;color:var(--ink);
+    font-family:"Shippori Mincho",serif;}
+  .formula-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
   .formula-tab-btn{
-    border:1px solid var(--line);border-radius:14px;padding:4px 11px;font-size:11.5px;
-    background:var(--paper);color:var(--ink-soft);
+    border:1px solid var(--line);border-radius:18px;padding:8px 16px;font-size:14px;
+    background:var(--paper);color:var(--ink-soft);font-weight:700;
   }
   .formula-tab-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
-  .formula-palette{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;max-width:100%;}
+  .formula-palette{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;max-width:100%;}
   .formula-palette-btn{
-    min-width:40px;min-height:34px;padding:5px 9px;border:1px solid var(--line);border-radius:7px;background:var(--paper);
-    font-size:14px;color:var(--ink);line-height:1;
+    min-width:56px;min-height:48px;padding:8px 14px;border:2px solid var(--line);border-radius:10px;background:var(--paper);
+    font-size:20px;color:var(--ink);line-height:1;
   }
-  .formula-palette-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
-  .formula-palette-btn.template-btn{font-size:11.5px;padding:6px 10px;min-width:auto;}
-  .formula-toolrow{display:flex;gap:6px;margin-top:5px;align-items:center;}
+  .formula-palette-btn:hover, .formula-palette-btn:active{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
+  .formula-palette-btn.template-btn{font-size:15px;padding:10px 16px;min-width:auto;font-weight:700;}
+  .formula-toolrow{display:flex;gap:10px;margin-top:8px;align-items:center;flex-wrap:wrap;}
   .formula-toolrow button{
-    border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink-soft);
-    font-size:11px;padding:5px 9px;
+    border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink-soft);
+    font-size:14px;padding:9px 14px;font-weight:700;
   }
   .formula-toolrow button:hover{border-color:var(--teal);color:var(--teal);}
-  .formula-hint{font-size:10.5px;color:var(--ink-soft);margin-top:4px;}
+  .formula-hint{font-size:12.5px;color:var(--ink-soft);margin-top:6px;line-height:1.6;}
   .formula-preview{
-    background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:8px;
-    margin-top:5px;min-height:44px;display:flex;align-items:center;justify-content:center;
-    font-size:11px;color:var(--ink-soft);overflow:auto;
+    background:var(--paper);border:2px solid var(--line);border-radius:10px;padding:18px;
+    margin-top:10px;min-height:110px;display:flex;align-items:center;justify-content:center;
+    font-size:14px;color:var(--ink-soft);overflow:auto;
   }
-  .formula-preview img{max-width:100%;max-height:100px;}
+  .formula-preview img{max-width:100%;max-height:220px;}
+  .formula-editor .manual-editor-actions{margin-top:14px;}
+  .formula-editor .manual-editor-actions button{font-size:15px;padding:10px 22px;border-radius:8px;font-weight:700;}
 
   /* ---------- 画像/グラフ/数式オブジェクト ---------- */
   .media-obj{
@@ -457,7 +488,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v3.1</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v3.3</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
     </div>
     <div class="group" id="mobileMenuBtns">
       <button class="icon-btn" id="openLeftbarBtn" title="ツール一覧を開く">☰</button>
@@ -470,8 +501,8 @@
     <input type="file" id="fileInput" accept="application/pdf,image/*" multiple style="display:none;">
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi%20note%20home%20v2.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
-    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v2.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi%20note%20home%20v5.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v3.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
     <div class="divider"></div>
     <div class="group">
@@ -618,22 +649,22 @@
     </div>
 
     <div class="modal-overlay hidden" id="dlcModal">
-      <div class="modal-box">
+      <div class="modal-box" style="width:440px;">
         <h3>🧩 追加DLC（拡張機能）の管理</h3>
         <div class="modal-row">
-          <label>状態</label>
-          <div id="dlcStatusText" style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;">未取り込みです</div>
+          <label>取り込み済みのDLC（複数可・それぞれ個別にオン/オフ・削除できます）</label>
+          <div id="dlcListArea" style="max-height:260px;overflow-y:auto;"></div>
         </div>
         <div class="modal-row" style="font-size:11.5px;color:var(--ink-soft);">
           DLCファイルは、このノートの中身（ページ・OCR結果など）に自由にアクセスできる
           プログラムです。信頼できる配布元のファイルだけを取り込んでください。
-          コマンドパレット（@2モード）から <code>/import dlc</code>・<code>/dlc on</code>・
-          <code>/dlc off</code> でも同じ操作ができます。
+          コマンドパレット（@2モード）から <code>/import dlc</code>・<code>/dlc on [番号]</code>・
+          <code>/dlc off [番号]</code>・<code>/dlc remove [番号]</code>・<code>/dlc list</code>
+          でも同じ操作ができます（番号を省略するとすべてに適用されます）。
         </div>
         <div class="modal-actions">
           <button class="btn" id="dlcCloseBtn">閉じる</button>
-          <button class="btn" id="dlcToggleBtn">オン/オフ切替</button>
-          <button class="btn primary" id="dlcImportBtn">📥 DLCを取り込む</button>
+          <button class="btn primary" id="dlcImportBtn">📥 DLCを追加で取り込む</button>
         </div>
       </div>
     </div>
@@ -719,7 +750,7 @@
     <div class="cmd-panel" id="cmdPanel">
       <div class="cmd-panel-header">
         <span class="cmd-mode-label">コマンド <span id="cmdModeLabel">@0</span></span>
-        <a class="cmd-help-link" href="./command-list-v3.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
+        <a class="cmd-help-link" href="./command-list-v4.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
         <button class="cmd-close-btn" id="cmdCloseBtn" title="閉じる">✕</button>
       </div>
       <div class="cmd-log" id="cmdLog"></div>
@@ -787,7 +818,7 @@
         </p>
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
-          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v2.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
+          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v3.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
         </div>
       </div>
     </aside>
@@ -3125,10 +3156,14 @@ function insertAtCursor(textarea, text){
   }
 }
 function openFormulaEditor(x, y, existing){
-  document.querySelectorAll('.formula-editor').forEach(el => el.remove());
+  document.querySelectorAll('.formula-backdrop').forEach(el => el.remove());
+  /* 【改善】クリックした場所の近くに小さく出す方式から、画面中央に大きく
+     表示するモーダル方式に変更（見づらい・子どもには使いにくいという声を受けて）。
+     挿入位置は引数のx, yのまま保持し、見た目だけ画面中央に大きく表示する。 */
+  const backdrop = document.createElement('div');
+  backdrop.className = 'formula-backdrop';
   const wrap = document.createElement('div');
   wrap.className = 'manual-editor formula-editor';
-  wrap.style.left = x + 'px'; wrap.style.top = y + 'px';
   let activeTab = 0;
   function paletteHtmlFor(catIdx){
     return FORMULA_CATEGORIES[catIdx].items.map((p, i) =>
@@ -3139,17 +3174,19 @@ function openFormulaEditor(x, y, existing){
     '<button type="button" class="formula-tab-btn' + (i === 0 ? ' active' : '') + '" data-tab="' + i + '">' + c.name + '</button>'
   ).join('');
   wrap.innerHTML =
+    '<div class="formula-title">∑ 数式を作る</div>' +
     '<div class="formula-tabs">' + tabsHtml + '</div>' +
     '<div class="formula-palette" id="formulaPaletteGrid">' + paletteHtmlFor(0) + '</div>' +
-    '<textarea rows="2" placeholder="上のボタンをタップして組み立てるか、直接LaTeXを入力"></textarea>' +
+    '<textarea rows="2" placeholder="上のボタンをタップして組み立てよう（直接入力もOK）"></textarea>' +
     '<div class="formula-toolrow">' +
-      '<button type="button" data-act="next-blank">→ 次の空欄</button>' +
+      '<button type="button" data-act="next-blank">→ 次の空欄へ</button>' +
       '<button type="button" data-act="clear">クリア</button>' +
     '</div>' +
-    '<div class="formula-hint">テンプレートをタップすると空欄に自動でカーソルが移動します。入力後は「→ 次の空欄」（またはTabキー）で次へ。</div>' +
-    '<div class="formula-preview">数式プレビュー</div>' +
-    '<div class="manual-editor-actions"><button data-act="cancel">取消</button><button data-act="ok">' + (existing ? '更新' : '挿入') + '</button></div>';
-  document.getElementById('pageEl').appendChild(wrap);
+    '<div class="formula-hint">上のボタンをタップすると、その形がそのまま入り、最初の空欄に自動でカーソルが合います。入力したら「→ 次の空欄へ」（またはTabキー）で次に進めます。</div>' +
+    '<div class="formula-preview">ここに数式が表示されます</div>' +
+    '<div class="manual-editor-actions"><button data-act="cancel">やめる</button><button data-act="ok">' + (existing ? '更新する' : '入れる') + '</button></div>';
+  backdrop.appendChild(wrap);
+  document.body.appendChild(backdrop);
   const ta = wrap.querySelector('textarea');
   const preview = wrap.querySelector('.formula-preview');
   const paletteGrid = wrap.querySelector('#formulaPaletteGrid');
@@ -3158,12 +3195,12 @@ function openFormulaEditor(x, y, existing){
   let debounceTimer = null;
   async function updatePreview(){
     const latex = ta.value.trim();
-    if (!latex){ preview.textContent = '数式プレビュー'; return; }
+    if (!latex){ preview.textContent = 'ここに数式が表示されます'; return; }
     try {
       const res = await renderFormulaToImage(latex, true);
       preview.innerHTML = '<img src="' + res.dataUri + '" alt="formula preview">';
     } catch(err){
-      preview.textContent = '(プレビューを表示できません。記法をご確認ください)';
+      preview.textContent = '(まだうまく表示できません。入力をご確認ください)';
     }
   }
   function wirePaletteButtons(){
@@ -3196,9 +3233,11 @@ function openFormulaEditor(x, y, existing){
   });
   ta.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 450); });
   if (existing) updatePreview();
+  function closeEditor(){ backdrop.remove(); }
+  backdrop.addEventListener('mousedown', e => { if (e.target === backdrop) closeEditor(); });
   wrap.querySelector('[data-act="ok"]').addEventListener('click', async () => {
     const latex = ta.value.trim();
-    if (!latex){ wrap.remove(); return; }
+    if (!latex){ closeEditor(); return; }
     try {
       const res = await renderFormulaToImage(latex, true);
       const page = notestate.pages[currentPageIndex];
@@ -3215,9 +3254,9 @@ function openFormulaEditor(x, y, existing){
       console.error(err);
       flashToast('数式の描画に失敗しました。記法をご確認ください。');
     }
-    wrap.remove();
+    closeEditor();
   });
-  wrap.querySelector('[data-act="cancel"]').addEventListener('click', () => wrap.remove());
+  wrap.querySelector('[data-act="cancel"]').addEventListener('click', closeEditor);
 }
 
 /* ============================================================
@@ -3507,6 +3546,27 @@ function renderHighlights(){
     d.className = 'ocr-rect ' + (b.source !== 'auto' ? b.source : '') + (b.excludeFromReading ? ' reading-excluded' : '');
     d.title = b.excludeFromReading ? '読み上げ対象外（右パネルで含めるに変更できます）' : '';
     d.style.left = b.x+'px'; d.style.top = b.y+'px'; d.style.width = b.w+'px'; d.style.height = b.h+'px';
+    /* 【追加】認識された範囲の右上に、その場で読み上げられる🔊ボタンを自動で配置する。
+       全体OCR・部分OCRのどちらで作られたブロックにも同じように付く（renderHighlightsは
+       両方の経路から呼ばれているため）。除外設定されているブロックには付けない。 */
+    if (!b.excludeFromReading && b.text && b.text.trim()){
+      const speakBtn = document.createElement('button');
+      speakBtn.type = 'button';
+      speakBtn.className = 'ocr-rect-speak';
+      speakBtn.title = 'この範囲を読み上げる';
+      speakBtn.textContent = '🔊';
+      speakBtn.addEventListener('pointerdown', e => e.stopPropagation());
+      speakBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        document.querySelectorAll('.ocr-rect-speak.playing').forEach(el => el.classList.remove('playing'));
+        readerContinuous = false;
+        speechSynthesis.cancel();
+        speakBtn.classList.add('playing');
+        const item = { text: b.text, blockId: b.id, x: b.x, y: b.y, w: b.w, h: b.h };
+        speakSentence(item, () => speakBtn.classList.remove('playing'));
+      });
+      d.appendChild(speakBtn);
+    }
     layer.appendChild(d);
   });
 }
@@ -3950,9 +4010,11 @@ function listAllCommands(){
       '/note mode @5 ― 部分OCRの精度を優先（画像・動画・URL・グラフ挿入は使用不可）',
       '/tool up ― ツールバーを上端表示に切り替える（ページ一覧が見やすくなる）',
       '/tool side ― ツールバーを左（通常）表示に戻す',
-      '/import dlc ― 追加DLC（.jsファイル）を選んで取り込む',
-      '/dlc on ― 取り込み済みのDLCを有効にする',
-      '/dlc off ― DLCを無効にする',
+      '/import dlc ― 追加DLC（.jsファイル）を選んで取り込む（複数取り込み可）',
+      '/dlc on [番号] ― DLCを有効にする（番号省略ですべて）',
+      '/dlc off [番号] ― DLCを無効にする（番号省略ですべて）',
+      '/dlc remove 番号 ― 指定した番号のDLCを削除する',
+      '/dlc list ― 取り込み済みDLCの一覧と番号を表示する',
       '/all command ― このコマンド一覧を表示'
     ]
   };
@@ -4073,13 +4135,14 @@ async function handleCommand2(input){
     await importDlcFile();
     return;
   }
-  if (/^\/dlc\s+on\s*$/i.test(input)){
-    setDlcEnabled(true);
-    return;
-  }
-  if (/^\/dlc\s+off\s*$/i.test(input)){
-    setDlcEnabled(false);
-    return;
+  {
+    const onMatch = input.match(/^\/dlc\s+on(?:\s+(\d+))?\s*$/i);
+    if (onMatch){ setDlcEnabledAt(onMatch[1] ? parseInt(onMatch[1], 10) : null, true); return; }
+    const offMatch = input.match(/^\/dlc\s+off(?:\s+(\d+))?\s*$/i);
+    if (offMatch){ setDlcEnabledAt(offMatch[1] ? parseInt(offMatch[1], 10) : null, false); return; }
+    const removeMatch = input.match(/^\/dlc\s+remove\s+(\d+)\s*$/i);
+    if (removeMatch){ removeDlcAt(parseInt(removeMatch[1], 10)); return; }
+    if (/^\/dlc\s+list\s*$/i.test(input)){ listDlcInCmdLog(); return; }
   }
   cmdLog('不明なコマンドです: ' + input + '（/all command で一覧を確認できます）', 'cmd-error');
 }
@@ -4199,10 +4262,34 @@ function setToolbarPosition(pos){
    取り込み時に必ず確認ダイアログを挟み、信頼できる配布元のものだけを
    取り込むよう案内する。
 ============================================================ */
-const DLC_KEY_SRC = 'yomiDlcScriptSrc';
-const DLC_KEY_NAME = 'yomiDlcFileName';
-const DLC_KEY_ENABLED = 'yomiDlcEnabled';
-
+const DLC_LIST_KEY = 'yomiDlcList'; /* JSON配列: [{id, name, src, enabled}, ...] 複数のDLCを個別管理する */
+/* 旧バージョン（v3.1未満）では単一DLCしか扱えず、別のキーに保存していた。
+   初回起動時に見つかれば、新しい複数管理用のリストへ1件だけ引き継ぐ。 */
+function migrateOldDlcStorage(){
+  try {
+    const already = localStorage.getItem(DLC_LIST_KEY);
+    const oldSrc = localStorage.getItem('yomiDlcScriptSrc');
+    if (!already && oldSrc){
+      const oldName = localStorage.getItem('yomiDlcFileName') || 'DLC';
+      const oldEnabled = localStorage.getItem('yomiDlcEnabled') === 'true';
+      saveDlcList([{ id: 'dlc_' + Date.now(), name: oldName, src: oldSrc, enabled: oldEnabled }]);
+    }
+    localStorage.removeItem('yomiDlcScriptSrc');
+    localStorage.removeItem('yomiDlcFileName');
+    localStorage.removeItem('yomiDlcEnabled');
+  } catch(e){}
+}
+function loadDlcList(){
+  try {
+    const raw = localStorage.getItem(DLC_LIST_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list : [];
+  } catch(e){ return []; }
+}
+function saveDlcList(list){
+  try { localStorage.setItem(DLC_LIST_KEY, JSON.stringify(list)); return true; }
+  catch(e){ dlcMsg('保存に失敗しました：' + (e && e.message ? e.message : String(e)), true); return false; }
+}
 /* コマンドパレットを開いていなくても（🧩ボタン経由でも）結果が分かるよう、
    コマンドログとトースト通知の両方に出す小さなヘルパー。 */
 function dlcMsg(text, isError){
@@ -4211,7 +4298,7 @@ function dlcMsg(text, isError){
 }
 function importDlcFile(){
   return new Promise(resolve => {
-    dlcMsg('DLC（追加コンテンツ）の.jsファイルを選んでください。index.htmlと同じフォルダに入れておくと、後から場所が分からなくならず安心です。');
+    dlcMsg('DLC（追加コンテンツ）の.jsファイルを選んでください。index.htmlと同じフォルダに入れておくと、後から場所が分からなくならず安心です。複数のDLCを取り込むこともできます。');
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.js,text/javascript,application/javascript';
@@ -4239,15 +4326,10 @@ function importDlcFile(){
           '続けますか？'
         );
         if (!ok){ dlcMsg('取り込みをキャンセルしました', true); resolve(); return; }
-        try {
-          localStorage.setItem(DLC_KEY_SRC, src);
-          localStorage.setItem(DLC_KEY_NAME, file.name);
-          localStorage.setItem(DLC_KEY_ENABLED, 'true');
-        } catch(e){
-          dlcMsg('保存に失敗しました：' + (e && e.message ? e.message : String(e)), true);
-          resolve(); return;
-        }
-        dlcMsg('「' + file.name + '」を取り込みました。次回このノートを開いたときも自動的に読み込まれます（/dlc off でオフにできます）。適用のため再読み込みします…');
+        const list = loadDlcList();
+        list.push({ id: 'dlc_' + Date.now(), name: file.name, src: src, enabled: true });
+        if (!saveDlcList(list)){ resolve(); return; }
+        dlcMsg('「' + file.name + '」を取り込みました。次回このノートを開いたときも自動的に読み込まれます（🧩ボタンから個別にオン/オフ・削除できます）。適用のため再読み込みします…');
         setTimeout(() => location.reload(), 900);
         resolve();
       };
@@ -4258,53 +4340,101 @@ function importDlcFile(){
   });
 }
 
-function setDlcEnabled(enabled){
-  let hasSrc = false;
-  try { hasSrc = !!localStorage.getItem(DLC_KEY_SRC); } catch(e){}
-  if (!hasSrc){
+/* 1-based の番号（コマンドパレット・UI共通で表示する番号）を指定して
+   個別にオン/オフ・削除する。番号省略時はすべてに適用する。 */
+function setDlcEnabledAt(oneBasedIndexOrNull, enabled){
+  const list = loadDlcList();
+  if (!list.length){
     dlcMsg('取り込み済みのDLCがありません。先に「DLCを取り込む」（または /import dlc）で取り込んでください。', true);
     return;
   }
-  try { localStorage.setItem(DLC_KEY_ENABLED, enabled ? 'true' : 'false'); }
-  catch(e){ dlcMsg('設定の保存に失敗しました', true); return; }
-  dlcMsg('DLCを' + (enabled ? 'オン' : 'オフ') + 'にしました。適用のため再読み込みします…');
+  if (oneBasedIndexOrNull === null){
+    list.forEach(d => { d.enabled = enabled; });
+    if (!saveDlcList(list)) return;
+    dlcMsg('すべてのDLCを' + (enabled ? 'オン' : 'オフ') + 'にしました。適用のため再読み込みします…');
+  } else {
+    const i = oneBasedIndexOrNull - 1;
+    if (!list[i]){ dlcMsg('その番号のDLCが見つかりません（/dlc list で確認できます）', true); return; }
+    list[i].enabled = enabled;
+    if (!saveDlcList(list)) return;
+    dlcMsg('「' + list[i].name + '」を' + (enabled ? 'オン' : 'オフ') + 'にしました。適用のため再読み込みします…');
+  }
   setTimeout(() => location.reload(), 700);
 }
+function removeDlcAt(oneBasedIndex){
+  const list = loadDlcList();
+  const i = oneBasedIndex - 1;
+  if (!list[i]){ dlcMsg('その番号のDLCが見つかりません（/dlc list で確認できます）', true); return; }
+  const name = list[i].name;
+  if (!window.confirm('「' + name + '」を削除します。よろしいですか？')) return;
+  list.splice(i, 1);
+  if (!saveDlcList(list)) return;
+  dlcMsg('「' + name + '」を削除しました。適用のため再読み込みします…');
+  setTimeout(() => location.reload(), 700);
+}
+function listDlcInCmdLog(){
+  const list = loadDlcList();
+  if (!list.length){ cmdLog('取り込み済みのDLCはありません', 'cmd-ok'); return; }
+  cmdLog('--- 取り込み済みDLC一覧 ---', 'cmd-title');
+  list.forEach((d, i) => cmdLog((i+1) + '. ' + d.name + '　［' + (d.enabled ? 'オン' : 'オフ') + '］', 'cmd-ok'));
+}
 
-/* アプリ起動時に、有効化済みのDLCがあれば自動で読み込む。
+/* アプリ起動時に、有効化済みのDLCをすべて自動で読み込む。
    let/constで宣言されたページ内のグローバル変数・関数（notestate等）へ
-   そのままアクセスできるよう、evalではなく実際の<script>要素として挿入する。 */
+   そのままアクセスできるよう、evalではなく実際の<script>要素として挿入する。
+   複数のDLCが有効な場合は、取り込んだ順番にそれぞれ読み込まれる。 */
 function loadStoredDlcIfEnabled(){
+  migrateOldDlcStorage();
   try {
-    const enabled = localStorage.getItem(DLC_KEY_ENABLED) === 'true';
-    const src = localStorage.getItem(DLC_KEY_SRC);
-    if (enabled && src){
+    const list = loadDlcList();
+    const enabledOnes = list.filter(d => d.enabled && d.src);
+    enabledOnes.forEach(d => {
       const s = document.createElement('script');
-      s.textContent = src;
+      s.textContent = d.src;
       document.body.appendChild(s);
-      const name = localStorage.getItem(DLC_KEY_NAME) || 'DLC';
-      flashToast('DLC「' + name + '」を読み込みました（/dlc off でオフにできます）');
+    });
+    if (enabledOnes.length === 1){
+      flashToast('DLC「' + enabledOnes[0].name + '」を読み込みました');
+    } else if (enabledOnes.length > 1){
+      flashToast(enabledOnes.length + '個のDLCを読み込みました');
     }
   } catch(e){ console.error(e); }
 }
 
-/* コマンドパレットを使わなくても、画面上部の🧩ボタンから取り込み・オンオフができるようにする */
-function updateDlcModalStatus(){
-  const el = document.getElementById('dlcStatusText');
-  if (!el) return;
-  let name = null, enabled = false;
-  try {
-    name = localStorage.getItem(DLC_KEY_NAME);
-    enabled = localStorage.getItem(DLC_KEY_ENABLED) === 'true';
-  } catch(e){}
-  if (!name){
-    el.textContent = 'まだ何も取り込まれていません。「DLCを取り込む」から .js ファイルを選んでください。';
-  } else {
-    el.textContent = '取り込み済み： ' + name + '　／　現在の状態： ' + (enabled ? '🟢 オン' : '⚪ オフ');
+function escapeHtmlApp(s){
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+/* コマンドパレットを使わなくても、画面上部の🧩ボタンから取り込み・個別のオン/オフ・削除ができるようにする */
+function renderDlcListArea(){
+  const area = document.getElementById('dlcListArea');
+  if (!area) return;
+  const list = loadDlcList();
+  if (!list.length){
+    area.innerHTML = '<div style="font-size:12px;color:var(--ink-soft);padding:8px 2px;">まだ何も取り込まれていません。</div>';
+    return;
   }
+  area.innerHTML = list.map((d, i) => `
+    <div style="display:flex;align-items:center;gap:6px;padding:7px 2px;border-bottom:1px solid var(--line);font-size:12px;">
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtmlApp(d.name)}">
+        ${d.enabled ? '🟢' : '⚪'} ${i+1}. ${escapeHtmlApp(d.name)}
+      </span>
+      <button class="btn" data-dlc-toggle="${i+1}" style="font-size:10.5px;padding:4px 8px;">${d.enabled ? 'オフにする' : 'オンにする'}</button>
+      <button class="btn" data-dlc-remove="${i+1}" style="font-size:10.5px;padding:4px 8px;color:var(--accent);">削除</button>
+    </div>
+  `).join('');
+  area.querySelectorAll('[data-dlc-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const list2 = loadDlcList();
+      const i = parseInt(btn.dataset.dlcToggle, 10) - 1;
+      if (list2[i]) setDlcEnabledAt(i + 1, !list2[i].enabled);
+    });
+  });
+  area.querySelectorAll('[data-dlc-remove]').forEach(btn => {
+    btn.addEventListener('click', () => removeDlcAt(parseInt(btn.dataset.dlcRemove, 10)));
+  });
 }
 document.getElementById('dlcManageBtn').addEventListener('click', () => {
-  updateDlcModalStatus();
+  renderDlcListArea();
   document.getElementById('dlcModal').classList.remove('hidden');
 });
 document.getElementById('dlcCloseBtn').addEventListener('click', () => {
@@ -4312,18 +4442,6 @@ document.getElementById('dlcCloseBtn').addEventListener('click', () => {
 });
 document.getElementById('dlcImportBtn').addEventListener('click', () => {
   importDlcFile();
-});
-document.getElementById('dlcToggleBtn').addEventListener('click', () => {
-  let hasSrc = false, enabled = false;
-  try {
-    hasSrc = !!localStorage.getItem(DLC_KEY_SRC);
-    enabled = localStorage.getItem(DLC_KEY_ENABLED) === 'true';
-  } catch(e){}
-  if (!hasSrc){
-    flashToast('先に「DLCを取り込む」からファイルを選んでください');
-    return;
-  }
-  setDlcEnabled(!enabled);
 });
 /* 手書き風の書体（Klee One）でテキストを画像化する（/ofset text 用） */
 function renderHandwrittenText(text, fontSize){
@@ -4529,15 +4647,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
   【方法1（かんたん・おすすめ）】
   アプリ内のコマンドパレットを開き、@2（システムコマンド）モードで
-  「/import dlc」と入力し、dyslexia-support-pack-v0.1.js を選択してください。
-  一度取り込めば、次回このノートを開いたときも自動的に読み込まれます。
-  オフにしたいときは「/dlc off」、再度オンにしたいときは「/dlc on」です。
+  「/import dlc」と入力し、dyslexia-support-pack-v0.4.js を選択してください。
+  複数のDLCを取り込むこともでき、それぞれ個別にオン/オフ・削除できます
+  （画面上部の🧩ボタン、または /dlc on [番号]・/dlc off [番号]・
+  /dlc remove 番号・/dlc list コマンドから操作できます）。
 
   【方法2（手動）】
-  dyslexia-support-pack-v0.1.js をこのファイル（index.html）と同じフォルダに置き、
+  dyslexia-support-pack-v0.4.js をこのファイル（index.html）と同じフォルダに置き、
   下の行のコメントを外してください（本体のメインscriptタグより必ず後ろに置くこと）。
+  複数のDLCを手動で読み込みたい場合は、同様のscriptタグを必要な数だけ追加してください。
 
-  <script src="dyslexia-support-pack-v0.1.js"></script>
+  <script src="dyslexia-support-pack-v0.4.js"></script>
 -->
 </body>
 </html>
