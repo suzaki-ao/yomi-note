@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>読みノート (Yomi-Note) ― ホーム</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F2; --paper-deep:#F3EEE3; --ink:#22262E; --ink-soft:#5B6270;
+    --line:#DAD3C4; --accent:#B5432E; --accent-soft:#EFD9CF; --teal:#3E6E63; --white:#FFFFFF;
+    --shadow:0 6px 22px rgba(34,38,46,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper-deep);color:var(--ink);font-family:"Noto Sans JP",sans-serif;line-height:1.75;}
+  h1,h2,h3{font-family:"Shippori Mincho",serif;}
+  a{color:var(--teal);}
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px 80px;}
+
+  /* ---------- ヒーロー ---------- */
+  .hero{
+    background:linear-gradient(160deg, var(--ink) 0%, #2E3440 100%);
+    color:#fff;padding:56px 24px 64px;margin-bottom:-40px;
+  }
+  .hero-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .hanko{
+    width:64px;height:64px;border-radius:50%;background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:"Shippori Mincho",serif;
+    font-weight:700;font-size:30px;flex-shrink:0;box-shadow:inset 0 0 0 3px rgba(255,255,255,0.35),0 6px 18px rgba(0,0,0,0.35);
+  }
+  .hero h1{font-size:32px;margin:0 0 4px;color:#fff;}
+  .hero p.tagline{margin:0;font-size:14px;color:#C9D0D8;}
+  .hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .badge-pill{
+    background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;
+    padding:4px 12px;border-radius:20px;font-size:11.5px;
+  }
+  .badge-pill.accent{background:var(--accent);border-color:var(--accent);}
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+  .cta-btn{
+    display:inline-flex;align-items:center;gap:6px;padding:11px 20px;border-radius:24px;
+    font-size:13.5px;text-decoration:none;font-weight:700;
+  }
+  .cta-btn.primary{background:var(--accent);color:#fff;}
+  .cta-btn.ghost{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.3);}
+  .cta-btn:hover{filter:brightness(1.08);}
+
+  /* ---------- カード共通 ---------- */
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 28px;
+    box-shadow:var(--shadow);margin-bottom:22px;position:relative;
+  }
+  .card h2{font-size:18px;margin:0 0 14px;display:flex;align-items:center;gap:8px;}
+
+  /* ---------- 機能グリッド ---------- */
+  .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+  .feature-item{
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;
+  }
+  .feature-item .icon{font-size:22px;margin-bottom:6px;display:block;}
+  .feature-item h3{font-size:13.5px;margin:0 0 4px;font-family:"Noto Sans JP",sans-serif;font-weight:700;}
+  .feature-item p{font-size:12px;color:var(--ink-soft);margin:0;}
+
+  /* ---------- 更新履歴（changelog） ---------- */
+  .changelog{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);}
+  .changelog li{position:relative;padding:0 0 22px 26px;}
+  .changelog li:last-child{padding-bottom:2px;}
+  .changelog li::before{
+    content:"";position:absolute;left:-7px;top:4px;width:12px;height:12px;border-radius:50%;
+    background:var(--accent);border:2px solid #fff;box-shadow:0 0 0 2px var(--line);
+  }
+  .changelog .ver-tag{
+    display:inline-block;background:var(--ink);color:#fff;font-size:11.5px;font-weight:700;
+    padding:2px 10px;border-radius:10px;margin-bottom:6px;font-family:"Courier New",monospace;
+  }
+  .changelog .ver-tag.doc{background:var(--teal);}
+  .changelog ul{margin:6px 0 0;padding-left:18px;}
+  .changelog ul li{padding:0;margin-bottom:3px;font-size:13px;color:var(--ink-soft);}
+  .changelog ul li::before{display:none;}
+
+  /* ---------- リンク集 ---------- */
+  .link-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;}
+  .link-card{
+    display:flex;flex-direction:column;gap:4px;padding:16px 18px;border-radius:10px;
+    background:var(--paper);border:1px solid var(--line);text-decoration:none;color:var(--ink);
+  }
+  .link-card:hover{border-color:var(--teal);}
+  .link-card .icon{font-size:20px;}
+  .link-card .title{font-size:13.5px;font-weight:700;}
+  .link-card .desc{font-size:11.5px;color:var(--ink-soft);}
+
+  footer{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:10px;padding:24px 0 0;}
+  @media (max-width:600px){
+    .hero{padding:44px 18px 56px;}
+    .card{padding:20px 18px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hanko">読</div>
+    <div>
+      <h1>読みノート <span style="font-size:16px;color:#C9D0D8;font-weight:500;">Yomi-Note</span></h1>
+      <p class="tagline">手書き・PDF/画像OCR読み上げノート ― 学習をもっとアクセシブルに</p>
+      <div class="hero-badges">
+        <span class="badge-pill accent" id="heroAppVersion">アプリ v3.4</span>
+        <span class="badge-pill" id="heroTermsVersion">利用規約 v4</span>
+        <span class="badge-pill" id="heroCmdVersion">コマンド一覧 v4</span>
+        <span class="badge-pill" id="heroUsageVersion">使い方 v1</span>
+        <span class="badge-pill">Home v7</span>
+      </div>
+      <div class="cta-row">
+        <a class="cta-btn primary" href="./index.html">📓 アプリを開く</a>
+        <a class="cta-btn ghost" href="./%E4%BD%BF%E3%81%84%E6%96%B9v1.html">📖 使い方</a>
+        <a class="cta-btn ghost" href="./command-list-v4.html">&gt;_ コマンド一覧</a>
+        <a class="cta-btn ghost" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v4.html">📜 利用規約</a>
+        <a class="cta-btn ghost" href="https://github.com/suzaki-ao/yomi-note" target="_blank" rel="noopener noreferrer">🐙 GitHub</a>
+        <button class="cta-btn ghost" id="readAloudBtn" type="button" style="cursor:pointer;">🔊 このページを読み上げる</button>
+        <span class="cta-btn ghost" id="readRateLabel" style="cursor:default;user-select:none;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>✨ できること</h2>
+    <div class="feature-grid">
+      <div class="feature-item"><span class="icon">✍️</span><h3>手書き・OCR</h3><p>ペンで書いた文字も、取り込んだPDF/画像の文字も、通常OCR・スライドOCRの2方式で読み取れます。</p></div>
+      <div class="feature-item"><span class="icon">🔊</span><h3>読み上げ</h3><p>一文ずつ・全文・選択範囲・テキストボックス単位など、細かく読み上げ範囲を選べます。</p></div>
+      <div class="feature-item"><span class="icon">🎤</span><h3>音声入力</h3><p>テキストボックスに話しかけるだけで文字起こしできます。</p></div>
+      <div class="feature-item"><span class="icon">📐</span><h3>縦書き・横書き自動判定</h3><p>空白（すきま）のパターンから文字の向きを自動で見分けます。手動指定も可能です。</p></div>
+      <div class="feature-item"><span class="icon">🚫</span><h3>OCR除外・区切り線</h3><p>図表を自動でOCR対象から除外。上下・左右の境界も自動検知＋手動指定の両方に対応。</p></div>
+      <div class="feature-item"><span class="icon">📷</span><h3>カメラ撮影</h3><p>内蔵・外付けカメラで直接撮影し、そのままOCRや画像挿入ができます。</p></div>
+      <div class="feature-item"><span class="icon">∑</span><h3>数式・図・動画・リンク</h3><p>LaTeX数式、グラフ、画像、動画、URLリンクをページに自由に挿入できます。</p></div>
+      <div class="feature-item"><span class="icon">&gt;_</span><h3>コマンドパレット</h3><p>キーボード操作派向けに、通常・数式・システムの3モードのコマンド機能を搭載。</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🗂 更新履歴 <span style="font-size:11.5px;color:var(--ink-soft);font-weight:400;">Changelog</span></h2>
+    <ul class="changelog">
+      <li>
+        <span class="ver-tag">Home v7</span>
+        <div>ページ間リンクの整備とバージョン整合、プログラミング追加パックを改善。</div>
+        <ul>
+          <li>本体アプリ(v3.4)に「使い方」ページへの導線(📖)を新設し、利用規約リンクをv4に修正</li>
+          <li>「使い方」ページにバージョン表記を追加（使い方 v1）</li>
+          <li>利用規約ページの表示アプリバージョンを v3.4 に同期</li>
+          <li>【プログラミング追加パック v0.1】プレビューの全画面表示ボタンを追加</li>
+          <li>【プログラミング追加パック v0.1】🧩ツールパレットをカテゴリ別に整理し、各言語のスニペット数を大幅に増加。ボタンにはコードの一部だけでなく分かりやすい説明も表示するように改善</li>
+        </ul>
+      </li>
+      <li>
+        <span class="ver-tag">Home v6</span>
+        <div>ホームページに使い方ガイド・GitHubリンクを追加し、追加DLC第2弾を公開。</div>
+        <ul>
+          <li>ホーム画面に作者のGitHubリポジトリ（<a href="https://github.com/suzaki-ao/yomi-note" target="_blank" rel="noopener noreferrer">suzaki-ao/yomi-note</a>）へのリンクを新設</li>
+          <li>「使い方」ページを新規作成し、基本操作・コマンド・DLCの導入方法をまとめて解説するように</li>
+          <li>利用規約を v4 に更新。「プログラミング追加パックについて」の項目（第11条）を新設</li>
+          <li>追加DLC第2弾「プログラミング追加パック v0.0」を公開（ノート機能をVS Code風のプログラミング画面に切り替え、HTML/CSS/JS/Python/C言語系の編集・一部実行に対応。コマンド機能・スニッチ風のブロックツール・DLCエクスポート機能つき）</li>
+        </ul>
+      </li>
+      <li>
+        <span class="ver-tag">ディスレクシア支援パック v0.4</span>
+        <div>固定表示（見開き）で、左側の現在ページが画面外に隠れてしまう不具合を修正。</div>
+        <ul>
+          <li>【不具合修正】固定表示中は中央寄せレイアウトを使っていたため、固定パネルの分だけ幅が足りないと、左側にあるはずの「今作業しているページ」の方が画面外に隠れてしまう不具合を修正</li>
+          <li>左詰め表示に変更し、固定表示のたびに横スクロール位置を先頭へ戻すことで、今のページが必ず画面内に見えるように改善</li>
+        </ul>
+      </li>
+      <li>
+        <span class="ver-tag">v3.3</span>
+        <div>OCR認識範囲へ読み上げボタンを自動配置、固定表示の不具合を修正。</div>
+        <ul>
+          <li>OCRで認識された範囲（全体OCR・部分OCRのどちらも）の右上に、その場で読み上げられる🔊ボタンを自動的に表示するように変更。範囲を選んだりサイドバーを開いたりしなくても、その場でタップして読み上げられます</li>
+          <li>【不具合修正・ディスレクシア支援パック v0.3】ページを固定表示すると既定で原寸(100%)のまま開始していたため、パネル幅に収まらず「ほとんど真っ白で壊れて見える」状態になっていた問題を修正。固定した瞬間はパネル幅にきちんと収まる倍率で自動表示し、そこから－/＋/原寸ボタンで自由に調整できるように変更</li>
+        </ul>
+      </li>
+      <li>
+        <span class="ver-tag">v3.2</span>
+        <div>ピン止め表示・数式入力をさらに改善し、DLCを複数取り込めるように対応（利用規約・コマンド一覧も更新）。</div>
+        <ul>
+          <li>ページのピン止め表示を「元のページと同じ解像度」で表示するように変更し、－/＋/原寸(100%)ボタンで自由に拡大縮小できるように</li>
+          <li>固定表示側にも「✏️ペン」「T文字」ツールを追加。手書きも新しいテキストボックスの追加も、固定側でそのまま行えるように（内容は通常表示にもそのまま反映されます）</li>
+          <li>数式入力エディタを画面中央の大きなモーダル表示に変更。ボタン・文字・プレビューをすべて拡大し、子どもでも見やすく操作しやすいデザインに刷新</li>
+          <li>追加DLCを複数取り込めるように対応。🧩ボタンの管理パネルで、取り込んだDLCをそれぞれ個別にオン/オフ・削除可能に</li>
+          <li>コマンドも対応：<code>/dlc on [番号]</code>・<code>/dlc off [番号]</code>・<code>/dlc remove 番号</code>・<code>/dlc list</code>を追加（番号省略ですべてに適用）</li>
+          <li>以前取り込んでいたDLCの設定は、初回起動時に自動的に新しい管理方式へ引き継がれます</li>
+          <li>利用規約に「追加DLC（拡張機能）について」の項目を新設し、DLCがノートの中身にアクセスできることや、信頼できる配布元のもののみ利用することを明記</li>
+          <li>コマンド一覧のDLC関連コマンドの説明を、複数取り込み対応の内容に更新</li>
+          <li>【ディスレクシア支援パック v0.2】ピン止め表示の改善（原寸表示＋拡大縮小、ペン・テキストボックス追加）に対応</li>
+        </ul>
+      </li>
+      <li>
+        <span class="ver-tag">v3.1</span>
+        <div>不具合修正、DLC管理のボタン化、数式入力の大幅刷新、ディスレクシア支援パックの機能追加（v0.1）。</div>
+        <ul>
+          <li>【不具合修正】画面右上に浮かんでいた読み上げボタンを削除。もともとツールバーの「🔊 全文読み上げ」ボタンと同じ機能が二重に存在していたための紛らわしさを解消</li>
+          <li>DLCの取り込み・オン/オフが、コマンド（/import dlc・/dlc on・/dlc off）だけでなく、画面右上の🧩ボタン（管理パネル）からも操作可能に</li>
+          <li>ページのピン止め表示を全面刷新：固定ページが右側に、通常ページとほぼ同じ大きさで見開き表示されるように変更。固定側のテキストボックスもその場で編集可能に</li>
+          <li>数式入力を全面リニューアル：タブ分けされたパレット（基本／記号／関数・微積分／連立方程式・場合分け／行列）から直感的にタップして組み立てられる方式に刷新</li>
+          <li>連立方程式（2式・3式）、場合分け、行列など、テンプレートを選ぶだけで複数の空欄付きの型が挿入されるように</li>
+          <li>「→ 次の空欄」ボタン・Tabキーで、空欄から空欄へ迷わず入力を進められるように</li>
+          <li>【ディスレクシア支援パック v0.1】UDフォント（BIZ UDゴシック）への切り替え機能を追加</li>
+          <li>【ディスレクシア支援パック v0.1】このページで行った操作を時刻付きで記録する「ログ」ツールを追加（テキストファイルへの書き出しも可能）</li>
+        </ul>
+      </li>
+      <li>
+        <span class="ver-tag">v3.0</span>
+        <div>不具合修正と、追加DLC（ディスレクシア支援パック）の取り込み機能を実装。</div>
+        <ul>
+          <li>【不具合修正】縦書き/横書きの自動検知：カメラ写真に写り込む背景・余白の影響で誤判定していたのを修正</li>
+          <li>【不具合修正】カメラOCR：影やグレア（反射）でコントラスト補正が効きにくかった問題を、外れ値に強い方式に変更して修正</li>
+          <li>【不具合修正】/tool up：ツールバーが上端ではなく横に飛び出し、ページが隠れてしまう表示崩れを修正</li>
+          <li>画面（キャンバス）右上に読み上げボタンを新設。右サイドバーまで手を伸ばさなくても読み上げの開始/停止が可能に</li>
+          <li>利用規約・コマンド一覧・ホームの各ページで、読み上げ速度をキーボード（＋/－キー等）で自由に変更可能に</li>
+          <li>ホームページに読み上げ機能を新規追加</li>
+          <li>ペンでの手書きをなめらかに（曲線スムージング）。対応端末では筆圧に応じて線の太さが変化</li>
+          <li>@2システムコマンドに /import dlc・/dlc on・/dlc off を追加。追加DLC（.jsファイル）を取り込み、次回起動時も自動的に読み込めるように</li>
+          <li>追加DLC第1弾「ディスレクシア支援パック v0.0」を公開（気が散りやすいツールの非表示化、部分OCR縦+/横+、区切り線の左右分割対応、ページのピン止め表示）</li>
+        </ul>
+      </li>
+      <li>
+        <span class="ver-tag">v2.9</span>
+        <div>ドキュメントのバージョン管理を整理。利用規約を v1、コマンド一覧を v2 に更新し、アプリ内のリンクも同期。</div>
+      </li>
+      <li>
+        <span class="ver-tag">v2.8</span>
+        <div>音声入力・カメラ撮影・スライドOCRなど、入力手段を大幅拡張。</div>
+        <ul>
+          <li>テキストボックスへの音声入力・単体読み上げボタン</li>
+          <li>利用規約／コマンド一覧ページの読み上げ機能</li>
+          <li>カメラツール（内蔵/外付け選択、撮影→OCR・画像挿入）</li>
+          <li>スライドOCR（走査線で帯ごとに認識する新方式、既存の分割・除外機能と共通利用可）</li>
+          <li>新コマンド：/camera・/slide ocr {N}・/all slide ocr</li>
+        </ul>
+      </li>
+      <li>
+        <span class="ver-tag">v2.7</span>
+        <div>致命的なテキストボックス入力バグを修正し、レイアウト・コマンド操作性を改善。</div>
+        <ul>
+          <li>リサイズハンドルがcontentEditableに混入しカーソルが飛ぶ不具合を修正</li>
+          <li>ツールバー肥大化でページ一覧が隠れる問題に対応（/tool up・/tool side）</li>
+          <li>/command mode をどのモードからでも使えるように修正</li>
+        </ul>
+      </li>
+      <li>
+        <span class="ver-tag">v2.6</span>
+        <div>OCR除外・自動テキストボックスを非破壊化し、コマンドパレットを実装。</div>
+        <ul>
+          <li>OCR除外・解答欄自動検出をオン/オフ可能に（誤検出時も文章を消さない）</li>
+          <li>手動区切り線ツール（自動検知とは別に自分で境界を指定）</li>
+          <li>コマンドパレット（@0通常・@1数式・@2システム）を初実装</li>
+          <li>利用規約ページへのリンクボタン</li>
+        </ul>
+      </li>
+      <li>
+        <span class="ver-tag">v2.5</span>
+        <div>OCRの精度と縦書き対応を根本から見直し。</div>
+        <ul>
+          <li>単語単位から自前で行・段落を組み立てる方式に刷新（上下・複数分割に対応）</li>
+          <li>ページ全体のOCRは縦横問わず自動レイアウト解析(PSM)を使用</li>
+          <li>縦書きテキストボックスは編集中だけ一時的に横書き化して入力を安定化</li>
+          <li>画面に合わせた自動フィットズーム</li>
+          <li>利用規約ページを新規作成</li>
+        </ul>
+      </li>
+      <li>
+        <span class="ver-tag doc">v2.4 以前</span>
+        <div>基本機能を段階的に構築。</div>
+        <ul>
+          <li>ノート作成の基本（手書き・テキストボックス・ページ管理・PDF書き出し・ブラウザ内保存）</li>
+          <li>OCR機能の追加（全体OCR・部分OCR・除外範囲）と読み上げ機能</li>
+          <li>数式入力・グラフ／画像／動画／リンク挿入・マルチプラットフォーム対応</li>
+          <li>元に戻す/やり直す、レイヤー選択・ポインター操作まわりの各種バグ修正</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🔗 関連ページ</h2>
+    <div class="link-grid">
+      <a class="link-card" href="./index.html">
+        <span class="icon">📓</span>
+        <span class="title">読みノート（アプリ本体）</span>
+        <span class="desc">ノート作成・OCR・読み上げのメイン画面</span>
+      </a>
+      <a class="link-card" href="./%E4%BD%BF%E3%81%84%E6%96%B9v1.html">
+        <span class="icon">📖</span>
+        <span class="title">使い方 v1</span>
+        <span class="desc">基本操作・コマンド・DLCの使い方ガイド</span>
+      </a>
+      <a class="link-card" href="./command-list-v4.html">
+        <span class="icon">&gt;_</span>
+        <span class="title">コマンド一覧 v4</span>
+        <span class="desc">@0・@1・@2 各モードのコマンドリファレンス</span>
+      </a>
+      <a class="link-card" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v4.html">
+        <span class="icon">📜</span>
+        <span class="title">利用規約 v4</span>
+        <span class="desc">生成物の扱い・禁止事項・著作権表記など</span>
+      </a>
+      <a class="link-card" href="https://github.com/suzaki-ao/yomi-note" target="_blank" rel="noopener noreferrer">
+        <span class="icon">🐙</span>
+        <span class="title">GitHub リポジトリ</span>
+        <span class="desc">作者（suzaki-ao）による公開ページ・ソース一式</span>
+      </a>
+      <a class="link-card" href="./programming-pack-v0.1.js" download>
+        <span class="icon">🧑‍💻</span>
+        <span class="title">プログラミング追加パック v0.1</span>
+        <span class="desc">追加DLC第2弾（.jsファイルをダウンロード）</span>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    読みノート (Yomi-Note) Home <span id="footerHomeVersion">v7</span> ／ © <span id="footerYear">2026</span> Yomi-Note Project. All rights reserved.
+  </footer>
+
+</div>
+
+<script>
+  var y = new Date().getFullYear();
+  document.getElementById('footerYear').textContent = y;
+
+  /* ホーム画面の読み上げ機能（v2.9で新規追加）。
+     タグライン→できること（各機能）→更新履歴→関連ページ、の順に読み上げる。
+     利用規約・コマンド一覧のページと同じく、読み上げ速度をキーボードで
+     自由に変更できる（＋/－/↑/↓/PageUp/PageDownで0.1倍ずつ、0キーで等倍リセット）。 */
+  (function(){
+    var queue = [];
+    var playing = false;
+    var idx = 0;
+    var rate = 1.0;
+    var RATE_MIN = 0.5, RATE_MAX = 3.0, RATE_STEP = 0.1;
+    function clampRate(r){ r = Math.round(r * 10) / 10; return Math.max(RATE_MIN, Math.min(RATE_MAX, r)); }
+    function updateRateLabel(){
+      var el = document.getElementById('readRateLabel');
+      if (el) el.textContent = '速度 ' + rate.toFixed(1) + '倍（＋/－キーで変更）';
+    }
+    function pushText(list, el){
+      if (!el) return;
+      var t = el.textContent.trim().replace(/\s+/g, ' ');
+      if (t) list.push(t);
+    }
+    function buildQueue(){
+      var list = [];
+      pushText(list, document.querySelector('.hero h1'));
+      pushText(list, document.querySelector('.hero p.tagline'));
+      document.querySelectorAll('.feature-item').forEach(function(item){
+        var h = item.querySelector('h3'), p = item.querySelector('p');
+        var t = (h ? h.textContent.trim() : '') + '。' + (p ? p.textContent.trim() : '');
+        if (t.trim().replace(/^。/, '')) list.push(t);
+      });
+      document.querySelectorAll('.changelog > li').forEach(function(li){
+        var tag = li.querySelector('.ver-tag');
+        var desc = li.querySelector('div');
+        var t = (tag ? tag.textContent.trim() : '') + '。' + (desc ? desc.textContent.trim() : '');
+        list.push(t);
+        li.querySelectorAll('ul li').forEach(function(sub){ pushText(list, sub); });
+      });
+      document.querySelectorAll('.link-card').forEach(function(card){
+        var title = card.querySelector('.title'), desc = card.querySelector('.desc');
+        var t = (title ? title.textContent.trim() : '') + '。' + (desc ? desc.textContent.trim() : '');
+        list.push(t);
+      });
+      return list;
+    }
+    function updateBtn(){
+      document.getElementById('readAloudBtn').textContent = playing ? '⏹ 読み上げを停止' : '🔊 このページを読み上げる';
+    }
+    function speak(i){
+      if (!playing || i >= queue.length){ playing = false; updateBtn(); return; }
+      idx = i;
+      var u = new SpeechSynthesisUtterance(queue[i]);
+      u.lang = 'ja-JP';
+      u.rate = rate;
+      u.onend = function(){ speak(i + 1); };
+      u.onerror = function(){ playing = false; updateBtn(); };
+      window.speechSynthesis.speak(u);
+    }
+    document.getElementById('readAloudBtn').addEventListener('click', function(){
+      if (!('speechSynthesis' in window)){ alert('このブラウザは読み上げに対応していません'); return; }
+      if (playing){ playing = false; window.speechSynthesis.cancel(); updateBtn(); return; }
+      queue = buildQueue();
+      if (!queue.length) return;
+      playing = true; updateBtn();
+      window.speechSynthesis.cancel();
+      speak(0);
+    });
+    document.addEventListener('keydown', function(e){
+      var tag = (e.target && e.target.tagName) || '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey || e.altKey) return;
+      var changed = false;
+      if (e.key === '+' || e.key === '=' || e.key === 'ArrowUp' || e.key === 'PageUp'){
+        rate = clampRate(rate + RATE_STEP); changed = true;
+      } else if (e.key === '-' || e.key === '_' || e.key === 'ArrowDown' || e.key === 'PageDown'){
+        rate = clampRate(rate - RATE_STEP); changed = true;
+      } else if (e.key === '0'){
+        rate = 1.0; changed = true;
+      }
+      if (changed){
+        e.preventDefault();
+        updateRateLabel();
+        if (playing){ window.speechSynthesis.cancel(); speak(idx); }
+      }
+    });
+    updateRateLabel();
+  })();
+</script>
+</body>
+</html>
