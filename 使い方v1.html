@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>使い方 ― 読みノート (Yomi-Note)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F2; --paper-deep:#F3EEE3; --ink:#22262E; --ink-soft:#5B6270;
+    --line:#DAD3C4; --accent:#B5432E; --accent-soft:#EFD9CF; --teal:#3E6E63; --white:#FFFFFF;
+    --shadow:0 6px 22px rgba(34,38,46,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper-deep);color:var(--ink);font-family:"Noto Sans JP",sans-serif;line-height:1.75;}
+  h1,h2,h3{font-family:"Shippori Mincho",serif;}
+  a{color:var(--teal);}
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px 80px;}
+
+  .hero{
+    background:linear-gradient(160deg, var(--ink) 0%, #2E3440 100%);
+    color:#fff;padding:44px 24px 54px;margin-bottom:-40px;
+  }
+  .hero-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .hanko{
+    width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:"Shippori Mincho",serif;
+    font-weight:700;font-size:26px;flex-shrink:0;box-shadow:inset 0 0 0 3px rgba(255,255,255,0.35),0 6px 18px rgba(0,0,0,0.35);
+  }
+  .hero h1{font-size:26px;margin:0 0 4px;color:#fff;}
+  .hero p.tagline{margin:0;font-size:13.5px;color:#C9D0D8;}
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .cta-btn{
+    display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:24px;
+    font-size:13px;text-decoration:none;font-weight:700;background:rgba(255,255,255,0.1);color:#fff;
+    border:1px solid rgba(255,255,255,0.3);cursor:pointer;
+  }
+  .cta-btn.primary{background:var(--accent);border-color:var(--accent);}
+  .cta-btn:hover{filter:brightness(1.08);}
+
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 28px;
+    box-shadow:var(--shadow);margin-bottom:22px;
+  }
+  .card h2{font-size:18px;margin:0 0 6px;display:flex;align-items:center;gap:8px;}
+  .card .lead{font-size:12.5px;color:var(--ink-soft);margin:0 0 16px;}
+
+  .step-list{list-style:none;margin:0;padding:0;counter-reset:step;}
+  .step-list li{
+    position:relative;padding:0 0 18px 40px;counter-increment:step;
+  }
+  .step-list li:last-child{padding-bottom:0;}
+  .step-list li::before{
+    content:counter(step);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;
+    background:var(--teal);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;
+  }
+  .step-list h3{font-size:14.5px;margin:0 0 4px;font-family:"Noto Sans JP",sans-serif;font-weight:700;}
+  .step-list p{font-size:13px;color:var(--ink-soft);margin:0;}
+
+  .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+  .feature-item{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
+  .feature-item .icon{font-size:20px;margin-bottom:6px;display:block;}
+  .feature-item h3{font-size:13.5px;margin:0 0 4px;font-weight:700;}
+  .feature-item p{font-size:12px;color:var(--ink-soft);margin:0;}
+
+  .dlc-box{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:12px;}
+  .dlc-box:last-child{margin-bottom:0;}
+  .dlc-box .title{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+  .dlc-box p{font-size:12.5px;color:var(--ink-soft);margin:4px 0;}
+  code{background:var(--accent-soft);color:var(--accent);padding:1px 6px;border-radius:5px;font-size:12px;}
+
+  .warn-box{background:#FFF6E9;border:1px solid #E7C77C;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#7A5B12;margin-top:10px;}
+
+  footer{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:10px;padding:24px 0 0;}
+  @media (max-width:600px){ .hero{padding:36px 18px 46px;} .card{padding:20px 18px;} }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hanko">読</div>
+    <div>
+      <h1>使い方ガイド <span style="font-size:14px;color:#C9D0D8;font-weight:500;">How to use Yomi-Note</span></h1>
+      <p class="tagline">読みノートの基本操作・コマンド・追加DLCの導入方法をまとめました</p>
+      <div class="cta-row" style="margin-top:10px;margin-bottom:2px;">
+        <span class="cta-btn" style="cursor:default;background:var(--accent,#B5432E);border-color:transparent;">使い方 v1</span>
+      </div>
+      <div class="cta-row">
+        <a class="cta-btn primary" href="./index.html">📓 アプリを開く</a>
+        <a class="cta-btn" href="./Yomi%20note%20home%20v7.html">🏠 ホームに戻る</a>
+        <button class="cta-btn" id="readAloudBtn" type="button">🔊 このページを読み上げる</button>
+        <span class="cta-btn" id="readRateLabel" style="cursor:default;user-select:none;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>① まずはノートを作ってみる</h2>
+    <p class="lead">はじめての方は、この順番で触ってみるとひと通りの機能がつかめます。</p>
+    <ol class="step-list">
+      <li><h3>ページを開く／増やす</h3><p>「📓 アプリを開く」からノートを開きます。画面下のページ一覧から新しいページを追加できます。</p></li>
+      <li><h3>手書き・テキストボックスで書く</h3><p>ツールバーの「✏️ペン」で手書き、「Tテキスト」でテキストボックスを追加できます。</p></li>
+      <li><h3>PDF・画像を取り込んでOCR</h3><p>PDF/画像を取り込み、「全体OCR」または「部分OCR」で文字として認識させます。縦書き・横書きは自動判定、手動指定も可能です。</p></li>
+      <li><h3>読み上げる</h3><p>ツールバーの「🔊 全文読み上げ」や、認識結果の右上に出る🔊ボタンから、一文・選択範囲・テキストボックス単位で読み上げできます。</p></li>
+      <li><h3>保存・書き出し</h3><p>編集内容はブラウザ内（localStorage）に自動保存されます。「PDF書き出し」で外部ファイルとしても保存できます。</p></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>② よく使う機能</h2>
+    <div class="feature-grid">
+      <div class="feature-item"><span class="icon">🎤</span><h3>音声入力</h3><p>テキストボックスに話しかけて文字起こしできます。</p></div>
+      <div class="feature-item"><span class="icon">📷</span><h3>カメラ撮影</h3><p>内蔵・外付けカメラで直接撮影し、OCRや画像挿入に使えます。</p></div>
+      <div class="feature-item"><span class="icon">∑</span><h3>数式入力</h3><p>LaTeX入力またはタップ入力パレットで数式を挿入できます。</p></div>
+      <div class="feature-item"><span class="icon">🖼️</span><h3>画像・グラフ・動画・リンク</h3><p>ページ内に自由に挿入できます。</p></div>
+      <div class="feature-item"><span class="icon">🚫</span><h3>OCR除外・区切り線</h3><p>図表を自動でOCR対象から除外。境界線は自動検知＋手動指定に対応。</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>③ コマンドパレットを使う</h2>
+    <p class="lead">キーボード操作に慣れている方向けの入力方法です。<code>@0</code>通常・<code>@1</code>数式・<code>@2</code>システムの3モードがあります。</p>
+    <p style="font-size:13px;">代表的なコマンドの一覧は「<a href="./command-list-v4.html">コマンド一覧</a>」ページに詳しくまとまっています。</p>
+  </div>
+
+  <div class="card">
+    <h2>④ 追加DLC（拡張機能）を使う</h2>
+    <p class="lead">読みノートは、任意でJavaScriptファイル（DLC）を取り込んで機能を拡張できます。</p>
+    <ol class="step-list">
+      <li><h3>DLCファイルを入手する</h3><p>下の一覧、または <a href="https://github.com/suzaki-ao/yomi-note" target="_blank" rel="noopener noreferrer">GitHubリポジトリ</a> から .js ファイルをダウンロードします。</p></li>
+      <li><h3>取り込む</h3><p>画面右上の🧩ボタン、または <code>/import dlc</code> コマンドからファイルを選んで取り込みます。複数のDLCを同時に取り込むことも可能です。</p></li>
+      <li><h3>オン/オフを切り替える</h3><p>🧩ボタンのパネル、または <code>/dlc on [番号]</code> ・ <code>/dlc off [番号]</code> ・ <code>/dlc remove [番号]</code> ・ <code>/dlc list</code> で管理できます。</p></li>
+    </ol>
+    <div class="dlc-box">
+      <div class="title">🧩 ディスレクシア支援パック v0.4</div>
+      <p>気が散りやすいツールを非表示にし、部分OCR縦+/横+、区切り線の左右分割、ページのピン止め表示、UDフォント、操作ログなど、読み書きをサポートする機能を追加します。</p>
+    </div>
+    <div class="dlc-box">
+      <div class="title">🧑‍💻 プログラミング追加パック v0.1</div>
+      <p>有効にすると、ノート機能の代わりにVS Code風のプログラミング画面に切り替わります。HTML/CSS/JavaScriptはその場でプレビュー実行（全画面表示も可能）、Pythonはブラウザ内で実行できます（初回実行時にPython実行環境を読み込むため、通信環境が必要です）。C言語系は編集・保存のみ対応（v0.1時点）。</p>
+      <p>カテゴリ別に整理された、ブロックを組み立てるような「ツールパレット」（v0.1で種類を大幅に増やし、使いやすく改善）や、独自のコマンド機能、作った作品を新しいDLCとして書き出す「DLCエクスポート」機能もついています。子ども向けの入門用としても、自分だけの追加DLCを作る土台としても使えます。</p>
+      <div class="warn-box">プログラミング追加パックは、有効化すると通常のノート機能が使えなくなります。無効に戻すと、通常のノートにそのまま戻れます。詳しくは<a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v4.html">利用規約（第11条）</a>をご確認ください。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⑤ 困ったときは</h2>
+    <ul style="font-size:13px;color:var(--ink-soft);padding-left:20px;margin:0;">
+      <li>ノートが消えた／保存されない → ブラウザのキャッシュ削除・シークレットモードでは保存されません。通常モードのブラウザでお試しください。</li>
+      <li>OCRの精度が低い → 部分OCRで範囲を絞る、区切り線で段組みを指定する、スライドOCRを使うなどをお試しください。</li>
+      <li>DLCを入れたら動きがおかしい → 🧩ボタンから該当DLCをオフ、または削除してください。</li>
+      <li>その他のご質問・不具合報告 → <a href="https://github.com/suzaki-ao/yomi-note" target="_blank" rel="noopener noreferrer">GitHubリポジトリ</a>からご連絡ください。</li>
+    </ul>
+  </div>
+
+  <footer>
+    読みノート (Yomi-Note) 使い方ガイド ／ © <span id="footerYear">2026</span> Yomi-Note Project. All rights reserved.
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+  (function(){
+    var queue = [], playing = false, idx = 0, rate = 1.0;
+    var RATE_MIN=0.5, RATE_MAX=3.0, RATE_STEP=0.1;
+    function clampRate(r){ r=Math.round(r*10)/10; return Math.max(RATE_MIN,Math.min(RATE_MAX,r)); }
+    function updateRateLabel(){
+      var el = document.getElementById('readRateLabel');
+      if (el) el.textContent = '速度 ' + rate.toFixed(1) + '倍（＋/－キーで変更）';
+    }
+    function pushText(list, el){ if(!el) return; var t=el.textContent.trim().replace(/\s+/g,' '); if(t) list.push(t); }
+    function buildQueue(){
+      var list = [];
+      pushText(list, document.querySelector('.hero h1'));
+      pushText(list, document.querySelector('.hero p.tagline'));
+      document.querySelectorAll('.card').forEach(function(card){
+        pushText(list, card.querySelector('h2'));
+        pushText(list, card.querySelector('.lead'));
+        card.querySelectorAll('.step-list li').forEach(function(li){
+          var h = li.querySelector('h3'), p = li.querySelector('p');
+          list.push((h?h.textContent.trim():'') + '。' + (p?p.textContent.trim():''));
+        });
+        card.querySelectorAll('.feature-item').forEach(function(item){
+          var h = item.querySelector('h3'), p = item.querySelector('p');
+          list.push((h?h.textContent.trim():'') + '。' + (p?p.textContent.trim():''));
+        });
+        card.querySelectorAll('.dlc-box').forEach(function(box){
+          pushText(list, box.querySelector('.title'));
+          box.querySelectorAll('p').forEach(function(p){ pushText(list, p); });
+        });
+      });
+      return list;
+    }
+    function updateBtn(){
+      document.getElementById('readAloudBtn').textContent = playing ? '⏹ 読み上げを停止' : '🔊 このページを読み上げる';
+    }
+    function speak(i){
+      if (!playing || i >= queue.length){ playing=false; updateBtn(); return; }
+      idx = i;
+      var u = new SpeechSynthesisUtterance(queue[i]);
+      u.lang='ja-JP'; u.rate=rate;
+      u.onend=function(){ speak(i+1); };
+      u.onerror=function(){ playing=false; updateBtn(); };
+      window.speechSynthesis.speak(u);
+    }
+    document.getElementById('readAloudBtn').addEventListener('click', function(){
+      if (!('speechSynthesis' in window)){ alert('このブラウザは読み上げに対応していません'); return; }
+      if (playing){ playing=false; window.speechSynthesis.cancel(); updateBtn(); return; }
+      queue = buildQueue();
+      if (!queue.length) return;
+      playing=true; updateBtn();
+      window.speechSynthesis.cancel();
+      speak(0);
+    });
+    document.addEventListener('keydown', function(e){
+      var tag=(e.target&&e.target.tagName)||'';
+      if (tag==='INPUT'||tag==='TEXTAREA'||e.metaKey||e.ctrlKey||e.altKey) return;
+      var changed=false;
+      if (e.key==='+'||e.key==='='||e.key==='ArrowUp'||e.key==='PageUp'){ rate=clampRate(rate+RATE_STEP); changed=true; }
+      else if (e.key==='-'||e.key==='_'||e.key==='ArrowDown'||e.key==='PageDown'){ rate=clampRate(rate-RATE_STEP); changed=true; }
+      else if (e.key==='0'){ rate=1.0; changed=true; }
+      if (changed){ e.preventDefault(); updateRateLabel(); if(playing){ window.speechSynthesis.cancel(); speak(idx); } }
+    });
+    updateRateLabel();
+  })();
+</script>
+</body>
+</html>
