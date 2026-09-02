@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v3.5 ― 手書き・読み上げノート</title>
+<title>読みノート v3.6 ― 手書き・読み上げノート</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -207,8 +207,8 @@
   .textbox.selected .resize-handle{display:block;}
 
   .tb-toolbar{
-    position:absolute;display:flex;align-items:center;gap:4px;background:var(--ink);
-    padding:5px 6px;border-radius:8px;box-shadow:var(--shadow);z-index:30;white-space:nowrap;
+    position:absolute;display:flex;flex-wrap:wrap;align-items:center;gap:4px;background:var(--ink);
+    padding:5px 6px;border-radius:8px;box-shadow:var(--shadow);z-index:30;max-width:300px;
   }
   .tb-toolbar.hidden{display:none;}
   .tb-toolbar input[type=number]{width:42px;border:none;border-radius:4px;padding:3px;font-size:11px;}
@@ -466,6 +466,12 @@
     display:inline-block;font-family:"Noto Sans JP",sans-serif;font-size:9px;font-weight:700;
     background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;vertical-align:middle;margin-left:4px;
   }
+  .offline-badge{
+    display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:#7A5B12;
+    background:#FFF6E9;border:1px solid #E7C77C;padding:3px 9px;border-radius:12px;margin-left:10px;
+  }
+  .offline-badge.hidden{display:none;}
+  [data-online-only].is-offline-disabled{opacity:.4;cursor:not-allowed;filter:grayscale(.5);}
 
   /* ---------- マルチプラットフォーム対応（タブレット・スマホ幅） ---------- */
   #mobileMenuBtns{display:none;}
@@ -510,7 +516,8 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v3.5</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v3.6</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <span class="offline-badge hidden" id="offlineBadge" title="インターネットに接続されていません。音声入力など、通信が必要な一部の機能は使えません。">🔌 オフライン</span>
     </div>
     <div class="group" id="mobileMenuBtns">
       <button class="icon-btn" id="openLeftbarBtn" title="ツール一覧を開く">☰</button>
@@ -523,8 +530,8 @@
     <input type="file" id="fileInput" accept="application/pdf,image/*" multiple style="display:none;">
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi%20note%20home%20v10.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
-    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v4.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi%20note%20home%20v11.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v5.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
     <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v5.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
     <div class="divider"></div>
@@ -633,8 +640,13 @@
             <input type="color" id="tbColor" value="#22262e" title="文字色">
             <button id="tbBold" title="太字(B)"><b>B</b></button>
             <button id="tbBorder" title="枠線の表示/非表示">枠</button>
+            <button id="tbAlign" title="文字の配置（左/中央/右）を切り替え">左</button>
+            <button id="tbFont" title="書体を切り替え（ゴシック/明朝/手書き風）">Aa</button>
+            <button id="tbFill" title="背景色の表示/非表示">塗</button>
+            <input type="color" id="tbFillColor" value="#fff59d" title="背景色">
             <button id="tbVertical" title="縦書き切替">縦</button>
-            <button id="tbMic" title="音声入力">🎤</button>
+            <button id="tbDuplicate" title="このテキストボックスを複製">📋</button>
+            <button id="tbMic" data-online-only="1" title="音声入力（インターネット接続が必要です）">🎤</button>
             <button id="tbSpeak" title="このテキストボックスを読み上げる">🔊</button>
             <button id="tbDelete" title="このテキストボックスを削除">🗑</button>
           </div>
@@ -846,7 +858,7 @@
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
           <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v5.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
-          ｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v3.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a>
+          ｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v5.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a>
         </div>
       </div>
     </aside>
@@ -1495,6 +1507,14 @@ function handleTextBoxEnterKey(e){
     }
   }
 }
+const TB_FONT_FAMILY_MAP = {
+  sans: '"Noto Sans JP", sans-serif',
+  serif: '"Shippori Mincho", serif',
+  rounded: '"Klee One", sans-serif'
+};
+const TB_FONT_LABEL_MAP = { sans: 'Aa', serif: '明', rounded: '丸' };
+const TB_ALIGN_ORDER = ['left', 'center', 'right'];
+const TB_ALIGN_LABEL_MAP = { left: '左', center: '中', right: '右' };
 function renderTextBoxes(){
   const layer = document.getElementById('textLayer');
   layer.innerHTML = '';
@@ -1510,6 +1530,9 @@ function renderTextBoxes(){
     el.style.fontWeight = tb.bold ? '700' : '400';
     el.style.border = '1px solid ' + (tb.border ? tb.color : 'transparent');
     el.style.writingMode = tb.vertical ? 'vertical-rl' : 'horizontal-tb';
+    el.style.textAlign = tb.align || 'left';
+    el.style.fontFamily = TB_FONT_FAMILY_MAP[tb.fontFamily || 'sans'];
+    el.style.backgroundColor = tb.fill ? (tb.fillColor || '#fff59d') : 'transparent';
     el.contentEditable = 'false';
     el.spellcheck = false;
     el.textContent = tb.text || '';
@@ -1633,6 +1656,10 @@ function selectTextBox(id){
   document.getElementById('tbBold').classList.toggle('active', tb.bold);
   document.getElementById('tbBorder').classList.toggle('active', tb.border);
   document.getElementById('tbVertical').classList.toggle('active', tb.vertical);
+  document.getElementById('tbAlign').textContent = TB_ALIGN_LABEL_MAP[tb.align || 'left'];
+  document.getElementById('tbFont').textContent = TB_FONT_LABEL_MAP[tb.fontFamily || 'sans'];
+  document.getElementById('tbFill').classList.toggle('active', !!tb.fill);
+  document.getElementById('tbFillColor').value = tb.fillColor || '#fff59d';
   positionFloatingToolbar(tb);
 }
 function positionFloatingToolbar(tb){
@@ -1656,6 +1683,9 @@ function updateTextBoxDom(tb){
   el.style.fontWeight = tb.bold ? '700' : '400';
   el.style.border = '1px solid ' + (tb.border ? tb.color : 'transparent');
   el.style.writingMode = tb.vertical ? 'vertical-rl' : 'horizontal-tb';
+  el.style.textAlign = tb.align || 'left';
+  el.style.fontFamily = TB_FONT_FAMILY_MAP[tb.fontFamily || 'sans'];
+  el.style.backgroundColor = tb.fill ? (tb.fillColor || '#fff59d') : 'transparent';
 }
 function deleteSelectedTextBox(){
   if (!selectedTextBoxId) return;
@@ -1863,6 +1893,42 @@ document.getElementById('tbVertical').addEventListener('click', () => {
   const tb = getTextBox(selectedTextBoxId); if (!tb) return;
   tb.vertical = !tb.vertical; document.getElementById('tbVertical').classList.toggle('active', tb.vertical); updateTextBoxDom(tb);
 });
+document.getElementById('tbAlign').addEventListener('click', () => {
+  const tb = getTextBox(selectedTextBoxId); if (!tb) return;
+  const cur = TB_ALIGN_ORDER.indexOf(tb.align || 'left');
+  tb.align = TB_ALIGN_ORDER[(cur + 1) % TB_ALIGN_ORDER.length];
+  document.getElementById('tbAlign').textContent = TB_ALIGN_LABEL_MAP[tb.align];
+  updateTextBoxDom(tb);
+});
+document.getElementById('tbFont').addEventListener('click', () => {
+  const tb = getTextBox(selectedTextBoxId); if (!tb) return;
+  const order = ['sans', 'serif', 'rounded'];
+  const cur = order.indexOf(tb.fontFamily || 'sans');
+  tb.fontFamily = order[(cur + 1) % order.length];
+  document.getElementById('tbFont').textContent = TB_FONT_LABEL_MAP[tb.fontFamily];
+  updateTextBoxDom(tb);
+});
+document.getElementById('tbFill').addEventListener('click', () => {
+  const tb = getTextBox(selectedTextBoxId); if (!tb) return;
+  tb.fill = !tb.fill;
+  if (tb.fill && !tb.fillColor) tb.fillColor = document.getElementById('tbFillColor').value;
+  document.getElementById('tbFill').classList.toggle('active', tb.fill);
+  updateTextBoxDom(tb);
+});
+document.getElementById('tbFillColor').addEventListener('input', e => {
+  const tb = getTextBox(selectedTextBoxId); if (!tb) return;
+  tb.fillColor = e.target.value;
+  if (!tb.fill){ tb.fill = true; document.getElementById('tbFill').classList.add('active'); }
+  updateTextBoxDom(tb);
+});
+document.getElementById('tbDuplicate').addEventListener('click', () => {
+  const tb = getTextBox(selectedTextBoxId); if (!tb) return;
+  const page = notestate.pages[currentPageIndex];
+  const copy = Object.assign({}, tb, { id: 'tb_' + Date.now(), x: tb.x + 16, y: tb.y + 16 });
+  page.textBoxes.push(copy);
+  pushUndo(); renderTextBoxes(); selectTextBox(copy.id);
+  flashToast('テキストボックスを複製しました');
+});
 document.getElementById('tbDelete').addEventListener('click', deleteSelectedTextBox);
 
 /* ============================================================
@@ -1872,9 +1938,32 @@ let voiceRecognition = null;
 function getSpeechRecognitionCtor(){
   return window.SpeechRecognition || window.webkitSpeechRecognition || null;
 }
+/* ============================================================
+   オフライン検知（v3.6）
+   音声入力（Web Speech API の SpeechRecognition）は、ブラウザが音声を
+   サーバーに送って文字にする仕組みのため、実質的にインターネット接続が
+   ないと動作しない。オフラインになったら自動的にボタンを無効化し、
+   オンラインに戻ったら自動的に元に戻す。
+============================================================ */
+function applyOnlineOfflineState(){
+  const offline = !navigator.onLine;
+  const badge = document.getElementById('offlineBadge');
+  if (badge) badge.classList.toggle('hidden', !offline);
+  document.querySelectorAll('[data-online-only]').forEach(el => {
+    el.classList.toggle('is-offline-disabled', offline);
+    el.disabled = offline;
+  });
+  if (offline && voiceRecognition){
+    try { voiceRecognition.stop(); } catch(e){}
+  }
+}
+window.addEventListener('online', () => { applyOnlineOfflineState(); flashToast('インターネットに再接続しました'); });
+window.addEventListener('offline', () => { applyOnlineOfflineState(); flashToast('オフラインになりました。音声入力など一部の機能は使えません'); });
+
 document.getElementById('tbMic').addEventListener('click', () => {
   const Ctor = getSpeechRecognitionCtor();
   const micBtn = document.getElementById('tbMic');
+  if (!navigator.onLine){ flashToast('オフラインのため音声入力は使えません'); return; }
   if (!Ctor){ flashToast('この端末・ブラウザは音声入力に対応していません'); return; }
   if (voiceRecognition){
     voiceRecognition.stop();
@@ -3236,6 +3325,19 @@ const FORMULA_CATEGORIES = [
   { name:'行列', items:[
     { label:'2×2行列', insert:'\\begin{pmatrix}{}&{}\\\\{}&{}\\end{pmatrix}', template:true },
     { label:'2×1（縦）', insert:'\\begin{pmatrix}{}\\\\{}\\end{pmatrix}', template:true }
+  ]},
+  { name:'よく使う公式', items:[
+    { label:'二次方程式の解の公式', insert:'x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}', template:true },
+    { label:'三平方の定理', insert:'a^2+b^2=c^2', template:true },
+    { label:'円の面積', insert:'S=\\pi r^2', template:true },
+    { label:'円周の長さ', insert:'l=2\\pi r', template:true },
+    { label:'球の体積', insert:'V=\\frac{4}{3}\\pi r^3', template:true },
+    { label:'一次関数', insert:'y=ax+b', template:true },
+    { label:'比例', insert:'y=ax', template:true },
+    { label:'反比例', insert:'y=\\frac{a}{x}', template:true },
+    { label:'速さ＝距離÷時間', insert:'v=\\frac{x}{t}', template:true },
+    { label:'平均', insert:'\\bar{x}=\\frac{a_1+a_2+\\cdots+a_n}{n}', template:true },
+    { label:'食塩水の濃度', insert:'\\text{濃度}=\\frac{\\text{食塩の重さ}}{\\text{食塩水の重さ}}\\times100', template:true }
   ]}
 ];
 /* テキストエリア中の「空の {}」の位置（開き括弧の直後＝閉じ括弧の直前）を
@@ -4795,6 +4897,7 @@ document.getElementById('cmdInput').addEventListener('keydown', e => {
    初期化
 ============================================================ */
 window.addEventListener('DOMContentLoaded', () => {
+  applyOnlineOfflineState();
   if (typeof pdfjsLib !== 'undefined'){
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   }
