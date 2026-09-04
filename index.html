@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v3.6 ― 手書き・読み上げノート</title>
+<title>読みノート v3.7 ― 手書き・読み上げノート</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -164,6 +164,11 @@
     width:20px;height:20px;border-radius:50%;border:2px solid transparent;padding:0;
   }
   .swatches button.active{border-color:var(--accent);}
+  .pen-size-presets button{
+    flex:1;padding:4px 0;font-size:11px;font-weight:700;border-radius:6px;border:1px solid var(--line);
+    background:var(--paper);color:var(--ink-soft);cursor:pointer;
+  }
+  .pen-size-presets button:hover{background:var(--accent-soft);color:var(--accent);}
 
   /* ---------- canvas area ---------- */
   #canvasArea{flex:1;overflow:auto;background:
@@ -516,7 +521,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v3.6</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v3.7</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
       <span class="offline-badge hidden" id="offlineBadge" title="インターネットに接続されていません。音声入力など、通信が必要な一部の機能は使えません。">🔌 オフライン</span>
     </div>
     <div class="group" id="mobileMenuBtns">
@@ -534,6 +539,8 @@
     <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v5.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
     <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v5.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
+    <button class="icon-btn" id="fullscreenBtn" title="全画面表示に切り替え">⛶</button>
+    <button class="icon-btn" id="ocrLangBtn" title="OCRで認識する言語を選ぶ（日本語＋外国語など）">🌐</button>
     <div class="divider"></div>
     <div class="group">
       <button class="icon-btn" id="undoBtn" title="元に戻す (Ctrl+Z)" disabled>↩</button>
@@ -604,14 +611,21 @@
           <input type="file" id="imageObjInput" accept="image/*" style="display:none;">
         </div>
         <div class="pen-options hidden" id="penOptions">
-          <label style="font-size:11px;color:var(--ink-soft);">太さ</label>
+          <label style="font-size:11px;color:var(--ink-soft);">太さ <span id="penWidthLabel" style="font-weight:700;color:var(--ink);">3px</span></label>
           <input type="range" id="penWidth" min="1" max="40" value="3">
+          <div class="pen-size-presets" style="display:flex;gap:4px;margin:4px 0;">
+            <button type="button" data-size="2" title="細い">S</button>
+            <button type="button" data-size="5" title="ふつう">M</button>
+            <button type="button" data-size="10" title="太い">L</button>
+            <button type="button" data-size="20" title="とても太い">XL</button>
+          </div>
           <div class="swatches">
             <button data-color="#22262E" class="active" style="background:#22262E"></button>
             <button data-color="#B5432E" style="background:#B5432E"></button>
             <button data-color="#3E6E63" style="background:#3E6E63"></button>
             <button data-color="#2F5FA8" style="background:#2F5FA8"></button>
             <button data-color="#FFFFFF" style="background:#fff;border:1px solid #ccc !important;"></button>
+            <input type="color" id="penColorPicker" value="#22262e" title="好きな色を選ぶ（カラーパネル）" style="width:26px;height:26px;padding:0;border:1px solid #ccc;border-radius:6px;cursor:pointer;">
           </div>
         </div>
       </div>
@@ -1043,16 +1057,47 @@ if ('speechSynthesis' in window){
 function pickJaVoice(){
   return voices.find(v => v.lang && v.lang.toLowerCase().indexOf('ja') === 0) || null;
 }
+/* 【v3.7で改善】読点（、）でも少し間を置いて読み上げるようにした。以前は句点（。）
+   単位でしか区切っておらず、長い文だと読点があっても一息に読み上げられてしまい、
+   聞き取りづらいという課題があった。文を読点で細かく分割し、それぞれを短い間隔
+   （約90ミリ秒）を空けて連続再生することで、実際に文章を読むときの「間」に近づける。
+   なお、より細かなアクセント・イントネーションの指定は、ブラウザの音声合成APIの
+   仕様上、対応できる範囲に限りがある点はご了承ください。 */
+function splitClauses(text){
+  return text.split('、').filter(s => s.length > 0);
+}
 function speakSentence(item, onEnd){
   if (!('speechSynthesis' in window)){ flashToast('このブラウザは読み上げに対応していません'); return; }
-  const utter = new SpeechSynthesisUtterance(item.text);
-  utter.lang = 'ja-JP';
-  const v = pickJaVoice(); if (v) utter.voice = v;
-  utter.rate = ttsRate;
-  utter.onend = () => { clearHighlight(); if (onEnd) onEnd(); };
-  utter.onerror = () => { clearHighlight(); if (onEnd) onEnd(); };
+  const clauses = splitClauses(item.text);
   highlightItem(item);
-  speechSynthesis.speak(utter);
+  if (clauses.length <= 1){
+    const utter = new SpeechSynthesisUtterance(item.text);
+    utter.lang = 'ja-JP';
+    const v = pickJaVoice(); if (v) utter.voice = v;
+    utter.rate = ttsRate;
+    utter.onend = () => { clearHighlight(); if (onEnd) onEnd(); };
+    utter.onerror = () => { clearHighlight(); if (onEnd) onEnd(); };
+    speechSynthesis.speak(utter);
+    return;
+  }
+  let idx = 0;
+  function speakNextClause(){
+    if (idx >= clauses.length){ clearHighlight(); if (onEnd) onEnd(); return; }
+    const isLast = idx === clauses.length - 1;
+    const text = clauses[idx] + (isLast ? '' : '、');
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'ja-JP';
+    const v = pickJaVoice(); if (v) utter.voice = v;
+    utter.rate = ttsRate;
+    utter.onend = () => {
+      idx++;
+      if (isLast){ clearHighlight(); if (onEnd) onEnd(); }
+      else { setTimeout(speakNextClause, 90); }
+    };
+    utter.onerror = () => { clearHighlight(); if (onEnd) onEnd(); };
+    speechSynthesis.speak(utter);
+  }
+  speakNextClause();
 }
 function buildFullQueueForSentenceMode(){
   const page = notestate.pages[currentPageIndex];
@@ -1276,6 +1321,7 @@ function setTool(t){
   document.getElementById('penOptions').classList.toggle('hidden', !showPen);
   if (t === 'eraser') document.getElementById('penWidth').value = eraserWidth;
   else document.getElementById('penWidth').value = penWidth;
+  if (typeof updatePenWidthLabel === 'function') updatePenWidthLabel(document.getElementById('penWidth').value);
   closeMobileDrawers();
 }
 function closeMobileDrawers(){
@@ -1960,6 +2006,75 @@ function applyOnlineOfflineState(){
 window.addEventListener('online', () => { applyOnlineOfflineState(); flashToast('インターネットに再接続しました'); });
 window.addEventListener('offline', () => { applyOnlineOfflineState(); flashToast('オフラインになりました。音声入力など一部の機能は使えません'); });
 
+/* ============================================================
+   全画面表示切替（v3.7）
+============================================================ */
+function isFullscreenActive(){
+  return !!(document.fullscreenElement || document.webkitFullscreenElement);
+}
+function updateFullscreenBtn(){
+  const btn = document.getElementById('fullscreenBtn');
+  if (!btn) return;
+  const on = isFullscreenActive();
+  btn.textContent = on ? '⛶ 解除' : '⛶';
+  btn.title = on ? '全画面表示を解除' : '全画面表示に切り替え';
+}
+document.getElementById('fullscreenBtn').addEventListener('click', () => {
+  if (isFullscreenActive()){
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  } else {
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen().catch(() => flashToast('この環境では全画面表示に対応していません'));
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else flashToast('この環境では全画面表示に対応していません');
+  }
+});
+document.addEventListener('fullscreenchange', updateFullscreenBtn);
+document.addEventListener('webkitfullscreenchange', updateFullscreenBtn);
+document.getElementById('ocrLangBtn').addEventListener('click', openOcrLangModal);
+
+/* ============================================================
+   はじめての方向けの簡単な操作説明（v3.7）
+   初回起動時のみ表示し、一度閉じると次回以降は表示しない
+   （localStorageにフラグを保存）。
+============================================================ */
+function showFirstTimeIntro(){
+  const INTRO_KEY = 'yomiHasSeenIntro';
+  let seen = false;
+  try { seen = localStorage.getItem(INTRO_KEY) === '1'; } catch(e){}
+  if (seen) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  const box = document.createElement('div');
+  box.className = 'modal-box';
+  box.style.width = '440px';
+  box.style.maxWidth = '92vw';
+  box.innerHTML =
+    '<h3>👋 ようこそ、読みノートへ</h3>' +
+    '<div style="font-size:13px;line-height:1.8;color:var(--ink-soft);margin-bottom:16px;">' +
+      '<p style="margin:0 0 8px;">はじめての方向けに、かんたんな使い方をご案内します。</p>' +
+      '<p style="margin:0 0 6px;">📝 左のツールから「ペン」や「文字」を選び、ノートに書き込めます。</p>' +
+      '<p style="margin:0 0 6px;">📷 「取込」からPDFや画像を読み込み、OCRで文字として認識できます。</p>' +
+      '<p style="margin:0 0 6px;">🔊 認識した文章は、右のパネルや「全文読み上げ」から読み上げられます。</p>' +
+      '<p style="margin:0;">🧩 右上の🧩ボタンから、読みやすさをサポートする追加DLCも導入できます。</p>' +
+    '</div>' +
+    '<div class="manual-editor-actions"><button type="button" id="introCloseBtn">もう表示しない</button><button type="button" id="introUsageBtn">使い方ガイドを見る</button></div>';
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  function dismiss(){
+    try { localStorage.setItem(INTRO_KEY, '1'); } catch(e){}
+    overlay.remove();
+  }
+  document.getElementById('introCloseBtn').addEventListener('click', dismiss);
+  document.getElementById('introUsageBtn').addEventListener('click', () => {
+    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v5.html', '_blank', 'noopener');
+    dismiss();
+  });
+}
+
 document.getElementById('tbMic').addEventListener('click', () => {
   const Ctor = getSpeechRecognitionCtor();
   const micBtn = document.getElementById('tbMic');
@@ -2388,9 +2503,73 @@ function pickPsm(vertical, cropped){
   if (cropped) return vertical ? '5' : '6';
   return '3';
 }
+/* 【v3.7で強化】これまで外国語混じりの文書は「日本語＋英語」固定でしか認識できず、
+   英語以外の外国語（中国語・韓国語・フランス語語など）が含まれる文書では精度が
+   出ないことがあった。認識に使う言語を選べるようにし、必要な言語だけを組み合わせて
+   OCRできるようにした（設定は保存され、次回以降も引き継がれる）。
+   ※Tesseract.jsの標準学習データには「古典（歴史的仮名遣い・くずし字等）」専用の
+   モデルは含まれていないため、古典文書は現代日本語(jpn)モデルでの認識となり、
+   完全な精度は保証できない点はご了承ください。 */
+const OCR_LANG_KEY = 'yomiOcrExtraLangs';
+const OCR_LANG_OPTIONS = [
+  { code: 'eng', label: '英語' },
+  { code: 'chi_sim', label: '中国語（簡体字）' },
+  { code: 'chi_tra', label: '中国語（繁体字）' },
+  { code: 'kor', label: '韓国語' },
+  { code: 'fra', label: 'フランス語' },
+  { code: 'deu', label: 'ドイツ語' },
+  { code: 'spa', label: 'スペイン語' },
+  { code: 'rus', label: 'ロシア語' }
+];
+function getOcrExtraLangs(){
+  try {
+    const v = JSON.parse(localStorage.getItem(OCR_LANG_KEY) || '["eng"]');
+    return Array.isArray(v) && v.length ? v : ['eng'];
+  } catch(e){ return ['eng']; }
+}
+function setOcrExtraLangs(list){
+  try { localStorage.setItem(OCR_LANG_KEY, JSON.stringify(list)); } catch(e){}
+}
+function getOcrLangString(vertical){
+  const base = vertical ? ['jpn_vert', 'jpn'] : ['jpn'];
+  const extra = getOcrExtraLangs().filter(l => base.indexOf(l) === -1);
+  return base.concat(extra).join('+');
+}
+function openOcrLangModal(){
+  const current = getOcrExtraLangs();
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  const box = document.createElement('div');
+  box.className = 'modal-box';
+  box.style.width = '380px';
+  box.innerHTML =
+    '<h3>🌐 OCRで認識する言語</h3>' +
+    '<div style="font-size:12px;color:var(--ink-soft);margin-bottom:10px;">日本語は常に含まれます。読み込みたい文書に合わせて、追加の言語をチェックしてください（複数選択可）。初めて使う言語は、初回のみ読み込みに少し時間がかかります。</div>' +
+    '<div id="ocrLangList" style="display:flex;flex-direction:column;gap:6px;max-height:260px;overflow-y:auto;"></div>' +
+    '<div class="manual-editor-actions"><button type="button" id="ocrLangCloseBtn">閉じる</button><button type="button" id="ocrLangSaveBtn">保存する</button></div>';
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  const list = box.querySelector('#ocrLangList');
+  OCR_LANG_OPTIONS.forEach(opt => {
+    const row = document.createElement('label');
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;font-size:13px;';
+    row.innerHTML = '<input type="checkbox" value="' + opt.code + '"' + (current.indexOf(opt.code) !== -1 ? ' checked' : '') + '> ' + opt.label;
+    list.appendChild(row);
+  });
+  function closeModal(){ overlay.remove(); }
+  box.querySelector('#ocrLangCloseBtn').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  box.querySelector('#ocrLangSaveBtn').addEventListener('click', () => {
+    const checked = Array.from(list.querySelectorAll('input[type=checkbox]:checked')).map(c => c.value);
+    setOcrExtraLangs(checked);
+    resetOcrWorker();
+    flashToast('OCRの言語設定を保存しました');
+    closeModal();
+  });
+}
 async function runOcrOnDataUrl(dataUrl, vertical, cropped, onProgress, excludeZones, opts){
   opts = opts || {};
-  const lang = vertical ? 'jpn_vert+jpn+eng' : 'jpn+eng';
+  const lang = getOcrLangString(vertical);
   const pre = await preprocessImageForOcr(dataUrl, excludeZones, opts.targetMin, opts.maxScale);
   if (onProgress) onProgress(35);
   try {
@@ -4100,16 +4279,39 @@ function flashToast(msg){
    ヘッダー・ツール操作
 ============================================================ */
 document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => btn.addEventListener('click', () => setTool(btn.dataset.tool)));
-document.querySelectorAll('.swatches button').forEach(b => {
+document.querySelectorAll('.swatches button[data-color]').forEach(b => {
   b.addEventListener('click', () => {
     penColor = b.dataset.color;
-    document.querySelectorAll('.swatches button').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.swatches button[data-color]').forEach(x => x.classList.remove('active'));
     b.classList.add('active');
+    const picker = document.getElementById('penColorPicker');
+    if (picker) picker.value = penColor;
   });
 });
+const penColorPicker = document.getElementById('penColorPicker');
+if (penColorPicker){
+  penColorPicker.addEventListener('input', e => {
+    penColor = e.target.value;
+    document.querySelectorAll('.swatches button[data-color]').forEach(x => x.classList.remove('active'));
+  });
+}
+function updatePenWidthLabel(v){
+  const label = document.getElementById('penWidthLabel');
+  if (label) label.textContent = v + 'px';
+}
 document.getElementById('penWidth').addEventListener('input', e => {
   const v = parseInt(e.target.value);
   if (currentTool === 'eraser') eraserWidth = v; else penWidth = v;
+  updatePenWidthLabel(v);
+});
+document.querySelectorAll('.pen-size-presets button[data-size]').forEach(b => {
+  b.addEventListener('click', () => {
+    const v = parseInt(b.dataset.size);
+    const slider = document.getElementById('penWidth');
+    slider.value = v;
+    if (currentTool === 'eraser') eraserWidth = v; else penWidth = v;
+    updatePenWidthLabel(v);
+  });
 });
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -4909,6 +5111,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderSavedList();
   setTool('pen');
   loadStoredDlcIfEnabled();
+  showFirstTimeIntro();
 });
 </script>
 
@@ -4923,11 +5126,11 @@ window.addEventListener('DOMContentLoaded', () => {
   /dlc remove 番号・/dlc list コマンドから操作できます）。
 
   【方法2（手動）】
-  dyslexia-support-pack-v0.7.js をこのファイル（index.html）と同じフォルダに置き、
+  dyslexia-support-pack-v0.8.js をこのファイル（index.html）と同じフォルダに置き、
   下の行のコメントを外してください（本体のメインscriptタグより必ず後ろに置くこと）。
   複数のDLCを手動で読み込みたい場合は、同様のscriptタグを必要な数だけ追加してください。
 
-  <script src="dyslexia-support-pack-v0.7.js"></script>
+  <script src="dyslexia-support-pack-v0.8.js"></script>
 -->
 </body>
 </html>
