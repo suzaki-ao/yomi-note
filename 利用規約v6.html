@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>利用規約 / Terms of Use ― 読みノート (Yomi-Note)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F2; --paper-deep:#F3EEE3; --ink:#22262E; --ink-soft:#5B6270;
+    --line:#DAD3C4; --accent:#B5432E; --accent-soft:#EFD9CF; --teal:#3E6E63; --white:#FFFFFF;
+    --shadow:0 6px 22px rgba(34,38,46,0.14);
+  }
+  *{box-sizing:border-box;}
+  html.dlc-ud-font, html.dlc-ud-font body, html.dlc-ud-font button, html.dlc-ud-font h1,
+  html.dlc-ud-font h2, html.dlc-ud-font h3, html.dlc-ud-font p, html.dlc-ud-font li,
+  html.dlc-ud-font a, html.dlc-ud-font td, html.dlc-ud-font th{
+    font-family:'BIZ UDGothic','BIZ UDPGothic','Yu Gothic UI',sans-serif !important;
+  }
+  html,body{margin:0;padding:0;background:var(--paper-deep);color:var(--ink);font-family:"Noto Sans JP",sans-serif;line-height:1.8;}
+  h1,h2,h3{font-family:"Shippori Mincho",serif;}
+  a{color:var(--teal);}
+  .wrap{max-width:820px;margin:0 auto;padding:40px 24px 80px;}
+  header.page-head{
+    display:flex;align-items:center;gap:12px;margin-bottom:8px;
+  }
+  .hanko{
+    width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:"Shippori Mincho",serif;
+    font-weight:700;font-size:17px;flex-shrink:0;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.35);
+  }
+  header.page-head h1{font-size:22px;margin:0;color:var(--ink);}
+  header.page-head p{margin:2px 0 0;font-size:11px;color:var(--ink-soft);}
+  .meta-bar{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0 30px;
+    font-size:12px;color:var(--ink-soft);
+  }
+  .ver-badge{
+    background:var(--accent);color:#fff;padding:2px 9px;border-radius:10px;font-weight:700;font-size:11px;
+  }
+  .meta-bar .sep{opacity:.5;}
+  .back-link{
+    display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--teal);text-decoration:none;
+    border:1px solid var(--line);padding:6px 12px;border-radius:20px;background:#fff;
+  }
+  .back-link:hover{border-color:var(--teal);}
+  section{
+    background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 26px;margin-bottom:16px;
+    box-shadow:0 2px 8px rgba(34,38,46,0.04);
+  }
+  section h2{
+    font-size:16px;margin:0 0 4px;color:var(--ink);display:flex;align-items:baseline;gap:8px;
+  }
+  section h2 .num{color:var(--accent);font-family:"Noto Sans JP",sans-serif;font-weight:700;}
+  section h2 .en{font-family:"Noto Sans JP",sans-serif;font-weight:500;font-size:12.5px;color:var(--ink-soft);}
+  .ja{font-size:14px;margin:10px 0;}
+  .en-text{font-size:12.5px;color:var(--ink-soft);margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--line);}
+  .en-text::before{content:"EN  ";font-weight:700;color:var(--teal);letter-spacing:.05em;}
+  ul{margin:8px 0;padding-left:22px;}
+  li{margin-bottom:4px;font-size:14px;}
+  li.en-li{font-size:12.5px;color:var(--ink-soft);}
+  .lib-list{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px 16px;
+    margin:10px 0;font-size:12.5px;color:var(--ink-soft);
+  }
+  .lib-list div{padding:4px 0;border-bottom:1px dashed var(--line);}
+  .credit-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px;}
+  .credit-table th,.credit-table td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .credit-table th{color:var(--ink-soft);font-weight:700;font-size:11.5px;}
+  .credit-table td.lib-name{font-weight:700;color:var(--ink);white-space:nowrap;}
+  .credit-table td.lib-version{white-space:nowrap;color:var(--ink-soft);}
+  .credit-table td.lib-license{white-space:nowrap;}
+  .credit-table a{color:var(--teal);}
+  footer{
+    text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:30px;padding-top:20px;
+    border-top:1px solid var(--line);
+  }
+  .copyright-box{
+    background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 18px;
+    font-size:12.5px;color:var(--ink-soft);margin-top:10px;
+  }
+  .warn-box{
+    background:var(--accent-soft);border:1px solid var(--accent);border-radius:8px;padding:14px 18px;
+    font-size:13px;color:var(--ink);margin-top:10px;
+  }
+  @media (max-width:600px){
+    .wrap{padding:24px 14px 60px;}
+    section{padding:16px 16px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <div class="hanko">読</div>
+    <div>
+      <h1>利用規約 <span style="font-size:13px;color:var(--ink-soft);font-weight:500;">/ Terms of Use</span></h1>
+      <p>読みノート (Yomi-Note) ― 手書き・PDF/画像OCR読み上げノート</p>
+    </div>
+  </header>
+
+  <div class="meta-bar">
+    <span class="ver-badge" id="docVersionBadge" style="background:var(--teal);">利用規約 v6</span>
+    <span class="ver-badge" id="versionBadge">v3.3</span>
+    <span class="sep">｜</span>
+    <span>最終更新日 / Last updated: <span id="lastUpdated">2026年（本ページ作成時点）</span></span>
+    <span class="sep">｜</span>
+    <a class="back-link" href="./index.html">← アプリに戻る / Back to the app</a>
+    <button class="back-link" id="readAloudBtn" type="button" style="cursor:pointer;">🔊 このページを読み上げる</button>
+    <button class="back-link" id="udFontToggleBtn" type="button" style="cursor:pointer;">Aa UDフォント</button>
+    <span class="back-link" id="readRateLabel" style="cursor:default;user-select:none;"></span>
+  </div>
+
+  <section>
+    <h2><span class="num">0.</span>はじめに <span class="en">Introduction</span></h2>
+    <p class="ja">本規約（以下「本規約」）は、「読みノート（Yomi-Note）」（以下「本サイト」）の利用条件を定めるものです。本サイトを利用した時点で、本規約に同意したものとみなします。本サイトは個人が開発・公開している学習支援ツールであり、営利目的の商用サービスではありません。</p>
+    <p class="en-text">These Terms of Use ("Terms") govern the use of "Yomi-Note" (the "Site"). By using the Site, you are deemed to have agreed to these Terms. The Site is a learning-support tool developed and published by an individual, and is not operated as a commercial service.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">1.</span>本サイトの内容 <span class="en">Description of the Service</span></h2>
+    <p class="ja">本サイトは、手書き入力、画像・PDFの取り込みと文字認識（OCR）、文章の読み上げ（音声合成）、テキストボックス、図・グラフ・数式・画像・動画・リンクなどの挿入、PDF書き出し、ブラウザ内保存（localStorage）といった機能を提供するノート作成ツールです。処理の大部分はご利用のブラウザ内で完結し、入力内容や作成したノートを本サイトのサーバーへ送信・保存することはありません（外部ライブラリの読み込み、および利用者ご自身が挿入したURL・動画へのアクセスを除く）。</p>
+    <p class="en-text">The Site is a note-taking tool that provides handwriting input, image/PDF import with optical character recognition (OCR), text-to-speech, text boxes, insertion of charts, formulas, images, videos and links, PDF export, and in-browser storage (localStorage). Most processing takes place entirely within your browser; the Site does not transmit or store your input or notes on any server operated by the Site (except for loading third-party libraries, and any URLs or videos you yourself choose to insert).</p>
+  </section>
+
+  <section>
+    <h2><span class="num">2.</span>生成物（出力されたもの）について <span class="en">About Output / Generated Content</span></h2>
+    <p class="ja">本サイト上でユーザーが作成・挿入した文章、手書き、テキストボックス、画像、動画、リンク、図・グラフ、数式、OCR認識結果、PDF書き出しファイルなど、ユーザーの操作によって作成・出力される一切のコンテンツを、本規約上まとめて「生成物」といいます。今後、追加のコンテンツ機能や拡張ツールが本サイトに追加された場合も、それらによって作成・出力されるものは同様に「生成物」に含まれます。</p>
+    <p class="ja">生成物の著作権・利用権は、法令に反しない限り、当該生成物を作成したユーザー本人に帰属します。本サイトは生成物の権利を主張しません。ただし、生成物の内容・利用・公開・第三者への提供について生じたあらゆる責任は、すべてユーザー自身が負うものとします。</p>
+    <p class="en-text">All content created or output through your use of the Site — including written text, handwriting, text boxes, images, videos, links, charts/graphs, formulas, OCR results, exported PDF files, and any content produced by future additional features or extension tools — is collectively referred to in these Terms as "Output." The Site does not claim any ownership over your Output; rights in your Output belong to you, the user who created it, to the extent permitted by law. However, you are solely responsible for the content, use, publication, and distribution of your Output.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">3.</span>画像・動画・リンク等の挿入機能について <span class="en">About Inserted Images, Videos and Links</span></h2>
+    <p class="ja">本サイトには、画像・動画・リンク(URL)・グラフ・数式などを挿入できる機能があります。これらの機能を利用してユーザーが挿入するコンテンツについて、以下を遵守してください。</p>
+    <ul>
+      <li>挿入する画像・動画等については、ユーザー自身が著作権・肖像権・商標権その他の権利について適法に利用する権利を有していることを確認してください。</li>
+      <li>第三者の著作権・プライバシー・肖像権等を侵害するコンテンツ、法令に違反するコンテンツ、公序良俗に反するコンテンツの挿入・作成を禁止します。</li>
+      <li>動画の埋め込み・リンクの挿入によって外部サイト（YouTube等）へアクセスする場合、当該外部サイトの利用規約が別途適用されます。</li>
+      <li>アップロードした画像・動画ファイルは、ブラウザ内（localStorage等）にのみ保存され、本サイトのサーバーへ送信されることはありません。</li>
+    </ul>
+    <p class="en-text">The Site allows you to insert images, videos, links (URLs), charts, and formulas. When using these features, you must comply with the following:</p>
+    <ul>
+      <li class="en-li">You must confirm that you lawfully hold the necessary rights (copyright, right of publicity, trademark, etc.) to use any image, video, or other content you insert.</li>
+      <li class="en-li">You may not insert or create content that infringes the copyright, privacy, or right of publicity of any third party, that violates applicable law, or that is contrary to public order and morals.</li>
+      <li class="en-li">Embedding videos or links that access external sites (e.g. YouTube) is subject to the separate terms of use of those external sites.</li>
+      <li class="en-li">Uploaded image/video files are stored only within your browser (e.g. localStorage) and are never transmitted to any server operated by the Site.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">4.</span>禁止事項 <span class="en">Prohibited Conduct</span></h2>
+    <p class="ja">ユーザーは、本サイトの利用にあたり、以下の行為を行ってはなりません。</p>
+    <ul>
+      <li>法令または公序良俗に違反する行為</li>
+      <li>本サイトのソースコード・デザイン・文章・その他構成要素を、著作権者の事前の書面による許可なく複製、転載、再配布、改変、または自己のサービスとして再公開する行為（「コード転載禁止」）</li>
+      <li>本サイトまたは本サイトを通じて生成された生成物を、違法に転載・二次配布する行為</li>
+      <li>本サイトの運営を妨害する行為（過度な自動アクセス、脆弱性の悪用等）</li>
+      <li>第三者になりすます行為、その他第三者に不利益・損害を与える行為</li>
+    </ul>
+    <p class="en-text">When using the Site, you must not:</p>
+    <ul>
+      <li class="en-li">Violate any applicable law or public order and morals.</li>
+      <li class="en-li">Copy, reproduce, redistribute, modify, or republish the Site's source code, design, text, or other components as your own service, without the prior written permission of the copyright holder ("no reproduction of the code").</li>
+      <li class="en-li">Illegally re-post or redistribute the Site itself, or Output generated through the Site.</li>
+      <li class="en-li">Interfere with the operation of the Site (e.g. excessive automated access, exploitation of vulnerabilities).</li>
+      <li class="en-li">Impersonate a third party, or otherwise cause disadvantage or damage to any third party.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">5.</span>著作権表記 <span class="en">Copyright Notice</span></h2>
+    <div class="copyright-box">
+      © <span id="copyrightYear">2026</span> Yomi-Note Project. All rights reserved.
+    </div>
+    <p class="ja" style="margin-top:14px;">本サイトのソースコードは学習・参考閲覧のためGitHub上で公開されていることがありますが、公開されていることは自由な複製・転載・再配布・改変・商用利用を許可するものではありません。本サイトのコード・デザイン・文章等を複製・転載・再配布・改変して利用する場合は、事前に著作権者の書面による許可を得てください。無断転載・無断使用を禁止します。</p>
+    <p class="en-text">The Site's source code may be published on GitHub for learning and reference purposes; however, its public visibility does not grant permission for free copying, reproduction, redistribution, modification, or commercial use. Prior written permission from the copyright holder is required before reproducing, redistributing, or modifying the Site's code, design, or text. Unauthorized reproduction and unauthorized use are prohibited.</p>
+    <p class="ja" style="margin-top:14px;">本サイトは以下のオープンソースライブラリを利用しています。各ライブラリの著作権は、それぞれの権利者に帰属し、各ライブラリのライセンス条件が適用されます。</p>
+    <table class="credit-table">
+      <thead>
+        <tr><th>ライブラリ</th><th>バージョン</th><th>用途</th><th>ライセンス</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="lib-name"><a href="https://github.com/naptha/tesseract.js" target="_blank" rel="noopener noreferrer">Tesseract.js</a></td>
+          <td class="lib-version">5.0.4</td>
+          <td>OCR（手書き・印刷文字認識）</td>
+          <td class="lib-license">Apache License 2.0</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://mozilla.github.io/pdf.js/" target="_blank" rel="noopener noreferrer">PDF.js</a></td>
+          <td class="lib-version">3.11.174</td>
+          <td>PDFの表示・取り込み</td>
+          <td class="lib-license">Apache License 2.0</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://github.com/parallax/jsPDF" target="_blank" rel="noopener noreferrer">jsPDF</a></td>
+          <td class="lib-version">2.5.1</td>
+          <td>PDF書き出し</td>
+          <td class="lib-license">MIT License</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://www.chartjs.org/" target="_blank" rel="noopener noreferrer">Chart.js</a></td>
+          <td class="lib-version">4.4.4</td>
+          <td>グラフ描画（棒・折れ線・円・ドーナツ）</td>
+          <td class="lib-license">MIT License</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://www.mathjax.org/" target="_blank" rel="noopener noreferrer">MathJax</a></td>
+          <td class="lib-version">3.2.2</td>
+          <td>数式の描画（LaTeX→SVG）</td>
+          <td class="lib-license">Apache License 2.0</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a><br><span style="font-weight:400;color:var(--ink-soft);">Noto Sans JP / Shippori Mincho / BIZ UDゴシック</span></td>
+          <td class="lib-version">—</td>
+          <td>画面表示用フォント</td>
+          <td class="lib-license">SIL Open Font License 1.1</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://tonejs.github.io/" target="_blank" rel="noopener noreferrer">Tone.js</a></td>
+          <td class="lib-version">14.8.49</td>
+          <td>MIDIプレーヤーパックでの音源合成（追加DLC）</td>
+          <td class="lib-license">MIT License</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://github.com/Tonejs/Midi" target="_blank" rel="noopener noreferrer">@tonejs/midi</a></td>
+          <td class="lib-version">2.0.28</td>
+          <td>MIDIファイルの解析（追加DLC）</td>
+          <td class="lib-license">MIT License</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="en-text">The Site uses the open-source libraries and fonts listed above; each is copyright its respective rights holders and is used under its own license (Apache License 2.0, MIT License, or SIL Open Font License 1.1 as noted).</p>
+  </section>
+
+  <section>
+    <h2><span class="num">6.</span>免責事項 <span class="en">Disclaimer</span></h2>
+    <p class="ja">本サイトは、OCR（文字認識）や音声読み上げ、手書き文字認識などの結果の正確性・完全性・有用性について、いかなる保証も行いません。認識結果の誤りにより生じた損害について、本サイトは責任を負いません。本サイトの利用は、すべて自己責任にて行ってください。</p>
+    <div class="warn-box">
+      ブラウザの保存領域（localStorage）はブラウザの設定変更・キャッシュ削除・端末の初期化などにより消失する場合があります。重要なノートは、こまめにPDF書き出し等でバックアップを取ることを強く推奨します。
+    </div>
+    <p class="en-text">The Site makes no warranty regarding the accuracy, completeness, or usefulness of OCR results, text-to-speech output, or handwriting recognition results. The Site is not liable for any damage arising from errors in recognition results. Use of the Site is entirely at your own risk.</p>
+    <p class="en-text" style="border-top:none;padding-top:0;">Data stored in your browser (localStorage) may be lost due to changes in browser settings, cache clearing, or device resets. We strongly recommend regularly backing up important notes, for example by exporting them as PDF.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">7.</span>本規約の変更 <span class="en">Changes to these Terms</span></h2>
+    <p class="ja">本サイトは、必要と判断した場合、ユーザーへの個別の事前通知なく本規約の内容を変更できるものとします。変更後の規約は、本ページに掲載された時点から効力を生じます。</p>
+    <p class="en-text">The Site may modify these Terms at any time without individual prior notice to users, where it deems necessary. Any changes take effect from the time they are posted on this page.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">8.</span>準拠法 <span class="en">Governing Law</span></h2>
+    <p class="ja">本規約の解釈にあたっては、日本法を準拠法とします。</p>
+    <p class="en-text">These Terms shall be governed by and construed in accordance with the laws of Japan.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">9.</span>お問い合わせ <span class="en">Contact</span></h2>
+    <p class="ja">本サイトまたは本規約に関するお問い合わせは、本サイトの公開元（GitHubリポジトリ）を通じてご連絡ください。</p>
+    <p class="en-text">For inquiries regarding the Site or these Terms, please contact us through the GitHub repository where the Site is published.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">10.</span>追加DLC（拡張機能）について <span class="en">About Add-on DLC Files</span></h2>
+    <p class="ja">本サイトは、利用者が任意でJavaScriptファイル（DLC）を取り込み、機能を拡張できる仕組みを提供しています。DLCファイルはノートの中身（ページ内容・OCR結果等）に自由にアクセスできるプログラムであり、その動作は本サイトの制作者が保証するものではありません。取り込みの際は内容をご確認のうえ、信頼できる配布元のファイルのみをご利用ください。取り込んだDLCによって生じたいかなる損害についても、本サイトは責任を負いません。</p>
+    <p class="en-text">The Site provides an optional mechanism allowing users to import JavaScript files ("DLC") to extend its functionality. DLC files are programs with unrestricted access to the note's contents (page data, OCR results, etc.), and their behavior is not guaranteed by the creator of the Site. Users should review the contents of any DLC file before importing it and use only files from trusted sources. The Site is not responsible for any damage arising from imported DLC files.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">11.</span>プログラミング追加パックについて <span class="en">About the Programming Add-on Pack</span></h2>
+    <p class="ja">追加DLCのひとつ「プログラミング追加パック」は、有効化するとノート機能の代わりにHTML／CSS／JavaScript／Python／C言語系のコードを編集・実行できる画面に切り替わる拡張機能です。ユーザー自身が入力・実行するコードの内容について、本サイトはその安全性・正確性を保証しません。実行結果によって生じたいかなる損害についても、本サイトは責任を負いません。</p>
+    <ul>
+      <li>Python実行機能は、実行時に外部ライブラリ（Pyodide）をインターネット経由で読み込みます。オフライン環境では実行できない場合があります。</li>
+      <li>C言語系については、本パックv0.1時点ではコードの編集・保存・シンタックス表示のみに対応し、ブラウザ内での実行（コンパイル）には対応していません。</li>
+      <li>本パックの「DLCとしてエクスポート」機能で書き出したファイルも、第10条の「追加DLC（拡張機能）」に準じて扱われるものとし、書き出したファイルの内容・配布・利用について生じた責任は、すべて作成したユーザー自身が負うものとします。</li>
+    </ul>
+    <p class="en-text">One of the add-on DLC files, the "Programming Add-on Pack," replaces the note-taking interface with a screen for editing and running HTML/CSS/JavaScript/Python/C-family code once enabled. The Site does not guarantee the safety or correctness of any code you write or run yourself, and is not liable for any damage resulting from running it.</p>
+    <ul>
+      <li class="en-li">The Python execution feature loads an external library (Pyodide) over the internet at runtime and may not work while offline.</li>
+      <li class="en-li">As of v0.1, C-family languages support editing, saving, and basic syntax display only; in-browser execution (compilation) is not supported.</li>
+      <li class="en-li">Files produced with the pack's "Export as DLC" feature are treated the same as any add-on DLC described in Section 10 above; the user who creates such a file is solely responsible for its content, distribution, and use.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">12.</span>MIDIプレーヤーパックについて <span class="en">About the MIDI Player Pack</span></h2>
+    <p class="ja">追加DLCのひとつ「MIDIプレーヤーパック」は、ユーザーが個別に開発した、MIDIファイルを自動演奏するためのツール（Web MIDI Piano Player）を組み込んだものです。安全のため、本体アプリとは別の独立した領域（iframe）内で動作し、ノートのデータには直接アクセスしません。「ノートに重ねて表示」機能を使うと、演奏中に降ってくるノーツの視覚効果を、作業中のノートに半透明で重ねて表示できますが、これはあくまで見た目の重ね合わせであり、ノートの内容（手書き・テキスト・画像など）を書き換えたり保存したりするものではありません。</p>
+    <ul>
+      <li>本パックはTone.js（MITライセンス）および@tonejs/midi（MITライセンス）という外部ライブラリを、それぞれの配布元（cdnjs／unpkg）から読み込んで利用しています。各ライブラリの著作権は、それぞれの開発者に帰属します。</li>
+      <li>本パックの利用には、ユーザーが用意したMIDIファイルの読み込みが必要です。読み込んだMIDIファイル自体の著作権については、本サイトは関与せず、ファイルの取得・利用に関する責任はユーザー自身が負うものとします。</li>
+      <li>演奏音声はブラウザ内蔵の音源で合成されるものであり、外部への通信や録音データの送信は行いません。「演奏録画」機能で生成される動画データも、ユーザーの端末内でのみ処理されます。</li>
+      <li>本パックも、第10条の「追加DLC（拡張機能）」の規定に準じて扱われるものとします。</li>
+    </ul>
+    <p class="en-text">One of the add-on DLC files, the "MIDI Player Pack," embeds a user-developed MIDI auto-playback tool (Web MIDI Piano Player). For safety, it runs in an isolated area (an iframe) separate from the main app and does not directly access your note data. The "Overlay on note" feature layers the falling-note visual effect semi-transparently over the note you are working on, purely as a visual overlay; it does not modify or save any note content (handwriting, text, images, etc.).</p>
+    <ul>
+      <li class="en-li">This pack loads the third-party libraries Tone.js (MIT License) and @tonejs/midi (MIT License) from their respective distributors (cdnjs / unpkg). Copyright in each library belongs to its respective developers.</li>
+      <li class="en-li">Using this pack requires a MIDI file that you supply yourself. The Site is not involved in the copyright of any MIDI file you load, and you are solely responsible for how you obtain and use it.</li>
+      <li class="en-li">Playback audio is synthesized entirely within the browser; no audio or recording data is transmitted externally. Video produced by the "performance recording" feature is likewise processed only on your own device.</li>
+      <li class="en-li">This pack is also governed by the "Add-on DLCs" provisions in Section 10 above.</li>
+    </ul>
+  </section>
+
+  <footer>
+    読みノート (Yomi-Note) <span id="footerVersion">v3.4</span> ／ © <span id="footerYear">2026</span> Yomi-Note Project. All rights reserved.<br>
+    <a class="back-link" style="margin-top:10px;" href="./index.html">← アプリに戻る / Back to the app</a>
+  </footer>
+
+</div>
+<script>
+  // バージョン表記はアプリ本体と揃えるため、ここを更新する際は index.html 側のバージョンも確認してください。
+  var APP_VERSION = 'v3.8';
+  document.getElementById('versionBadge').textContent = APP_VERSION;
+  document.getElementById('footerVersion').textContent = APP_VERSION;
+  var y = new Date().getFullYear();
+  document.getElementById('copyrightYear').textContent = y;
+  document.getElementById('footerYear').textContent = y;
+
+  /* ページの読み上げ（日本語文のみを対象に、上から順に読む）
+     ＋読み上げ速度をキーボードで自由に変更できる機能。
+     ＋／－（またはPageUp/PageDown、↑/↓）キーで0.1倍ずつ、0キーで等倍(1.0)にリセット。
+     再生中に速度を変えた場合は、今読んでいる文からその速度で読み直す。 */
+  (function(){
+    var queue = [];
+    var playing = false;
+    var idx = 0;
+    var rate = 1.0;
+    var RATE_MIN = 0.5, RATE_MAX = 3.0, RATE_STEP = 0.1;
+    function buildQueue(){
+      var nodes = document.querySelectorAll('.ja, .copyright-box, .warn-box');
+      var list = [];
+      for (var i = 0; i < nodes.length; i++){
+        var t = nodes[i].textContent.trim();
+        if (t) list.push(t);
+      }
+      return list;
+    }
+    function updateBtn(){
+      document.getElementById('readAloudBtn').textContent = playing ? '⏹ 読み上げを停止' : '🔊 このページを読み上げる';
+    }
+    function updateRateLabel(){
+      var el = document.getElementById('readRateLabel');
+      if (el) el.textContent = '速度 ' + rate.toFixed(1) + '倍（＋/－キーで変更）';
+    }
+    function clampRate(r){
+      r = Math.round(r * 10) / 10;
+      return Math.max(RATE_MIN, Math.min(RATE_MAX, r));
+    }
+    function speak(i){
+      if (!playing || i >= queue.length){ playing = false; updateBtn(); return; }
+      idx = i;
+      var u = new SpeechSynthesisUtterance(queue[i]);
+      u.lang = 'ja-JP';
+      u.rate = rate;
+      u.onend = function(){ speak(i + 1); };
+      u.onerror = function(){ playing = false; updateBtn(); };
+      window.speechSynthesis.speak(u);
+    }
+    document.getElementById('readAloudBtn').addEventListener('click', function(){
+      if (!('speechSynthesis' in window)){ alert('このブラウザは読み上げに対応していません'); return; }
+      if (playing){ playing = false; window.speechSynthesis.cancel(); updateBtn(); return; }
+      queue = buildQueue();
+      if (!queue.length) return;
+      playing = true; updateBtn();
+      window.speechSynthesis.cancel();
+      speak(0);
+    });
+    document.addEventListener('keydown', function(e){
+      var tag = (e.target && e.target.tagName) || '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey || e.altKey) return;
+      var changed = false;
+      if (e.key === '+' || e.key === '=' || e.key === 'ArrowUp' || e.key === 'PageUp'){
+        rate = clampRate(rate + RATE_STEP); changed = true;
+      } else if (e.key === '-' || e.key === '_' || e.key === 'ArrowDown' || e.key === 'PageDown'){
+        rate = clampRate(rate - RATE_STEP); changed = true;
+      } else if (e.key === '0'){
+        rate = 1.0; changed = true;
+      }
+      if (changed){
+        e.preventDefault();
+        updateRateLabel();
+        if (playing){ window.speechSynthesis.cancel(); speak(idx); }
+      }
+    });
+    updateRateLabel();
+  })();
+  (function(){
+    var KEY = 'yomiDlcUdFontEnabled';
+    var btn = document.getElementById('udFontToggleBtn');
+    function apply(){
+      var on = false;
+      try { on = localStorage.getItem(KEY) === 'true'; } catch(e){}
+      document.documentElement.classList.toggle('dlc-ud-font', on);
+      if (btn) btn.style.background = on ? 'var(--accent,#B5432E)' : '';
+      if (btn) btn.style.color = on ? '#fff' : '';
+    }
+    if (btn) btn.addEventListener('click', function(){
+      var on = document.documentElement.classList.contains('dlc-ud-font');
+      try { localStorage.setItem(KEY, on ? 'false' : 'true'); } catch(e){}
+      apply();
+    });
+    apply();
+  })();
+</script>
+</body>
+</html>
