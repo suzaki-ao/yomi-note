@@ -14,5 +14,9 @@ https://suzaki-ao.github.io/yomi-note/command-list-v8.html
 👉 **アプリはこちら**
 https://github.com/suzaki-ao/yomi-note/releases/tag/%E8%AA%AD%E3%81%BF%E3%83%8E%E3%83%BC%E3%83%88%E3%82%A2%E3%83%97%E3%83%AAver
 
+ **ipadアプリについて**
+ サイトをホームに追加する形でアプリにしてください。
+ そうすれば検索エンジンを通らずに観覧することが可能です。
+
 👉 **相談修正案などはこちら**
 https://github.com/suzaki-ao/yomi-note/issues/1
