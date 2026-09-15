@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v4.4</title>
+<title>読みノート v4.5 ― 手書き・読み上げノート</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -382,6 +382,17 @@
   .link-icon{font-size:16px;flex-shrink:0;}
   .link-label{font-size:12px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
   .link-open-btn{border:none;background:var(--teal);color:#fff;border-radius:5px;padding:4px 8px;font-size:10.5px;flex-shrink:0;}
+  /* ---------- 【v4.5で追加】テストモード ---------- */
+  .test-mode-locked-card{border-color:#B5432E;background:#FFF4F1;flex-wrap:wrap;}
+  .test-mode-lock-badge{width:100%;font-size:10px;font-weight:700;color:#B5432E;}
+  .test-mode-badge{
+    display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:#fff;
+    background:#B5432E;border:1px solid #8f3222;padding:3px 9px;border-radius:12px;margin-left:10px;
+  }
+  .test-mode-badge.hidden{display:none;}
+  #testModeBtn.active{background:#B5432E;color:#fff;border-color:#8f3222;}
+  [data-test-mode-hide].test-mode-disabled{opacity:.4;cursor:not-allowed;filter:grayscale(.6);pointer-events:none;}
+  .tool-btn.test-mode-disabled{opacity:.4;cursor:not-allowed;filter:grayscale(.6);}
 
   /* ---------- モーダル(グラフ挿入) ---------- */
   .modal-overlay{
@@ -556,8 +567,9 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v4.4</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v4.5</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
       <span class="offline-badge hidden" id="offlineBadge" title="インターネットに接続されていません。音声入力は端末によっては引き続き使える場合がありますが、多くの環境では通信が必要です。">🔌 オフライン</span>
+      <span class="test-mode-badge hidden" id="testModeBadge" title="テストモード中は、自動で公式が出てくる機能やリンク・動画がブロックされています">🧪 テストモード中</span>
     </div>
     <div class="group" id="mobileMenuBtns">
       <button class="icon-btn" id="openLeftbarBtn" title="ツール一覧を開く">☰</button>
@@ -570,6 +582,7 @@
       <option value="high">📗 高校生</option>
       <option value="university" selected>🎓 大学生・一般</option>
     </select>
+    <button class="btn" id="testModeBtn" title="テストモード：学校のテスト中に、自動で公式が出てくる機能や挿入済みのリンク・動画をブロックします（コマンド /test mode on・/test mode off でも切替可）">🧪 テストモード</button>
     <div class="divider"></div>
     <button class="btn" id="newNoteBtn" title="新規ノート">🆕 新規</button>
     <button class="btn" id="importBtn" title="画像/PDFを取り込む">📥 取込</button>
@@ -577,9 +590,9 @@
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
     <button class="btn accent" id="exportZipBtn" title="各ページの画像とノートデータをZIPでまとめて書き出す">🗜️ ZIP書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v20.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
-    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v13.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
-    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v11.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v21.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v14.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
+    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v12.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
     <button class="icon-btn" id="fullscreenBtn" title="全画面表示に切り替え">⛶</button>
     <button class="icon-btn" id="ocrLangBtn" title="OCRで認識する言語を選ぶ（日本語＋外国語など）">🌐</button>
@@ -848,7 +861,7 @@
     <div class="cmd-panel" id="cmdPanel">
       <div class="cmd-panel-header">
         <span class="cmd-mode-label">コマンド <span id="cmdModeLabel">@0</span></span>
-        <a class="cmd-help-link" href="./command-list-v10.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
+        <a class="cmd-help-link" href="./command-list-v11.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
         <button class="cmd-close-btn" id="cmdCloseBtn" title="閉じる">✕</button>
       </div>
       <div class="cmd-log" id="cmdLog"></div>
@@ -925,8 +938,8 @@
         </p>
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
-          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v11.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
-          ｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v13.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a>
+          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v12.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
+          ｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v14.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a>
         </div>
       </div>
     </aside>
@@ -983,6 +996,14 @@ let undoStack = [];
 let redoStack = [];
 let drawing = false, lastPt = null, rulerStart = null, lastRulerPoint = null;
 let dragStart = null;
+/* 【v4.5で追加】テストモード：学校のテストで不要・不適切になる機能を一時的に
+   ブロックする。①数式パレットの「よく使う公式」（タップすると完成した公式が
+   自動で出てくるもの）を非表示にする、②ノートに挿入済みのリンク・動画を
+   開けない／再生できないようにする（新規挿入もできないようにする）。
+   ボタン（🧪テストモード）またはコマンド（/test mode on・/test mode off）で
+   切り替えられ、状態はlocalStorageに保存して次回起動時も引き継ぐ。 */
+const TEST_MODE_KEY = 'yomiTestMode';
+let testModeOn = (() => { try { return localStorage.getItem(TEST_MODE_KEY) === '1'; } catch(e){ return false; } })();
 
 function newPage(w, h, bgImage, fromCamera){
   return {
@@ -1581,6 +1602,15 @@ const PALM_REJECTION_WINDOW_MS = 1200;
 document.addEventListener('pointerdown', e => {
   if (e.target.id !== 'inkCanvas') return;
   if (['pen','eraser','ruler'].indexOf(currentTool) === -1) return;
+  /* 【v4.5で追加】2本指が同時に触れている場合は2本指スワイプ（スクロール）と
+     みなすため、新たな描画は開始しない（下の「2本指スワイプ」セクション参照）。 */
+  if (activeTouchPoints.size >= 2) return;
+  /* 【v4.5で修正】スワイプ操作中などに2本目以降の指が触れると、それまでの
+     activeDrawPointerId が新しい指のIDで上書きされてしまい、①最初の指の線が
+     描けなくなる、②pushUndo()が余分に呼ばれてUndo履歴が無駄に積まれる、
+     という不具合があった。既に描画中（activeDrawPointerIdが設定済み）の間は、
+     新たなpointerdownを無視して最初の指だけを追跡し続けるようにする。 */
+  if (activeDrawPointerId !== null && e.pointerId !== activeDrawPointerId) return;
   if (e.pointerType === 'pen'){
     lastPenPointerTime = Date.now();
   } else if (e.pointerType === 'touch' && (Date.now() - lastPenPointerTime) < PALM_REJECTION_WINDOW_MS){
@@ -1628,6 +1658,62 @@ document.addEventListener('pointerup', e => {
   }
   smoothPts = [];
 });
+
+/* ============================================================
+   【v4.5で追加】2本指スワイプでのキャンバスのスクロール（iPhone/iPad対応）
+   ------------------------------------------------------------
+   ペンや範囲選択系のツールが有効な間はinkCanvas/selectOverlayが
+   touch-action:noneで画面全体を覆っているため、これまでは指でスワイプ
+   しても①ブラウザ標準のスクロールが一切効かず、②代わりに1本指の
+   スワイプがそのまま描画・範囲選択として処理されてしまい、意図せず
+   線が引かれたり選択範囲が暴れたりする不具合があった。
+   2本の指が同時に画面へ触れたことを検知したら「スクロールしたい」
+   という意図とみなし、進行中の描画・選択・投げ縄操作を取り消した上で、
+   2本の指の中心点の移動量ぶんだけキャンバスエリアを手動でスクロール
+   させる。イベントはキャプチャフェーズで監視するため、各要素側で
+   e.stopPropagation() が呼ばれていても必ず検知できる。
+============================================================ */
+const activeTouchPoints = new Map();
+let twoFingerPan = null;
+function cancelInProgressDrawOrSelect(){
+  if (drawing){
+    drawing = false; activeDrawPointerId = null; smoothPts = [];
+    undo(); /* pointerdown時に積んだpushUndo()の分を打ち消し、線を確実に消す */
+  }
+  if (dragStart){ dragStart = null; selectActivePointerId = null; clearDragRectVisual(); }
+  if (lassoPoints){ lassoPoints = null; selectActivePointerId = null; clearLassoPreview(); }
+}
+document.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'touch') return;
+  activeTouchPoints.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (activeTouchPoints.size === 2 && e.target.closest('#canvasArea')){
+    cancelInProgressDrawOrSelect();
+    const pts = Array.from(activeTouchPoints.values());
+    const area = document.getElementById('canvasArea');
+    twoFingerPan = {
+      cx: (pts[0].x + pts[1].x) / 2, cy: (pts[0].y + pts[1].y) / 2,
+      scrollLeft: area.scrollLeft, scrollTop: area.scrollTop
+    };
+  }
+}, true);
+document.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'touch' || !activeTouchPoints.has(e.pointerId)) return;
+  activeTouchPoints.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (twoFingerPan && activeTouchPoints.size >= 2){
+    const pts = Array.from(activeTouchPoints.values());
+    const cx = (pts[0].x + pts[1].x) / 2, cy = (pts[0].y + pts[1].y) / 2;
+    const area = document.getElementById('canvasArea');
+    area.scrollLeft = twoFingerPan.scrollLeft - (cx - twoFingerPan.cx);
+    area.scrollTop = twoFingerPan.scrollTop - (cy - twoFingerPan.cy);
+  }
+}, true);
+function endTouchTracking(e){
+  if (e.pointerType !== 'touch') return;
+  activeTouchPoints.delete(e.pointerId);
+  if (activeTouchPoints.size < 2) twoFingerPan = null;
+}
+document.addEventListener('pointerup', endTouchTracking, true);
+document.addEventListener('pointercancel', endTouchTracking, true);
 
 /* ============================================================
    テキストボックス
@@ -1730,13 +1816,20 @@ function onTextBoxPointerDown(e, tb, el){
   el.setPointerCapture(e.pointerId);
   const start = getPagePoint(e);
   const orig = {x:tb.x, y:tb.y};
+  const dragPointerId = e.pointerId;
+  /* 【v4.5で修正】onMove/onUpがpointerIdを確認していなかったため、ドラッグ中に
+     別の指がたまたま同じテキストボックスの上に触れると、その指の座標で位置が
+     ジャンプしてしまう不具合があった（setPointerCaptureしていても、同じ要素への
+     addEventListenerは他ポインターのイベントも拾ってしまうため）。 */
   function onMove(ev){
+    if (ev.pointerId !== dragPointerId) return;
     const p = getPagePoint(ev);
     tb.x = orig.x + (p.x - start.x); tb.y = orig.y + (p.y - start.y);
     el.style.left = tb.x + 'px'; el.style.top = tb.y + 'px';
     positionFloatingToolbar(tb);
   }
-  function onUp(){
+  function onUp(ev){
+    if (ev.pointerId !== dragPointerId) return;
     el.removeEventListener('pointermove', onMove);
     el.removeEventListener('pointerup', onUp);
   }
@@ -1753,14 +1846,19 @@ function onResizePointerDown(e, tb, el){
   handle.setPointerCapture(e.pointerId);
   const start = getPagePoint(e);
   const orig = {w:tb.w, h:tb.h};
+  const resizePointerId = e.pointerId;
+  /* 【v4.5で修正】テキストボックスのドラッグ移動と同様、別の指が同じハンドルに
+     触れるとその指の座標でサイズが暴れる不具合があったため、pointerIdを確認する。 */
   function onMove(ev){
+    if (ev.pointerId !== resizePointerId) return;
     const p = getPagePoint(ev);
     tb.w = Math.max(24, orig.w + (p.x - start.x));
     tb.h = Math.max(24, orig.h + (p.y - start.y));
     el.style.width = tb.w + 'px'; el.style.height = tb.h + 'px';
     positionFloatingToolbar(tb);
   }
-  function onUp(){
+  function onUp(ev){
+    if (ev.pointerId !== resizePointerId) return;
     handle.removeEventListener('pointermove', onMove);
     handle.removeEventListener('pointerup', onUp);
   }
@@ -1897,6 +1995,15 @@ function deleteSelectedTextBox(){
 function getMediaObject(id){
   return (notestate.pages[currentPageIndex].mediaObjects || []).find(x => x.id === id);
 }
+/* 【v4.5で追加】テストモード中、リンク・動画の代わりに表示するロック済みカード */
+function buildTestModeLockedCard(label, icon){
+  const card = document.createElement('div'); card.className = 'link-card test-mode-locked-card';
+  const iconEl = document.createElement('span'); iconEl.className = 'link-icon'; iconEl.textContent = icon;
+  const labelEl = document.createElement('span'); labelEl.className = 'link-label'; labelEl.textContent = label;
+  const lockEl = document.createElement('span'); lockEl.className = 'test-mode-lock-badge'; lockEl.textContent = '🔒 テストモード中';
+  card.appendChild(iconEl); card.appendChild(labelEl); card.appendChild(lockEl);
+  return card;
+}
 function renderMediaObjects(){
   const layer = document.getElementById('mediaLayer');
   layer.innerHTML = '';
@@ -1914,32 +2021,44 @@ function renderMediaObjects(){
       wrap.appendChild(img);
       wrap.addEventListener('pointerdown', e => onMediaPointerDown(e, m, wrap));
     } else if (m.type === 'link'){
-      const card = document.createElement('div'); card.className = 'link-card';
-      const icon = document.createElement('span'); icon.className = 'link-icon'; icon.textContent = '🔗';
-      const label = document.createElement('span'); label.className = 'link-label'; label.textContent = m.label || m.url;
-      const openBtn = document.createElement('button'); openBtn.className = 'link-open-btn'; openBtn.type = 'button'; openBtn.textContent = '開く ↗';
-      openBtn.addEventListener('pointerdown', e => e.stopPropagation());
-      openBtn.addEventListener('click', e => { e.stopPropagation(); window.open(m.url, '_blank', 'noopener,noreferrer'); });
-      card.appendChild(icon); card.appendChild(label); card.appendChild(openBtn);
-      wrap.appendChild(card);
-      wrap.addEventListener('pointerdown', e => onMediaPointerDown(e, m, wrap));
-    } else if (m.type === 'video'){
-      const handle2 = document.createElement('div'); handle2.className = 'media-drag-handle'; handle2.textContent = '⠿ 移動';
-      handle2.addEventListener('pointerdown', e => onMediaPointerDown(e, m, wrap));
-      wrap.appendChild(handle2);
-      if (m.mode === 'iframe'){
-        const iframe = document.createElement('iframe');
-        iframe.src = m.src; iframe.setAttribute('allowfullscreen', ''); iframe.setAttribute('frameborder', '0');
-        wrap.appendChild(iframe);
+      /* 【v4.5で追加】テストモード中は開けないようロックした見た目にする。
+         データ自体は保持したままなので、テストモードを解除すればすぐ元通り使える。 */
+      if (testModeOn){
+        wrap.appendChild(buildTestModeLockedCard(m.label || m.url, '🔗'));
+        wrap.addEventListener('pointerdown', e => onMediaPointerDown(e, m, wrap));
       } else {
-        const video = document.createElement('video');
-        video.src = m.src; video.controls = true;
-        wrap.appendChild(video);
+        const card = document.createElement('div'); card.className = 'link-card';
+        const icon = document.createElement('span'); icon.className = 'link-icon'; icon.textContent = '🔗';
+        const label = document.createElement('span'); label.className = 'link-label'; label.textContent = m.label || m.url;
+        const openBtn = document.createElement('button'); openBtn.className = 'link-open-btn'; openBtn.type = 'button'; openBtn.textContent = '開く ↗';
+        openBtn.addEventListener('pointerdown', e => e.stopPropagation());
+        openBtn.addEventListener('click', e => { e.stopPropagation(); window.open(m.url, '_blank', 'noopener,noreferrer'); });
+        card.appendChild(icon); card.appendChild(label); card.appendChild(openBtn);
+        wrap.appendChild(card);
+        wrap.addEventListener('pointerdown', e => onMediaPointerDown(e, m, wrap));
       }
-      wrap.addEventListener('pointerdown', e => {
-        if (e.target === handle2 || e.target.classList.contains('resize-handle')) return;
-        if (currentTool === 'select') selectMedia(m.id);
-      });
+    } else if (m.type === 'video'){
+      if (testModeOn){
+        wrap.appendChild(buildTestModeLockedCard('動画', '🎬'));
+        wrap.addEventListener('pointerdown', e => onMediaPointerDown(e, m, wrap));
+      } else {
+        const handle2 = document.createElement('div'); handle2.className = 'media-drag-handle'; handle2.textContent = '⠿ 移動';
+        handle2.addEventListener('pointerdown', e => onMediaPointerDown(e, m, wrap));
+        wrap.appendChild(handle2);
+        if (m.mode === 'iframe'){
+          const iframe = document.createElement('iframe');
+          iframe.src = m.src; iframe.setAttribute('allowfullscreen', ''); iframe.setAttribute('frameborder', '0');
+          wrap.appendChild(iframe);
+        } else {
+          const video = document.createElement('video');
+          video.src = m.src; video.controls = true;
+          wrap.appendChild(video);
+        }
+        wrap.addEventListener('pointerdown', e => {
+          if (e.target === handle2 || e.target.classList.contains('resize-handle')) return;
+          if (currentTool === 'select') selectMedia(m.id);
+        });
+      }
     }
 
     const handle = document.createElement('div');
@@ -1961,13 +2080,17 @@ function onMediaPointerDown(e, m, wrap){
   capTarget.setPointerCapture(e.pointerId);
   const start = getPagePoint(e);
   const orig = { x: m.x, y: m.y };
+  const dragPointerId = e.pointerId;
+  /* 【v4.5で修正】テキストボックスと同様、別の指の接触で座標が飛ぶ不具合を修正 */
   function onMove(ev){
+    if (ev.pointerId !== dragPointerId) return;
     const p = getPagePoint(ev);
     m.x = orig.x + (p.x - start.x); m.y = orig.y + (p.y - start.y);
     wrap.style.left = m.x + 'px'; wrap.style.top = m.y + 'px';
     positionMediaToolbar(m);
   }
-  function onUp(){
+  function onUp(ev){
+    if (ev.pointerId !== dragPointerId) return;
     capTarget.removeEventListener('pointermove', onMove);
     capTarget.removeEventListener('pointerup', onUp);
   }
@@ -1981,14 +2104,18 @@ function onMediaResizePointerDown(e, m, wrap){
   const start = getPagePoint(e);
   const orig = { w: m.w, h: m.h };
   const ratio = orig.h / orig.w || 1;
+  const resizePointerId = e.pointerId;
+  /* 【v4.5で修正】別の指の接触でサイズが暴れる不具合を修正 */
   function onMove(ev){
+    if (ev.pointerId !== resizePointerId) return;
     const p = getPagePoint(ev);
     const nw = Math.max(20, orig.w + (p.x - start.x));
     m.w = nw; m.h = nw * ratio;
     wrap.style.width = m.w + 'px'; wrap.style.height = m.h + 'px';
     positionMediaToolbar(m);
   }
-  function onUp(){
+  function onUp(ev){
+    if (ev.pointerId !== resizePointerId) return;
     handle.removeEventListener('pointermove', onMove);
     handle.removeEventListener('pointerup', onUp);
   }
@@ -2324,7 +2451,7 @@ function showFirstTimeIntro(){
   }
   document.getElementById('introCloseBtn').addEventListener('click', dismiss);
   document.getElementById('introUsageBtn').addEventListener('click', () => {
-    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v13.html', '_blank', 'noopener');
+    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v14.html', '_blank', 'noopener');
     dismiss();
   });
 }
@@ -2466,7 +2593,17 @@ document.addEventListener('keydown', e => {
 ============================================================ */
 const selectOverlayEl = document.getElementById('selectOverlay');
 let lassoPoints = null;
+/* 【v4.5で修正】選択矩形／投げ縄選択は、どの指(pointerId)が操作を始めたかを
+   まったく記録していなかったため、ドラッグ中に別の指が同じ画面に触れると
+   dragStart/lassoPointsの続きがその新しい指の座標に飛び替わってしまい、
+   選択範囲がガクッと歪む・意図しない位置で確定する、といった不具合があった。
+   最初に触れた指のpointerIdだけを追跡し、それ以外の指の接触・移動・離脱は無視する。 */
+let selectActivePointerId = null;
 selectOverlayEl.addEventListener('pointerdown', e => {
+  /* 【v4.5で追加】2本指スワイプ（スクロール）中は範囲選択・投げ縄を開始しない */
+  if (activeTouchPoints.size >= 2) return;
+  if (selectActivePointerId !== null && e.pointerId !== selectActivePointerId) return;
+  selectActivePointerId = e.pointerId;
   selectOverlayEl.setPointerCapture(e.pointerId);
   if (currentTool === 'lasso'){
     lassoPoints = [getPagePoint(e)];
@@ -2477,6 +2614,7 @@ selectOverlayEl.addEventListener('pointerdown', e => {
   updateDragRectVisual(dragStart, dragStart);
 });
 selectOverlayEl.addEventListener('pointermove', e => {
+  if (selectActivePointerId !== null && e.pointerId !== selectActivePointerId) return;
   if (currentTool === 'lasso'){
     if (!lassoPoints) return;
     const events = (e.getCoalescedEvents && e.getCoalescedEvents()) || [e];
@@ -2488,6 +2626,8 @@ selectOverlayEl.addEventListener('pointermove', e => {
   updateDragRectVisual(dragStart, getPagePoint(e));
 });
 selectOverlayEl.addEventListener('pointerup', e => {
+  if (selectActivePointerId !== null && e.pointerId !== selectActivePointerId) return;
+  selectActivePointerId = null;
   if (currentTool === 'lasso'){
     if (lassoPoints && lassoPoints.length > 6) cutOutLassoSelection(smoothLassoPoints(lassoPoints));
     lassoPoints = null;
@@ -4132,7 +4272,12 @@ let schoolMode = localStorage.getItem(SCHOOL_MODE_KEY) || 'university';
 function currentSchoolLevel(){ return SCHOOL_LEVELS[schoolMode] || 4; }
 function getVisibleFormulaCategories(){
   const maxLevel = currentSchoolLevel();
+  /* 【v4.5で追加】テストモード中は「よく使う公式」カテゴリ（タップすると
+     完成した公式がそのまま出てくるカンニング的な項目）をパレットごと除外する。
+     分数・行列・場合分けなどの「記法の骨組み」は公式そのものではないので
+     テストモード中も引き続き使える。 */
   return FORMULA_CATEGORIES.map(cat => {
+    if (testModeOn && cat.name === 'よく使う公式') return null;
     const items = cat.items.filter(item => (item.level || cat.level || 1) <= maxLevel);
     return items.length ? { name: cat.name, items } : null;
   }).filter(Boolean);
@@ -4200,6 +4345,38 @@ function applySchoolMode(){
   applyElementaryUiText(schoolMode === 'elementary');
   const sel = document.getElementById('schoolModeSelect');
   if (sel) sel.value = schoolMode;
+}
+/* 【v4.5で追加】テストモードの切替本体。
+   ①数式パレット：getVisibleFormulaCategories()側でtestModeOnを見て
+     「よく使う公式」を除外しているので、開いていれば再描画するだけでよい。
+   ②リンク・動画：renderMediaObjects()側でtestModeOnを見てロック表示に
+     切り替えているので、再描画するだけでよい。
+   ③新規のリンク・動画の挿入ボタン：テストモード中は押せないようにする
+     （学校のテストで新たにリンクや動画を貼り付けて調べる、という使い方を防ぐため）。 */
+function setTestMode(on){
+  testModeOn = !!on;
+  try { localStorage.setItem(TEST_MODE_KEY, testModeOn ? '1' : '0'); } catch(e){}
+  const btn = document.getElementById('testModeBtn');
+  if (btn){
+    btn.classList.toggle('active', testModeOn);
+    btn.textContent = testModeOn ? '🧪 テストモード中（解除）' : '🧪 テストモード';
+  }
+  const badge = document.getElementById('testModeBadge');
+  if (badge) badge.classList.toggle('hidden', !testModeOn);
+  ['insertLinkBtn','insertVideoBtn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.disabled = testModeOn;
+    el.classList.toggle('test-mode-disabled', testModeOn);
+    el.title = testModeOn
+      ? 'テストモード中はリンク・動画を新しく挿入できません（🧪テストモードを解除すると使えます）'
+      : (id === 'insertLinkBtn' ? 'リンク(URL)を挿入' : '動画を挿入');
+  });
+  renderMediaObjects();
+  /* 数式エディタが開いている最中にテストモードを切り替えた場合は、
+     パレットの中身（「よく使う公式」の有無）がズレたままにならないよう、
+     安全側に倒して一旦閉じる。作りかけの数式は失われるが再度開けば良い。 */
+  document.querySelectorAll('.formula-backdrop').forEach(el => el.remove());
 }
 /* テキストエリア中の「空の {}」の位置（開き括弧の直後＝閉じ括弧の直前）を
    すべて探し、その中にカーソル（幅0の選択範囲）を合わせるためのヘルパー。 */
@@ -4715,6 +4892,10 @@ document.getElementById('schoolModeSelect').addEventListener('change', e => {
   schoolMode = e.target.value;
   applySchoolMode();
   flashToast('学年モードを「' + e.target.options[e.target.selectedIndex].text + '」に変更しました');
+});
+document.getElementById('testModeBtn').addEventListener('click', () => {
+  setTestMode(!testModeOn);
+  flashToast(testModeOn ? 'テストモードをONにしました（公式パレット・リンク・動画をブロック）' : 'テストモードをOFFにしました');
 });
 document.getElementById('pageOrientationSelect').addEventListener('change', e => {
   const page = notestate.pages[currentPageIndex];
@@ -5240,6 +5421,8 @@ function listAllCommands(){
       '/note mode @5 ― 部分OCRの精度を優先（画像・動画・URL・グラフ挿入は使用不可）',
       '/tool up ― ツールバーを上端表示に切り替える（ページ一覧が見やすくなる）',
       '/tool side ― ツールバーを左（通常）表示に戻す',
+      '/test mode on ― テストモードON（公式パレット「よく使う公式」・リンク・動画をブロック）',
+      '/test mode off ― テストモードOFF',
       '/import dlc ― 追加DLC（.jsファイル）を選んで取り込む（複数取り込み可）',
       '/dlc on [番号] ― DLCを有効にする（番号省略ですべて）',
       '/dlc off [番号] ― DLCを無効にする（番号省略ですべて）',
@@ -5359,6 +5542,17 @@ async function handleCommand2(input){
   if (/^\/tool\s+side\s*$/i.test(input)){
     setToolbarPosition('side');
     cmdLog('ツールバーを左（通常）表示に切り替えました', 'cmd-ok');
+    return;
+  }
+  /* 【v4.5で追加】テストモードのON/OFF切替コマンド */
+  if (/^\/test\s+mode\s+on\s*$/i.test(input)){
+    setTestMode(true);
+    cmdLog('テストモードをONにしました（公式パレット・リンク・動画をブロックしました）', 'cmd-ok');
+    return;
+  }
+  if (/^\/test\s+mode\s+off\s*$/i.test(input)){
+    setTestMode(false);
+    cmdLog('テストモードをOFFにしました', 'cmd-ok');
     return;
   }
   if (/^\/import\s+dlc\s*$/i.test(input)){
@@ -6038,6 +6232,7 @@ window.addEventListener('DOMContentLoaded', () => {
   setTool('pen');
   loadStoredDlcIfEnabled();
   applySchoolMode();
+  setTestMode(testModeOn); /* 【v4.5で追加】前回終了時のテストモード状態を復元してUIに反映 */
   showFirstTimeIntro();
   setTimeout(warmupOcrWorker, 1200);
 });
