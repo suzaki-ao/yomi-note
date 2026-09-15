@@ -1,6 +1,6 @@
 # 読みノート（Yomi Note）
 👉 **公式ページはこちら**
-https://suzaki-ao.github.io/yomi-note/Yomi%20note%20home%20v21.html
+https://suzaki-ao.github.io/yomi-note/Yomi_note_home_v21.html
 
 👉 **使い方ガイドはこちら**
 https://suzaki-ao.github.io/yomi-note/%E4%BD%BF%E3%81%84%E6%96%B9v14.html
