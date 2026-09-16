@@ -22,3 +22,7 @@ https://github.com/suzaki-ao/yomi-note/releases/tag/%E8%AA%AD%E3%81%BF%E3%83%8E%
 👉 **相談修正案などはこちら**
 https://github.com/suzaki-ao/yomi-note/issues/1
 ****
+# アプリについてのお知らせ
+> - v4.6アプリについて
+> 現在アプリv4.6は配信していませんv4.7以降でアプリ化しますのでご了承くださいまたアプリの更新頻度をvが0.5あがるごとに変更しようと思っておりますが現状変更しませんので変更する場合はお知らせします。
+****
