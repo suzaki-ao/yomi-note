@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v4.5</title>
+<title>読みノート v4.6</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -43,6 +43,26 @@
     padding:calc(8px + env(safe-area-inset-top)) 14px 8px;box-shadow:0 2px 6px rgba(0,0,0,0.04);
     position:relative;z-index:20;
   }
+  /* 【v4.6で追加】コマンドは左サイドバーのツール一覧に埋もれると押しにくい・
+     探しにくいという声を受け、画面最下部に常時固定で表示するバーを新設した。
+     ツールバーの表示位置（左/上）やテストモードの有無に関わらず、
+     どの状態でも同じ場所（画面の一番下）から押せる。 */
+  #bottomBar{
+    display:flex;align-items:center;justify-content:center;
+    background:var(--white);border-top:1px solid var(--line);
+    padding:8px 14px calc(8px + env(safe-area-inset-bottom));
+    box-shadow:0 -2px 6px rgba(0,0,0,0.04);position:relative;z-index:20;flex-shrink:0;
+  }
+  #bottomBar.hidden{display:none;}
+  /* 【v4.6で追加】テストモード中に隠すリンク類 */
+  #homeLinkBtn.hidden, #usageLinkBtn.hidden, #savedTabUsageLinkSep.hidden{display:none;}
+  .bottom-cmd-btn{
+    display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;
+    background:var(--ink);color:#fff;border:none;border-radius:20px;
+    padding:9px 26px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.15);
+  }
+  .bottom-cmd-btn:active{transform:scale(0.97);}
+  .bottom-cmd-btn .glyph{font-size:14px;}
   .brand{display:flex;align-items:center;gap:8px;margin-right:6px;}
   .hanko{
     width:30px;height:30px;border-radius:50%;background:var(--accent);
@@ -133,7 +153,13 @@
   .page-btn-row{display:flex;gap:6px;}
   .page-btn-row .btn{flex:1;justify-content:center;padding:6px;}
 
-  .tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .tool-grid{display:flex;flex-direction:column;gap:10px;}
+  .tool-group-label{font-size:10.5px;color:var(--ink-soft);font-weight:700;letter-spacing:.03em;margin:0 0 5px 2px;}
+  .tool-group-buttons{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .top-toolbar .tool-grid{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:12px;}
+  .top-toolbar .tool-group{display:flex;flex-direction:column;}
+  .top-toolbar .tool-group-label{margin:0 0 4px 2px;}
+  .top-toolbar .tool-group-buttons{display:flex;flex-wrap:wrap;gap:6px;}
   .tool-btn{
     border:1px solid var(--line);background:var(--paper);border-radius:8px;
     padding:8px 4px;font-size:11px;display:flex;flex-direction:column;align-items:center;
@@ -155,7 +181,6 @@
     padding:0;border:none;flex:1;
   }
   .top-toolbar #toolSectionWrap h3{display:none;}
-  .top-toolbar .tool-grid{display:flex;flex-wrap:wrap;gap:6px;}
   .top-toolbar .tool-btn{flex-direction:row;padding:6px 10px;gap:5px;}
   .top-toolbar .tool-btn .glyph{font-size:14px;}
   .top-toolbar .pen-options{margin-top:0;display:flex;align-items:center;gap:8px;}
@@ -567,7 +592,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v4.5</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v4.6</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
       <span class="offline-badge hidden" id="offlineBadge" title="インターネットに接続されていません。音声入力は端末によっては引き続き使える場合がありますが、多くの環境では通信が必要です。">🔌 オフライン</span>
       <span class="test-mode-badge hidden" id="testModeBadge" title="テストモード中は、自動で公式が出てくる機能やリンク・動画がブロックされています">🧪 テストモード中</span>
     </div>
@@ -590,12 +615,16 @@
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
     <button class="btn accent" id="exportZipBtn" title="各ページの画像とノートデータをZIPでまとめて書き出す">🗜️ ZIP書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v21.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
-    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v14.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
-    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v12.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v22.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v15.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
+    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v13.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
     <button class="icon-btn" id="fullscreenBtn" title="全画面表示に切り替え">⛶</button>
     <button class="icon-btn" id="ocrLangBtn" title="OCRで認識する言語を選ぶ（日本語＋外国語など）">🌐</button>
+    <div class="group" title="ツールの表示位置（コマンド/tool up・/tool side と同じ機能）">
+      <button class="icon-btn" id="toolPosUpBtn" title="ツールを上部に表示">⬆️</button>
+      <button class="icon-btn" id="toolPosSideBtn" title="ツールを左に表示（元の位置）">⬅️</button>
+    </div>
     <div class="divider"></div>
     <div class="group">
       <button class="icon-btn" id="undoBtn" title="元に戻す (Ctrl+Z)" disabled>↩</button>
@@ -645,25 +674,44 @@
       <div class="sidebar-section" id="toolSectionWrap">
         <h3>ツール</h3>
         <div class="tool-grid" id="toolGrid">
-          <button class="tool-btn" data-tool="select" title="選択・移動・リサイズ"><span class="glyph">↖</span>選択</button>
-          <button class="tool-btn" data-tool="pen" title="ペンで手書き"><span class="glyph">🖊</span>ペン</button>
-          <button class="tool-btn" data-tool="eraser" title="消しゴム"><span class="glyph">🩹</span>消す</button>
-          <button class="tool-btn" data-tool="ruler" title="定規（直線）"><span class="glyph">📏</span>定規</button>
-          <button class="tool-btn" data-tool="lasso" title="輪投げ：手書きの一部を丸く囲んで選択し、そのまま移動・リサイズ・削除できるようにします"><span class="glyph">➰</span>輪投げ</button>
-          <button class="tool-btn" data-tool="text-add" title="テキストボックス追加"><span class="glyph">T</span>文字</button>
-          <button class="tool-btn" data-tool="manual-add" title="範囲を指定して手動でテキスト登録"><span class="glyph">✍</span>手動登録</button>
-          <button class="tool-btn" data-tool="read-select" title="範囲をドラッグして部分読み上げ（認識済みテキストを読む）"><span class="glyph">🔊</span>部分読上</button>
-          <button class="tool-btn" data-tool="ocr-select" title="範囲をドラッグしてその場でOCR＋読み上げ"><span class="glyph">🔎</span>部分OCR</button>
-          <button class="tool-btn" data-tool="ocr-exclude" title="範囲をドラッグしてOCR対象から除外（写真や図など文字にしたくない部分）"><span class="glyph">🚫</span>OCR除外</button>
-          <button class="tool-btn" data-tool="divider-add" title="横または縦にドラッグして、上下/左右に分かれている境界を自分で指定"><span class="glyph">┃</span>区切り線</button>
-          <button class="tool-btn" data-tool="ink-to-text" title="範囲をドラッグして手書き文字をきれいなテキストに変換"><span class="glyph">✒</span>手書→文字</button>
-          <button class="tool-btn" data-tool="formula-add" title="クリックした位置に数式(LaTeX)を挿入"><span class="glyph">∑</span>数式</button>
-          <button class="tool-btn" id="insertImageBtn" type="button" title="画像を挿入（移動・拡大縮小できます）"><span class="glyph">🖼</span>画像</button>
-          <button class="tool-btn" id="insertChartBtn" type="button" title="グラフを挿入"><span class="glyph">📊</span>グラフ</button>
-          <button class="tool-btn" id="insertLinkBtn" type="button" title="リンク(URL)を挿入"><span class="glyph">🔗</span>リンク</button>
-          <button class="tool-btn" id="insertVideoBtn" type="button" title="動画を挿入"><span class="glyph">🎬</span>動画</button>
-          <button class="tool-btn" id="openCommandBtn" type="button" title="コマンドパレットを開く（コマンド一覧は右上の？から）"><span class="glyph">&gt;_</span>コマンド</button>
-          <button class="tool-btn" id="openCameraBtn" type="button" title="カメラで撮影して画像挿入・OCR"><span class="glyph">📷</span>カメラ</button>
+          <div class="tool-group">
+            <div class="tool-group-label">基本</div>
+            <div class="tool-group-buttons">
+              <button class="tool-btn" data-tool="select" title="選択・移動・リサイズ"><span class="glyph">↖</span>選択</button>
+              <button class="tool-btn" data-tool="pen" title="ペンで手書き"><span class="glyph">🖊</span>ペン</button>
+              <button class="tool-btn" data-tool="eraser" title="消しゴム"><span class="glyph">🩹</span>消す</button>
+              <button class="tool-btn" data-tool="ruler" title="定規（直線）"><span class="glyph">📏</span>定規</button>
+              <button class="tool-btn" data-tool="lasso" title="輪投げ：手書きの一部を丸く囲んで選択し、そのまま移動・リサイズ・削除できるようにします"><span class="glyph">➰</span>輪投げ</button>
+            </div>
+          </div>
+          <div class="tool-group">
+            <div class="tool-group-label">文字・テキスト</div>
+            <div class="tool-group-buttons">
+              <button class="tool-btn" data-tool="text-add" title="テキストボックス追加"><span class="glyph">T</span>文字</button>
+              <button class="tool-btn" data-tool="manual-add" title="範囲を指定して手動でテキスト登録"><span class="glyph">✍</span>手動登録</button>
+              <button class="tool-btn" data-tool="ink-to-text" title="範囲をドラッグして手書き文字をきれいなテキストに変換"><span class="glyph">✒</span>手書→文字</button>
+            </div>
+          </div>
+          <div class="tool-group">
+            <div class="tool-group-label">読み上げ・OCR選択</div>
+            <div class="tool-group-buttons">
+              <button class="tool-btn" data-tool="read-select" title="範囲をドラッグして部分読み上げ（認識済みテキストを読む）"><span class="glyph">🔊</span>部分読上</button>
+              <button class="tool-btn" data-tool="ocr-select" title="範囲をドラッグしてその場でOCR＋読み上げ"><span class="glyph">🔎</span>部分OCR</button>
+              <button class="tool-btn" data-tool="ocr-exclude" title="範囲をドラッグしてOCR対象から除外（写真や図など文字にしたくない部分）"><span class="glyph">🚫</span>OCR除外</button>
+              <button class="tool-btn" data-tool="divider-add" title="横または縦にドラッグして、上下/左右に分かれている境界を自分で指定"><span class="glyph">┃</span>区切り線</button>
+            </div>
+          </div>
+          <div class="tool-group">
+            <div class="tool-group-label">挿入</div>
+            <div class="tool-group-buttons">
+              <button class="tool-btn" data-tool="formula-add" title="クリックした位置に数式(LaTeX)を挿入"><span class="glyph">∑</span>数式</button>
+              <button class="tool-btn" id="insertImageBtn" type="button" title="画像を挿入（移動・拡大縮小できます）"><span class="glyph">🖼</span>画像</button>
+              <button class="tool-btn" id="insertChartBtn" type="button" title="グラフを挿入"><span class="glyph">📊</span>グラフ</button>
+              <button class="tool-btn" id="insertLinkBtn" type="button" title="リンク(URL)を挿入"><span class="glyph">🔗</span>リンク</button>
+              <button class="tool-btn" id="insertVideoBtn" type="button" title="動画を挿入"><span class="glyph">🎬</span>動画</button>
+              <button class="tool-btn" id="openCameraBtn" type="button" title="カメラで撮影して画像挿入・OCR"><span class="glyph">📷</span>カメラ</button>
+            </div>
+          </div>
           <input type="file" id="imageObjInput" accept="image/*" style="display:none;">
         </div>
         <div class="pen-options hidden" id="penOptions">
@@ -938,11 +986,14 @@
         </p>
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
-          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v12.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
-          ｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v14.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a>
+          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v13.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
+          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v15.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
         </div>
       </div>
     </aside>
+  </div>
+  <div id="bottomBar">
+    <button class="bottom-cmd-btn" id="openCommandBtn" type="button" title="コマンドパレットを開く（コマンド一覧は右上の？から）"><span class="glyph">&gt;_</span> コマンド</button>
   </div>
 </div>
 
@@ -2444,6 +2495,7 @@ function showFirstTimeIntro(){
     '<div class="manual-editor-actions"><button type="button" id="introCloseBtn">もう表示しない</button><button type="button" id="introUsageBtn">使い方ガイドを見る</button></div>';
   overlay.appendChild(box);
   document.body.appendChild(overlay);
+  if (schoolMode === 'elementary') elementarizeRoot(box, true); /* 【v4.6で追加】動的生成モーダルにも小学生モードを適用 */
 
   function dismiss(){
     try { localStorage.setItem(INTRO_KEY, '1'); } catch(e){}
@@ -2451,7 +2503,7 @@ function showFirstTimeIntro(){
   }
   document.getElementById('introCloseBtn').addEventListener('click', dismiss);
   document.getElementById('introUsageBtn').addEventListener('click', () => {
-    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v14.html', '_blank', 'noopener');
+    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v15.html', '_blank', 'noopener');
     dismiss();
   });
 }
@@ -3245,6 +3297,7 @@ function openOcrLangModal(){
     row.innerHTML = '<input type="checkbox" value="' + opt.code + '"' + (current.indexOf(opt.code) !== -1 ? ' checked' : '') + '> ' + opt.label;
     list.appendChild(row);
   });
+  if (schoolMode === 'elementary') elementarizeRoot(box, true); /* 【v4.6で追加】動的生成モーダルにも小学生モードを適用 */
   function closeModal(){ overlay.remove(); }
   box.querySelector('#ocrLangCloseBtn').addEventListener('click', closeModal);
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
@@ -4282,61 +4335,102 @@ function getVisibleFormulaCategories(){
     return items.length ? { name: cat.name, items } : null;
   }).filter(Boolean);
 }
-/* 【v4.3で追加】小学生モード：画面上の主な漢字表示をひらがなに置き換える。
-   対象は「今なにをするボタンなのか」が伝わることが特に重要な、ツールバーの
-   ボタン名・サイドパネルの見出し・主要な操作ボタン。ノートの中身（OCRで
-   読み取った文章そのものなど）はそのままで、あくまでアプリ自身の操作画面の
-   文字を対象にしている。辞書に無い文字列は元のまま表示する（安全側に倒す）。
-   置き換え前の文字は data-orig-* に保存しておき、モードを戻すと元に戻る。 */
+/* 【v4.3で追加・v4.6で全面拡張】小学生モード：画面上の主な漢字表示をひらがなに置き換える。
+   これまでは左のツールバーの一部ボタンなど、ごく限られた範囲しか対象になっておらず、
+   「ほぼ変わらない」状態だった。v4.6では対象範囲を大きく広げ、
+   ①上部バー（topbar）、②左サイドバー（leftbar：ページ操作・ツール一覧・ペン設定など）、
+   ③右パネル（rightpanel）の見出し類、④グラフ/リンク/動画/カメラ/DLC管理/記号一覧といった
+   よく開かれるモーダルの中身、を一括で変換できるようにした。
+   ノートの中身（OCRで読み取った文章・保存済みノート名・DLC名など、ユーザーのデータ）は
+   対象外とし、あくまで「アプリ自身の操作画面の文字（チェック）」だけを対象にしている。
+   辞書に無い文字列は元のまま表示する（安全側に倒す）。 */
 const ELEMENTARY_UI_DICT = {
+  /* ツールバー（アイコン+ラベル） */
   '選択':'せんたく', '文字':'もじ', '消す':'けす', '定規':'じょうぎ',
   '輪投げ':'わなげ', '数式':'すうしき', '手書→文字':'てがき→もじ', '手動登録':'しゅどうとうろく',
   '部分読上':'ぶぶんよみあげ', 'OCR除外':'OCRじょがい', '部分OCR':'ぶぶんOCR', '区切り線':'くぎりせん',
   '画像':'がぞう', '動画':'どうが',
-  'カメラで撮影':'カメラでとる', 'グラフを挿入':'グラフをいれる', 'ツール':'ツール',
-  'ページ':'ページ', 'リンクを挿入':'リンクをいれる', '数学記号一覧（/all kigou）':'すうがくきごういちらん',
-  '👋 ようこそ、読みノートへ':'👋 ようこそ、よみノートへ',
+  /* サイドバー見出し */
+  'ツール':'ツール', 'ページ':'ページ',
+  /* 【v4.6で追加】ツールボタンの種類別グループ見出し */
+  '基本':'きほん', '文字・テキスト':'もじ・テキスト', '読み上げ・OCR選択':'よみあげ・OCRせんたく',
+  'コマンド':'コマンド',
+  /* 上部バー・サイドバーの主要ボタン（絵文字込みの全文一致） */
+  '🆕 新規':'🆕 しんき', '📥 取込':'📥 とりこみ', '💾 保存':'💾 ほぞん',
+  '📄 PDF書き出し':'📄 PDFかきだし', '🗜️ ZIP書き出し':'🗜️ ZIPかきだし',
+  '🔊 全文読み上げ':'🔊 ぜんぶんよみあげ', '⏹ 停止':'⏹ ていし',
+  '＋ 追加':'＋ ついか', '🗑 削除':'🗑 さくじょ',
   '🧩 追加DLC（拡張機能）の管理':'🧩 ついかDLC（きのう）のかんり',
-  '🌐 OCRで認識する言語':'🌐 OCRでよみとることば'
+  '🌐 OCRで認識する言語':'🌐 OCRでよみとることば',
+  '👋 ようこそ、読みノートへ':'👋 ようこそ、よみノートへ',
+  'もう表示しない':'もうひょうじしない', '使い方ガイドを見る':'つかいかたガイドをみる',
+  '🎒 小学生':'🎒 しょうがくせい', '📘 中学生':'📘 ちゅうがくせい',
+  '📗 高校生':'📗 こうこうせい', '🎓 大学生・一般':'🎓 だいがくせい・いっぱん',
+  '🧪 テストモード':'🧪 テストモード', '🧪 テストモード中':'🧪 テストモードちゅう',
+  '🧪 テストモード中（解除）':'🧪 テストモードちゅう（かいじょ）',
+  /* グループラベル */
+  '一文':'いちぶん', '速度':'そくど', '倍速':'ばいそく',
+  /* 汎用の操作ボタン（モーダル共通） */
+  '挿入':'いれる', 'キャンセル':'キャンセル', '閉じる':'とじる', '開く':'ひらく',
+  '削除':'さくじょ', '追加':'ついか', '種類':'しゅるい', '方法':'ほうほう', '保存する':'ほぞんする',
+  /* グラフ挿入モーダル */
+  'グラフを挿入':'グラフをいれる', '棒グラフ':'ぼうグラフ', '折れ線グラフ':'おれせんグラフ',
+  '円グラフ':'えんグラフ', 'タイトル（任意）':'タイトル（かかなくてもよい）',
+  'データ（1行に「項目名,数値」）':'データ（1ぎょうに「なまえ,すうじ」）',
+  /* リンク挿入モーダル */
+  'リンクを挿入':'リンクをいれる', '表示名（任意）':'ひょうじする名まえ（かかなくてもよい）',
+  /* 動画挿入モーダル */
+  '動画を挿入':'どうがをいれる', '動画のURL':'どうがのURL', 'ファイル':'ファイル',
+  '大きい動画はブラウザ保存に失敗する場合があります':'おおきいどうがは、うまくほぞんできないことがあります',
+  /* 記号一覧モーダル */
+  '数学記号一覧（/all kigou）':'すうがくきごういちらん',
+  /* カメラ撮影モーダル */
+  'カメラで撮影':'カメラでとる', 'カメラ（内蔵/外付けなど）':'カメラ（うちがわ・そとがわ）',
+  '📷 撮影':'📷 とる', '撮り直す':'とりなおす', '画像として挿入':'がぞうとしていれる',
+  '新しいページに追加してOCR':'あたらしいページにいれてOCR',
+  /* DLC管理モーダル */
+  '🎁 内蔵DLC（ダウンロード不要・バージョンを選んで有効化できます）':'🎁 はじめから入っているDLC（バージョンをえらんでつかえます）',
+  '取り込み済みのDLC（複数可・それぞれ個別にオン/オフ・削除できます）':'とりこんだDLC（オン・オフ・さくじょができます）',
+  '📥 DLCを追加で取り込む':'📥 DLCをついかでとりこむ',
+  'このバージョンを有効にする':'このバージョンをつかう', '無効にする':'つかわない',
+  '✎ 編集':'✎ へんしゅう', '⌫ 削除':'⌫ さくじょ',
 };
-const ELEMENTARY_BTN_DICT = {
-  newNoteBtn: '🆕 しんき', importBtn: '📥 とりこみ', saveBtn: '💾 ほぞん',
-  exportPdfBtn: '📄 PDFかきだし', exportZipBtn: '🗜️ ZIPかきだし',
-  addPageBtn: '＋ ついか', delPageBtn: '🗑 さくじょ'
-};
-function applyElementaryUiText(on){
-  document.querySelectorAll('.tool-btn').forEach(btn => {
-    const glyph = btn.querySelector('.glyph');
-    const node = glyph ? glyph.nextSibling : null;
-    if (!node || node.nodeType !== 3) return;
+/* 変換前の文字列を復元できるよう、変換したノードごとに元の文字列を覚えておく */
+const elementaryOrigTextMap = new WeakMap();
+/* 【v4.6で追加】小学生モードの変換をかけないエリア（ユーザー自身のデータや、
+   常に変化し続ける動的な内容。誤変換・パフォーマンス低下を避けるため除外する） */
+const ELEMENTARY_EXCLUDE_SELECTOR = [
+  '#thumbWrap', '#cmdLog', '#cmdInput', '#sentencePreview', '#pageEl', '#mediaLayer',
+  '#builtinDlcListArea', '#dlcListArea', '#ocrLangList', '.saved-list', '.sentence-strips',
+  '#titleInput', '.formula-palette', '#symbolGrid'
+].join(',');
+/* 指定した範囲(root)の中のボタン・見出し・ラベル等を、辞書に従ってひらがな表示に
+   置き換える（on=false で元に戻す）。「グリフ(絵文字)＋テキスト」の構造と、
+   「テキストのみ」の構造の両方に対応する。 */
+function elementarizeRoot(root, on){
+  if (!root) return;
+  const candidates = root.querySelectorAll('button, label, h2, h3, legend, option, span.link-label, .tool-group-label');
+  candidates.forEach(el => {
+    if (el.closest(ELEMENTARY_EXCLUDE_SELECTOR)) return;
+    const glyph = el.querySelector && el.querySelector(':scope > .glyph');
+    const targetNode = glyph ? glyph.nextSibling : (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3 ? el.childNodes[0] : null);
+    if (!targetNode || targetNode.nodeType !== 3) return;
     if (on){
-      if (btn.dataset.origLabel === undefined) btn.dataset.origLabel = node.textContent;
-      const key = btn.dataset.origLabel.trim();
-      if (ELEMENTARY_UI_DICT[key]) node.textContent = ELEMENTARY_UI_DICT[key];
-    } else if (btn.dataset.origLabel !== undefined){
-      node.textContent = btn.dataset.origLabel;
-    }
-  });
-  document.querySelectorAll('#leftbar h3, #rightpanel h3, .modal-box h3').forEach(h => {
-    if (on){
-      if (h.dataset.origLabel === undefined) h.dataset.origLabel = h.textContent;
-      const key = h.dataset.origLabel.trim();
-      if (ELEMENTARY_UI_DICT[key]) h.textContent = ELEMENTARY_UI_DICT[key];
-    } else if (h.dataset.origLabel !== undefined){
-      h.textContent = h.dataset.origLabel;
-    }
-  });
-  Object.keys(ELEMENTARY_BTN_DICT).forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (on){
-      if (el.dataset.origLabel === undefined) el.dataset.origLabel = el.textContent;
-      el.textContent = ELEMENTARY_BTN_DICT[id];
-    } else if (el.dataset.origLabel !== undefined){
-      el.textContent = el.dataset.origLabel;
+      if (!elementaryOrigTextMap.has(targetNode)) elementaryOrigTextMap.set(targetNode, targetNode.textContent);
+      const key = elementaryOrigTextMap.get(targetNode).trim();
+      if (ELEMENTARY_UI_DICT[key]) targetNode.textContent = ELEMENTARY_UI_DICT[key];
+    } else if (elementaryOrigTextMap.has(targetNode)){
+      targetNode.textContent = elementaryOrigTextMap.get(targetNode);
     }
   });
 }
+function applyElementaryUiText(on){
+  ['#topbar', '#leftbar', '#rightpanel', '#chartModal', '#dlcModal', '#linkModal',
+   '#videoModal', '#symbolModal', '#cameraModal'].forEach(sel => {
+    elementarizeRoot(document.querySelector(sel), on);
+  });
+}
+
 /* モード切り替えの本体。数式パレットは開くたびに現在のモードを見て
    フィルタするだけなので、ここでは学年の保存とUIひらがな化だけを行う。 */
 function applySchoolMode(){
@@ -4353,8 +4447,38 @@ function applySchoolMode(){
      切り替えているので、再描画するだけでよい。
    ③新規のリンク・動画の挿入ボタン：テストモード中は押せないようにする
      （学校のテストで新たにリンクや動画を貼り付けて調べる、という使い方を防ぐため）。 */
+/* 【v4.6で追加】このDLCが「ディスレクシア支援パック」かどうかを判定する。
+   内蔵DLC（idが builtin_dyslexia_ で始まる）と、ファイルとして取り込んだ場合
+   （ファイル名に dyslexia／ディスレクシア を含む）の両方に対応する。 */
+function isDyslexiaSupportDlc(d){
+  if (!d) return false;
+  if (typeof d.id === 'string' && d.id.indexOf('builtin_dyslexia_') === 0) return true;
+  const name = d.name || '';
+  return /dyslexia/i.test(name) || name.indexOf('ディスレクシア') !== -1;
+}
 function setTestMode(on){
-  testModeOn = !!on;
+  const prev = testModeOn;
+  const next = !!on;
+  /* 【v4.6で追加】テストモード中は、ディスレクシア支援パック以外のDLC
+     （追加コンテンツ）を止める。DLCはページ読み込み時にしか読み込み/停止が
+     できない仕組みのため、既に読み込まれている他のDLCがある場合だけ、
+     ページを再読み込みして反映する（DLCの有効/無効の設定自体は変更しない
+     ので、テストモードを解除すればまた元通り動く）。 */
+  if (prev !== next){
+    let dlcList = [];
+    try { dlcList = loadDlcList(); } catch(e){}
+    const hasOtherDlc = dlcList.some(d => d.enabled && d.src && !isDyslexiaSupportDlc(d));
+    if (hasOtherDlc){
+      testModeOn = next;
+      try { localStorage.setItem(TEST_MODE_KEY, testModeOn ? '1' : '0'); } catch(e){}
+      flashToast(testModeOn
+        ? 'テストモードをONにします。ディスレクシア支援パック以外のDLCを止めるため、再読み込みします…'
+        : 'テストモードをOFFにします。DLCを元に戻すため、再読み込みします…', 3500);
+      setTimeout(() => location.reload(), 900);
+      return;
+    }
+  }
+  testModeOn = next;
   try { localStorage.setItem(TEST_MODE_KEY, testModeOn ? '1' : '0'); } catch(e){}
   const btn = document.getElementById('testModeBtn');
   if (btn){
@@ -4372,6 +4496,18 @@ function setTestMode(on){
       ? 'テストモード中はリンク・動画を新しく挿入できません（🧪テストモードを解除すると使えます）'
       : (id === 'insertLinkBtn' ? 'リンク(URL)を挿入' : '動画を挿入');
   });
+  /* 【v4.6で追加】テストモード中は「追加コンテンツ（🧩）」「利用規約（📜）」以外の
+     リンク・コマンド機能を非表示にする。ツールバーの位置切替（⬆️/⬅️）は
+     上部バーのボタンからそのまま使えるので、コマンドが使えなくても困らない。 */
+  ['homeLinkBtn','usageLinkBtn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('hidden', testModeOn);
+  });
+  const savedTabLinkSep = document.getElementById('savedTabUsageLinkSep');
+  if (savedTabLinkSep) savedTabLinkSep.classList.toggle('hidden', testModeOn);
+  const bottomBar = document.getElementById('bottomBar');
+  if (bottomBar) bottomBar.classList.toggle('hidden', testModeOn);
+  if (testModeOn) document.getElementById('cmdPanel').classList.remove('open');
   renderMediaObjects();
   /* 数式エディタが開いている最中にテストモードを切り替えた場合は、
      パレットの中身（「よく使う公式」の有無）がズレたままにならないよう、
@@ -4897,6 +5033,16 @@ document.getElementById('testModeBtn').addEventListener('click', () => {
   setTestMode(!testModeOn);
   flashToast(testModeOn ? 'テストモードをONにしました（公式パレット・リンク・動画をブロック）' : 'テストモードをOFFにしました');
 });
+/* 【v4.6で追加】/tool up・/tool side と同じ機能を上部バーのボタンからも使えるようにする
+   （テストモード中はコマンドパレットが使えなくなるため、必須の代替導線として追加） */
+document.getElementById('toolPosUpBtn').addEventListener('click', () => {
+  setToolbarPosition('up');
+  flashToast('ツールバーを上端表示に切り替えました');
+});
+document.getElementById('toolPosSideBtn').addEventListener('click', () => {
+  setToolbarPosition('side');
+  flashToast('ツールバーを左（通常）表示に切り替えました');
+});
 document.getElementById('pageOrientationSelect').addEventListener('change', e => {
   const page = notestate.pages[currentPageIndex];
   page.orientationMode = e.target.value;
@@ -5207,11 +5353,35 @@ async function exportZip(){
 /* ============================================================
    トースト通知
 ============================================================ */
-function flashToast(msg){
+function flashToast(msg, duration){
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+  t._timer = setTimeout(() => t.classList.remove('show'), duration || 2200);
+}
+/* 【v4.6で追加】UDフォントの読み込み確認。
+   本体アプリは v4.3 以降、常に「BIZ UDゴシック」を標準フォントとして使う
+   設計になっている（ディスレクシア支援パックv1.0以降は、この標準搭載を前提に
+   パック側のフォント切替ボタンを廃止した）。しかし学校・施設のネットワークで
+   Google Fontsへの通信がブロックされていると、フォントの読み込みに失敗し、
+   見た目上は代替フォント（メイリオ・游ゴシックなど）のままになり、
+   「UDフォントになっていない」ように見えることがある。
+   起動時に実際にフォントが読み込めたかを確認し、失敗していた場合だけ
+   ひとこと案内を出す（読み込めていれば何も表示しない）。 */
+function checkUdFontLoaded(){
+  if (!document.fonts || !document.fonts.load){
+    return; /* 古いブラウザではFont Loading APIが無いため確認自体をスキップ */
+  }
+  const timeout = new Promise(resolve => setTimeout(() => resolve(null), 4000));
+  Promise.race([
+    document.fonts.load('700 16px "BIZ UDGothic"').catch(() => null),
+    timeout
+  ]).then(() => {
+    const loaded = document.fonts.check('700 16px "BIZ UDGothic"');
+    if (!loaded){
+      flashToast('UDフォント（BIZ UDゴシック）の読み込みに失敗しました。ネットワーク（学校や施設のフィルタリング等）でGoogle Fontsがブロックされている可能性があります。', 6000);
+    }
+  }).catch(() => {});
 }
 
 /* ============================================================
@@ -5945,7 +6115,18 @@ function loadStoredDlcIfEnabled(){
   migrateOldDlcStorage();
   try {
     const list = loadDlcList();
-    const enabledOnes = list.filter(d => d.enabled && d.src);
+    let enabledOnes = list.filter(d => d.enabled && d.src);
+    /* 【v4.6で追加】テストモード中は、ディスレクシア支援パック以外のDLCを
+       読み込まない（学校のテストで不要・不適切な機能をブロックするため）。
+       DLC自体の有効/無効設定は変更しないので、テストモードを解除すれば
+       次の再読み込みで元通りすべて読み込まれる。 */
+    if (testModeOn){
+      const blocked = enabledOnes.filter(d => !isDyslexiaSupportDlc(d));
+      enabledOnes = enabledOnes.filter(d => isDyslexiaSupportDlc(d));
+      if (blocked.length){
+        console.info('テストモード中のため、次のDLCの読み込みをブロックしました：', blocked.map(d => d.name).join('、'));
+      }
+    }
     enabledOnes.forEach(d => {
       const s = document.createElement('script');
       s.textContent = d.src;
@@ -6195,6 +6376,7 @@ document.getElementById('cameraCancelBtn').addEventListener('click', closeCamera
 document.getElementById('openCameraBtn').addEventListener('click', openCameraModal);
 
 document.getElementById('openCommandBtn').addEventListener('click', () => {
+  if (testModeOn) return; /* 【v4.6で追加】テストモード中はコマンドパレットを開けないようにする */
   document.getElementById('cmdPanel').classList.add('open');
   updateCommandPromptUI();
   if (!document.getElementById('cmdLog').children.length){
@@ -6235,6 +6417,7 @@ window.addEventListener('DOMContentLoaded', () => {
   setTestMode(testModeOn); /* 【v4.5で追加】前回終了時のテストモード状態を復元してUIに反映 */
   showFirstTimeIntro();
   setTimeout(warmupOcrWorker, 1200);
+  checkUdFontLoaded();
 });
 </script>
 
@@ -6253,7 +6436,7 @@ window.addEventListener('DOMContentLoaded', () => {
   下の行のコメントを外してください（本体のメインscriptタグより必ず後ろに置くこと）。
   複数のDLCを手動で読み込みたい場合は、同様のscriptタグを必要な数だけ追加してください。
 
-  <script src="dyslexia-support-pack-v1_0.js"></script>
+  <script src="dyslexia-support-pack-v1.0.js"></script>
 -->
 </body>
 </html>
