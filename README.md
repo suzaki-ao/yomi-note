@@ -1,13 +1,13 @@
 # 読みノート（Yomi Note）
 ****
 👉 **公式ページはこちら**
-https://suzaki-ao.github.io/yomi-note/Yomi_note_home_v23.html
+https://suzaki-ao.github.io/yomi-note/Yomi_note_home_v24.html
 ****
 👉 **使い方ガイドはこちら**
-https://suzaki-ao.github.io/yomi-note/%E4%BD%BF%E3%81%84%E6%96%B9v16.html
+https://suzaki-ao.github.io/yomi-note/%E4%BD%BF%E3%81%84%E6%96%B9v17.html
 ****
 👉 **利用規約はこちら**
-https://suzaki-ao.github.io/yomi-note/%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v14.html
+https://suzaki-ao.github.io/yomi-note/%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v15.html
 ****
 👉 **コマンド一覧はこちら**
 https://suzaki-ao.github.io/yomi-note/command-list-v11.html
