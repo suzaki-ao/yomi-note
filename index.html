@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v4.8</title>
+<title>読みノート v4.9</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -55,7 +55,7 @@
   }
   #bottomBar.hidden{display:none;}
   /* 【v4.6で追加】テストモード中に隠すリンク類 */
-  #homeLinkBtn.hidden, #usageLinkBtn.hidden, #savedTabUsageLinkSep.hidden{display:none;}
+  #homeLinkBtn.hidden, #usageLinkBtn.hidden, #featureLinkBtn.hidden, #savedTabUsageLinkSep.hidden{display:none;}
   #ocrToolHintText.hidden, #testSettingsBtn.hidden{display:none;}
   .bottom-cmd-btn{
     display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;
@@ -420,6 +420,11 @@
   [data-test-mode-hide].test-mode-disabled{opacity:.4;cursor:not-allowed;filter:grayscale(.6);pointer-events:none;}
   .tool-btn.test-mode-disabled{opacity:.4;cursor:not-allowed;filter:grayscale(.6);}
   .btn.test-mode-disabled{opacity:.4;cursor:not-allowed;filter:grayscale(.6);}
+  /* 【v4.9で追加】テストモード中にブロックされているボタンは、グレーアウト表示
+     ではなく完全に非表示にする（生徒に「使えない機能がある」ことを見せない
+     ようにするため）。ONにする際にツールグリッド内で隙間ができないよう、
+     幅0のスペースとして完全に折りたたむ。 */
+  .test-mode-hidden{display:none !important;}
 
   /* ---------- モーダル(グラフ挿入) ---------- */
   .modal-overlay{
@@ -602,7 +607,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v4.8</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v4.9</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
       <span class="offline-badge hidden" id="offlineBadge" title="インターネットに接続されていません。音声入力は端末によっては引き続き使える場合がありますが、多くの環境では通信が必要です。">🔌 オフライン</span>
       <span class="test-mode-badge hidden" id="testModeBadge" title="テストモード中は、自動で公式が出てくる機能やリンク・動画がブロックされています">🧪 テストモード中</span>
     </div>
@@ -627,9 +632,10 @@
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
     <button class="btn accent" id="exportZipBtn" title="各ページの画像とノートデータをZIPでまとめて書き出す">🗜️ ZIP書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v24.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
-    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v17.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
-    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v15.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v25.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="featureLinkBtn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv1.html" target="_blank" rel="noopener" title="機能紹介 / Features" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">✨</a>
+    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v18.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
+    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v16.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
     <button class="icon-btn" id="fullscreenBtn" title="全画面表示に切り替え">⛶</button>
     <button class="icon-btn" id="ocrLangBtn" title="OCRで認識する言語を選ぶ（日本語＋外国語など）">🌐</button>
@@ -782,6 +788,7 @@
           </div>
           <div class="tb-toolbar hidden" id="mediaToolbar">
             <button data-act="edit" title="数式を編集">✎ 編集</button>
+            <button data-act="ocr" title="この画像の文字をOCRで読み取り、読み上げられるようにします">🔍 OCR</button>
             <button data-act="delete" title="削除">🗑</button>
           </div>
         </div>
@@ -1037,8 +1044,8 @@
         </p>
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
-          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v15.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
-          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v17.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
+          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v16.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
+          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v18.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
         </div>
       </div>
     </aside>
@@ -1098,14 +1105,21 @@ let undoStack = [];
 let redoStack = [];
 let drawing = false, lastPt = null, rulerStart = null, lastRulerPoint = null;
 let dragStart = null;
-/* 【v4.5で追加】テストモード：学校のテストで不要・不適切になる機能を一時的に
-   ブロックする。①数式パレットの「よく使う公式」（タップすると完成した公式が
-   自動で出てくるもの）を非表示にする、②ノートに挿入済みのリンク・動画を
-   開けない／再生できないようにする（新規挿入もできないようにする）。
-   ボタン（🧪テストモード）またはコマンド（/test mode on・/test mode off）で
-   切り替えられ、状態はlocalStorageに保存して次回起動時も引き継ぐ。 */
+/* 【v4.5で追加・v4.9で修正】テストモード：学校のテストで不要・不適切になる
+   機能を一時的にブロックする。①数式パレットの「よく使う公式」（タップすると
+   完成した公式が自動で出てくるもの）を非表示にする、②ノートに挿入済みの
+   リンク・動画を開けない／再生できないようにする（新規挿入もできないよう
+   にする）。ボタン（🧪テストモード）またはコマンド（/test mode on・
+   /test mode off）で切り替えられる。
+   【v4.9で修正】以前はlocalStorageに保存していたため、サイトを閉じて
+   もう一度開いた（＝新しいタブ/セッションで開いた）だけでも前回の
+   テストモードの状態がそのまま復元されてしまい、「開いたら勝手に
+   テストモードがONになっている」という紛らわしい不具合があった。
+   sessionStorageに変更し、同じタブ内でのリロード（DLC設定変更時の
+   自動再読み込みなど）では状態を保つが、タブ/ブラウザを閉じて
+   開き直した場合は必ずOFFから始まるようにする。 */
 const TEST_MODE_KEY = 'yomiTestMode';
-let testModeOn = (() => { try { return localStorage.getItem(TEST_MODE_KEY) === '1'; } catch(e){ return false; } })();
+let testModeOn = (() => { try { return sessionStorage.getItem(TEST_MODE_KEY) === '1'; } catch(e){ return false; } })();
 
 function newPage(w, h, bgImage, fromCamera){
   return {
@@ -1197,8 +1211,17 @@ function clusterIntoReadingColumns(items, vertical){
   return result;
 }
 function getReadingOrderItems(page){
+  /* 【v4.9で追加】テストモード中に画像がブロック設定になっている場合、その
+     画像からOCRで読み取ったテキスト（sourceMediaIdが対応する画像を指すもの）も
+     読み上げ・OCR一覧から除外する。ロック表示にしているのに、OCR結果からは
+     内容が読めてしまう、という抜け道を防ぐため。 */
+  const blockImage = testModeOn && testModeSettings.blockImage;
+  const lockedImageIds = blockImage
+    ? new Set((page.mediaObjects || []).filter(m => m.type === 'image').map(m => m.id))
+    : null;
   const items = page.ocrBlocks
     .filter(b => !b.excludeFromReading)
+    .filter(b => !(lockedImageIds && b.sourceMediaId && lockedImageIds.has(b.sourceMediaId)))
     .map(b => ({id:b.id, text:b.text, x:b.x, y:b.y, w:b.w, h:b.h}))
     .concat(page.textBoxes.filter(t=>t.text && t.text.trim()).map(t => ({id:t.id, text:t.text, x:t.x, y:t.y, w:t.w, h:t.h})));
   return clusterIntoReadingColumns(items, page.vertical);
@@ -2259,7 +2282,9 @@ function selectMedia(id){
   const m = getMediaObject(id);
   if (!m){ hideMediaToolbar(); return; }
   const bar = document.getElementById('mediaToolbar');
+  const imageIsLocked = testModeOn && testModeSettings.blockImage && (m.type === 'image' || m.type === 'chart');
   bar.querySelector('[data-act="edit"]').style.display = (m.type === 'formula') ? 'flex' : 'none';
+  bar.querySelector('[data-act="ocr"]').style.display = (m.type === 'image' && !imageIsLocked) ? 'flex' : 'none';
   positionMediaToolbar(m);
 }
 function positionMediaToolbar(m){
@@ -2283,6 +2308,52 @@ document.getElementById('mediaToolbar').querySelector('[data-act="edit"]').addEv
   const m = getMediaObject(selectedMediaId);
   if (m && m.type === 'formula') openFormulaEditor(m.x, m.y, m);
 });
+/* 【v4.9で追加】挿入した画像（写真・スクリーンショットなど）そのものをOCRできる
+   ようにした。これまでOCRはページの背景画像（PDF/カメラ取り込み）にしか
+   実行できず、「画像」ツールで貼り付けた画像は文字として認識できなかった。
+   認識結果は、その画像の位置に重なる形でocrBlocksに追加され、右パネルの
+   OCR一覧・読み上げ・ハイライト表示にそのまま乗る（部分OCRツールと同じ扱い）。 */
+document.getElementById('mediaToolbar').querySelector('[data-act="ocr"]').addEventListener('click', () => ocrSelectedImage());
+async function ocrSelectedImage(){
+  const m = getMediaObject(selectedMediaId);
+  if (!m || m.type !== 'image') return;
+  /* 【v4.9で追加】テストモード中に画像がブロックされている場合は、
+     選択できてしまっていてもOCR実行自体を拒否する（ロック済み画像の
+     中身をOCR経由で読み上げて回避されることを防ぐため） */
+  if (testModeOn && testModeSettings.blockImage){
+    logTestEvent('ロック中の画像のOCRを試みた（ブロック中）');
+    return;
+  }
+  if (typeof Tesseract === 'undefined'){ flashToast('OCRライブラリの読み込みに失敗しました。ネットワーク接続を確認してください。'); return; }
+  const page = notestate.pages[currentPageIndex];
+  flashToast('画像の文字を認識しています…');
+  try {
+    let vertical = page.vertical;
+    try {
+      const img = await loadImageAsync(m.src);
+      const detected = detectTextOrientation(img, m.w, m.h);
+      if (detected) vertical = (detected === 'vertical');
+    } catch(e){ /* 向きの自動判定に失敗しても、ページの向きのまま続行する */ }
+    const result = await runOcrOnDataUrl(m.src, vertical, true, null, null,
+      { shadingCorrection: !!page.fromCamera });
+    const text = (result.data.text || '').trim();
+    if (!text){ flashToast('この画像から文字を認識できませんでした。手動登録ツールでの入力もお試しください。'); return; }
+    /* 同じ画像に対してもう一度OCRをかけ直した場合は、前回分を置き換える
+       （同じ場所に文字が重複して積み上がらないようにするため） */
+    page.ocrBlocks = (page.ocrBlocks || []).filter(b => b.sourceMediaId !== m.id);
+    const block = {
+      id: 'img_ocr_' + Date.now(), text, x: m.x, y: m.y, w: m.w, h: m.h,
+      source: 'selection', sourceMediaId: m.id, confidence: result.data.confidence || 0
+    };
+    page.ocrBlocks.push(block);
+    renderOcrList(); renderHighlights();
+    flashToast('画像の文字を認識しました。右パネルや読み上げで確認できます');
+    logTestEvent('画像をOCRした', m.id);
+  } catch(err){
+    console.error(err);
+    flashToast('画像のOCRに失敗しました：' + (err && err.message ? err.message : '不明なエラー'));
+  }
+}
 
 /* 【v3.9で追加】選択ツールでの範囲選択（複数選択）強化。
    これまでは1回のクリックで1つのテキストボックスしか選べなかったが、
@@ -2580,7 +2651,7 @@ function showFirstTimeIntro(){
   }
   document.getElementById('introCloseBtn').addEventListener('click', dismiss);
   document.getElementById('introUsageBtn').addEventListener('click', () => {
-    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v17.html', '_blank', 'noopener');
+    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v18.html', '_blank', 'noopener');
     dismiss();
   });
 }
@@ -4658,7 +4729,7 @@ function setTestMode(on){
     }
     if (hasOtherDlc){
       testModeOn = next;
-      try { localStorage.setItem(TEST_MODE_KEY, testModeOn ? '1' : '0'); } catch(e){}
+      try { sessionStorage.setItem(TEST_MODE_KEY, testModeOn ? '1' : '0'); } catch(e){}
       flashToast(testModeOn
         ? 'テストモードをONにします。ディスレクシア支援パック以外のDLCをオフにするため、再読み込みします…'
         : 'テストモードをOFFにします。再読み込みします…', 3500);
@@ -4667,7 +4738,7 @@ function setTestMode(on){
     }
   }
   testModeOn = next;
-  try { localStorage.setItem(TEST_MODE_KEY, testModeOn ? '1' : '0'); } catch(e){}
+  try { sessionStorage.setItem(TEST_MODE_KEY, testModeOn ? '1' : '0'); } catch(e){}
   if (prev !== testModeOn){
     appendLogRaw(testModeOn ? 'テストモードON' : 'テストモードOFF',
       testModeOn ? ('設定：画像=' + (testModeSettings.blockImage?'ブロック':'許可') + '／カメラ=' + (testModeSettings.blockCamera?'ブロック':'許可') + '／定規=' + (testModeSettings.blockRuler?'ブロック':'許可') + '／輪投げ=' + (testModeSettings.blockLasso?'ブロック':'許可') + '／学年変更=' + (testModeSettings.blockGradeChange?'ブロック':'許可')) : '');
@@ -4679,26 +4750,21 @@ function setTestMode(on){
   }
   const badge = document.getElementById('testModeBadge');
   if (badge) badge.classList.toggle('hidden', !testModeOn);
-  /* 【v4.8で修正】画像はグラフ・リンク・動画と違い、詳細設定でON/OFFできる
-     「仮ブロック」に変更（既定はブロック）。 */
+  /* 【v4.8で修正・v4.9でさらに変更】画像はグラフ・リンク・動画と違い、詳細設定で
+     ON/OFFできる「仮ブロック」。またv4.9では、ブロック中のボタンは
+     グレーアウト表示ではなく完全に非表示にするよう変更した
+     （生徒に「使えない機能がある」こと自体を見せないため）。 */
   ['insertLinkBtn','insertVideoBtn','insertChartBtn'].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     el.disabled = testModeOn;
-    el.classList.toggle('test-mode-disabled', testModeOn);
-    const labelMap = { insertLinkBtn:'リンク(URL)を挿入', insertVideoBtn:'動画を挿入', insertChartBtn:'グラフを挿入' };
-    el.title = testModeOn
-      ? 'テストモード中はリンク・動画・グラフを新しく挿入できません（🧪テストモードを解除すると使えます）'
-      : labelMap[id];
+    el.classList.toggle('test-mode-hidden', testModeOn);
   });
   const blockImage = testModeOn && testModeSettings.blockImage;
   const imgBtn = document.getElementById('insertImageBtn');
   if (imgBtn){
     imgBtn.disabled = blockImage;
-    imgBtn.classList.toggle('test-mode-disabled', blockImage);
-    imgBtn.title = blockImage
-      ? 'テストモード中は画像を新しく挿入できません（詳細設定で許可に変更できます。設定はテストモードを始める前に）'
-      : '画像を挿入（移動・拡大縮小できます）';
+    imgBtn.classList.toggle('test-mode-hidden', blockImage);
   }
   /* 【v4.7で追加・v4.8で仮ブロック化】カメラ撮影からの「画像として挿入」も
      画像挿入の一種として同じ設定に従う。カメラ機能自体（撮影ボタン）は
@@ -4706,16 +4772,14 @@ function setTestMode(on){
   const cameraInsertBtn = document.getElementById('cameraInsertImageBtn');
   if (cameraInsertBtn){
     cameraInsertBtn.disabled = blockImage;
-    cameraInsertBtn.classList.toggle('test-mode-disabled', blockImage);
-    cameraInsertBtn.title = blockImage ? 'テストモード中は画像として挿入できません' : '';
+    cameraInsertBtn.classList.toggle('test-mode-hidden', blockImage);
   }
   /* 【v4.8で追加】カメラ機能自体（撮影ボタン）を、詳細設定に従ってブロックする */
   const blockCamera = testModeOn && testModeSettings.blockCamera;
   const cameraBtn = document.getElementById('openCameraBtn');
   if (cameraBtn){
     cameraBtn.disabled = blockCamera;
-    cameraBtn.classList.toggle('test-mode-disabled', blockCamera);
-    cameraBtn.title = blockCamera ? 'テストモード中はカメラを使用できません（詳細設定で許可に変更できます）' : 'カメラで撮影して画像挿入・OCR';
+    cameraBtn.classList.toggle('test-mode-hidden', blockCamera);
   }
   /* 【v4.8で追加】定規・輪投げツールを、詳細設定に従ってブロックする。
      setTool()側でも二重に防止しているが、ボタン自体も押せないようにしておく。 */
@@ -4723,17 +4787,19 @@ function setTestMode(on){
   const rulerBtn = document.querySelector('.tool-btn[data-tool="ruler"]');
   if (rulerBtn){
     rulerBtn.disabled = blockRuler;
-    rulerBtn.classList.toggle('test-mode-disabled', blockRuler);
+    rulerBtn.classList.toggle('test-mode-hidden', blockRuler);
     if (blockRuler && currentTool === 'ruler') setTool('select');
   }
   const blockLasso = testModeOn && testModeSettings.blockLasso;
   const lassoBtn = document.querySelector('.tool-btn[data-tool="lasso"]');
   if (lassoBtn){
     lassoBtn.disabled = blockLasso;
-    lassoBtn.classList.toggle('test-mode-disabled', blockLasso);
+    lassoBtn.classList.toggle('test-mode-hidden', blockLasso);
     if (blockLasso && currentTool === 'lasso') setTool('select');
   }
-  /* 【v4.8で追加】学年モードの変更を、詳細設定に従ってブロックする */
+  /* 【v4.8で追加】学年モードの変更を、詳細設定に従ってブロックする。
+     これは「ボタン」ではなくプルダウンで、現在の学年が分かるように残す
+     意味もあるため、非表示にはせずグレーアウト＋操作不可のみにする。 */
   const blockGrade = testModeOn && testModeSettings.blockGradeChange;
   const gradeSelect = document.getElementById('schoolModeSelect');
   if (gradeSelect){
@@ -4745,7 +4811,8 @@ function setTestMode(on){
   const settingsBtn = document.getElementById('testSettingsBtn');
   if (settingsBtn){
     settingsBtn.disabled = testModeOn;
-    settingsBtn.classList.toggle('test-mode-disabled', testModeOn);
+    settingsBtn.classList.toggle('test-mode-hidden', testModeOn);
+
   }
   /* 【v4.8で追加】右パネルのOCRツール案内文（使えるツールを教えてしまう）を
      テストモード中は非表示にする */
@@ -4758,12 +4825,12 @@ function setTestMode(on){
     const el = document.getElementById(id);
     if (!el) return;
     el.disabled = testModeOn;
-    el.classList.toggle('test-mode-disabled', testModeOn);
+    el.classList.toggle('test-mode-hidden', testModeOn);
   });
   /* 【v4.6で追加】テストモード中は「追加コンテンツ（🧩）」「利用規約（📜）」以外の
      リンク・コマンド機能を非表示にする。ツールバーの位置切替（⬆️/⬅️）は
      上部バーのボタンからそのまま使えるので、コマンドが使えなくても困らない。 */
-  ['homeLinkBtn','usageLinkBtn'].forEach(id => {
+  ['homeLinkBtn','usageLinkBtn','featureLinkBtn'].forEach(id => {
     const el = document.getElementById(id);
 
     if (el) el.classList.toggle('hidden', testModeOn);
@@ -4774,6 +4841,10 @@ function setTestMode(on){
   if (bottomBar) bottomBar.classList.toggle('hidden', testModeOn);
   if (testModeOn) document.getElementById('cmdPanel').classList.remove('open');
   renderMediaObjects();
+  /* 【v4.9で追加】画像のブロック状態が変わったら、その画像から読み取った
+     OCR結果の見え方（一覧・読み上げからの除外）も合わせて更新する */
+  renderOcrList();
+  renderHighlights();
   /* 数式エディタが開いている最中にテストモードを切り替えた場合は、
      パレットの中身（「よく使う公式」の有無）がズレたままにならないよう、
      安全側に倒して一旦閉じる。作りかけの数式は失われるが再度開けば良い。 */
@@ -5195,11 +5266,19 @@ function renderOcrList(){
   const page = notestate.pages[currentPageIndex];
   const wrap = document.getElementById('ocrList');
   wrap.innerHTML = '';
-  if (!page.ocrBlocks.length){
+  /* 【v4.9で追加】テストモード中に画像がブロックされている場合、その画像を
+     元に認識したテキストは一覧にも表示しない（getReadingOrderItemsの
+     読み上げ側フィルタと揃える） */
+  const blockImage = testModeOn && testModeSettings.blockImage;
+  const lockedImageIds = blockImage
+    ? new Set((page.mediaObjects || []).filter(m => m.type === 'image').map(m => m.id))
+    : null;
+  const visibleBlocks = page.ocrBlocks.filter(b => !(lockedImageIds && b.sourceMediaId && lockedImageIds.has(b.sourceMediaId)));
+  if (!visibleBlocks.length){
     wrap.innerHTML = '<p class="empty-hint">まだテキストがありません。OCRを実行するか、手動でテキスト範囲を追加してください。</p>';
     return;
   }
-  page.ocrBlocks.forEach(b => {
+  visibleBlocks.forEach(b => {
     const item = document.createElement('div'); item.className = 'ocr-item' + (b.excludeFromReading ? ' excluded' : '');
     const head = document.createElement('div'); head.className = 'ocr-item-head';
     head.innerHTML = '<span class="badge ' + b.source + '">' + (OCR_SOURCE_LABEL[b.source] || b.source) + '</span>' +
