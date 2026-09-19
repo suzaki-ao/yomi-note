@@ -1,13 +1,13 @@
 # 読みノート（Yomi Note）
 ****
 👉 **公式ページはこちら**
-https://suzaki-ao.github.io/yomi-note/Yomi_note_home_v24.html
+https://suzaki-ao.github.io/yomi-note/Yomi_note_home_v25.html
 ****
 👉 **使い方ガイドはこちら**
-https://suzaki-ao.github.io/yomi-note/%E4%BD%BF%E3%81%84%E6%96%B9v17.html
+https://suzaki-ao.github.io/yomi-note/%E4%BD%BF%E3%81%84%E6%96%B9v18.html
 ****
 👉 **利用規約はこちら**
-https://suzaki-ao.github.io/yomi-note/%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v15.html
+https://suzaki-ao.github.io/yomi-note/%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v16.html
 ****
 👉 **コマンド一覧はこちら**
 https://suzaki-ao.github.io/yomi-note/command-list-v11.html
@@ -23,6 +23,6 @@ https://github.com/suzaki-ao/yomi-note/releases/tag/%E8%AA%AD%E3%81%BF%E3%83%8E%
 https://github.com/suzaki-ao/yomi-note/issues/1
 ****
 # アプリについてのお知らせ
-> - v4.6アプリについて
-> 現在アプリv4.6は配信していませんv4.7以降でアプリ化しますのでご了承くださいまたアプリの更新頻度をvが0.5あがるごとに変更しようと思っておりますが現状変更しませんので変更する場合はお知らせします。
+> - v4.8アプリについて
+> 現在アプリv4.8は配信していませんv4.9以降でアプリ化しますのでご了承くださいまたアプリの更新頻度をvが0.5あがるごとに変更しようと思っておりますが現状変更しませんので変更する場合はお知らせします。
 ****
