@@ -6,6 +6,9 @@ https://suzaki-ao.github.io/yomi-note/Yomi_note_home_v25.html
 👉 **使い方ガイドはこちら**
 https://suzaki-ao.github.io/yomi-note/%E4%BD%BF%E3%81%84%E6%96%B9v18.html
 ****
+👉 **機能紹介はこちら**
+https://suzaki-ao.github.io/yomi-note/%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv1.html
+****
 👉 **利用規約はこちら**
 https://suzaki-ao.github.io/yomi-note/%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v16.html
 ****
