@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v5.2 ― 手書き・読み上げノート</title>
+<title>読みノート v5.3 ― 手書き・読み上げノート</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -624,7 +624,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v5.2</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v5.3</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
       <span class="offline-badge hidden" id="offlineBadge" title="インターネットに接続されていません。音声入力は端末によっては引き続き使える場合がありますが、多くの環境では通信が必要です。">🔌 オフライン</span>
       <span class="test-mode-badge hidden" id="testModeBadge" title="テストモード中は、自動で公式が出てくる機能やリンク・動画がブロックされています">🧪 テストモード中</span>
       <span class="test-mode-badge hidden" id="testModeTimerBadge" style="background:#3A6EA5;" title="テストモードの残り時間">⏳ --:--</span>
@@ -650,10 +650,10 @@
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
     <button class="btn accent" id="exportZipBtn" title="各ページの画像とノートデータをZIPでまとめて書き出す">🗜️ ZIP書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v28.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
-    <a class="icon-btn" id="featureLinkBtn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv4.html" target="_blank" rel="noopener" title="機能紹介 / Features" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">✨</a>
-    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v21.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
-    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v19.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v29.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="featureLinkBtn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv5.html" target="_blank" rel="noopener" title="機能紹介 / Features" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">✨</a>
+    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v22.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
+    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v20.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
     <button class="icon-btn" id="fullscreenBtn" title="全画面表示に切り替え">⛶</button>
     <button class="icon-btn" id="ocrLangBtn" title="OCRで認識する言語を選ぶ（日本語＋外国語など）">🌐</button>
@@ -989,7 +989,7 @@
     <div class="cmd-panel" id="cmdPanel">
       <div class="cmd-panel-header">
         <span class="cmd-mode-label">コマンド <span id="cmdModeLabel">@0</span></span>
-        <a class="cmd-help-link" href="./command-list-v14.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
+        <a class="cmd-help-link" href="./command-list-v15.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
         <button class="cmd-close-btn" id="cmdCloseBtn" title="閉じる">✕</button>
       </div>
       <div class="cmd-log" id="cmdLog"></div>
@@ -1075,8 +1075,8 @@
         </p>
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
-          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v19.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
-          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v21.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
+          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v20.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
+          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v22.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
         </div>
       </div>
     </aside>
@@ -2739,7 +2739,7 @@ function showFirstTimeIntro(){
   }
   document.getElementById('introCloseBtn').addEventListener('click', dismiss);
   document.getElementById('introUsageBtn').addEventListener('click', () => {
-    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v21.html', '_blank', 'noopener');
+    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v22.html', '_blank', 'noopener');
     dismiss();
   });
 }
@@ -4605,6 +4605,102 @@ function detectGapRegions(blocks, vertical, pageW, pageH, opts){
     }
   }
   return gaps;
+}
+/* 【v5.3で新規追加】テキストボックス自動配置システム ――― さらなる強化（研究開発中）。
+   これまでのdetectGapRegionsは「ブロックとブロックの間の空白」しか見ておらず、
+   OCRが実際に文字として認識した括弧・□そのもの（例：「これは（　）です。」
+   「これは□です。」）は一切利用していなかった。しかし記入式プリントでは、
+   括弧や□がそのまま1つの文字ブロックの中に文字として含まれていることが多く、
+   さらに□で囲まれた大きな枠の中に、別の（）や□が入れ子になっているケースも
+   珍しくない（依頼のあった画像例と同様のパターン）。
+   detectBracketBlanksは、ブロックのテキストを1文字ずつ走査し、（）［］()[]の
+   対応関係をスタックで追跡することで、何重に入れ子になっていても正しく
+   対応するペアを見つけ出し、単独の□（対になる記号が要らない空欄記号）も
+   あわせて検出する。depthには入れ子の深さ（0＝一番外側）を記録し、内側の
+   ものほど枠と重ならないよう少しだけ内側に縮めて配置できるようにしてある。
+   現時点ではまだ実運用（autoAnalyzeLayout）には組み込まず、@newコマンドの
+   「/new bracket compare」で候補件数を確認できる研究開発段階の実装とする。 */
+const BRACKET_PAIR_DEFS = [
+  { open:'（', close:'）' },
+  { open:'(',  close:')'  },
+  { open:'［', close:'］' },
+  { open:'[',  close:']'  }
+];
+const SOLO_BLANK_CHARS = ['□','▢','◻','☐'];
+function findBracketBlankSpans(text){
+  const spans = [];
+  const stacks = {};
+  for (let i = 0; i < text.length; i++){
+    const ch = text[i];
+    const openDef = BRACKET_PAIR_DEFS.find(p => p.open === ch);
+    if (openDef){
+      (stacks[openDef.open] = stacks[openDef.open] || []).push(i);
+      continue;
+    }
+    const closeDef = BRACKET_PAIR_DEFS.find(p => p.close === ch);
+    if (closeDef){
+      const stack = stacks[closeDef.open];
+      if (stack && stack.length){
+        const openIdx = stack.pop();
+        /* 入れ子の深さ＝このペアより外側にまだ開いたままの括弧がいくつあるか
+           （種類を問わず数える） */
+        const depth = Object.keys(stacks).reduce((n,k) => n + stacks[k].length, 0);
+        spans.push({ start: openIdx, end: i, innerStart: openIdx + 1, innerEnd: i, type: 'pair', depth: depth });
+      }
+      continue;
+    }
+    if (SOLO_BLANK_CHARS.indexOf(ch) !== -1){
+      const depth = Object.keys(stacks).reduce((n,k) => n + stacks[k].length, 0);
+      spans.push({ start: i, end: i, innerStart: i, innerEnd: i + 1, type: 'box', depth: depth });
+    }
+  }
+  return spans.sort((a,b) => a.start - b.start);
+}
+/* ブロック内の文字インデックスを、ブロック矩形上のおおよその位置（比率）に
+   変換する。文字ごとの実際の描画幅は分からないため、「全角と半角でおよそ
+   2:1」という簡易近似で按分する（正確な再現はできないが、括弧の位置を
+   大まかに示す用途としては十分な精度が見込める）。 */
+function approxCharWidth(ch){
+  return /[\x00-\xFF]/.test(ch) ? 0.55 : 1.0;
+}
+function charRangeToRatio(text, startIdx, endIdx){
+  let total = 0, before = 0, within = 0;
+  for (let i = 0; i < text.length; i++){
+    const w = approxCharWidth(text[i]);
+    total += w;
+    if (i < startIdx) before += w;
+    else if (i < endIdx) within += w;
+  }
+  if (!total) return { start: 0, end: 1 };
+  return { start: before / total, end: (before + within) / total };
+}
+function detectBracketBlanks(blocks, vertical){
+  const results = [];
+  blocks.forEach(b => {
+    if (!b.text || b.autoAnnotation) return;
+    const spans = findBracketBlankSpans(b.text);
+    spans.forEach((sp, i) => {
+      const ratio = charRangeToRatio(b.text, sp.innerStart, sp.innerEnd);
+      /* □1文字や空の（）のように範囲が極端に狭い場合でも、実際に
+         タップ・入力できる大きさを確保しておく。 */
+      const minRatio = Math.max(0.04, 1 / Math.max(b.text.length, 1));
+      const startR = ratio.start;
+      const endR = Math.max(ratio.end, startR + minRatio);
+      /* 入れ子が深いほど、外側の枠と重ならないよう少しだけ内側に縮める。 */
+      const inset = Math.min(sp.depth * 2, 6);
+      let rect;
+      if (!vertical){
+        const w = Math.max((endR - startR) * b.w, 18);
+        rect = { x: b.x + startR * b.w + inset, y: b.y + inset, w: Math.max(w - inset * 2, 14), h: Math.max(b.h - inset * 2, 14) };
+      } else {
+        const h = Math.max((endR - startR) * b.h, 18);
+        rect = { x: b.x + inset, y: b.y + startR * b.h + inset, w: Math.max(b.w - inset * 2, 14), h: Math.max(h - inset * 2, 14) };
+      }
+      results.push({ x: rect.x, y: rect.y, w: rect.w, h: rect.h, vertical: !!vertical,
+        kind: sp.type === 'box' ? 'bracketBox' : 'bracketPair', depth: sp.depth, sourceBlockId: b.id, spanIndex: i });
+    });
+  });
+  return results;
 }
 function loadImageAsync(src){
   return new Promise((resolve, reject) => {
@@ -7019,6 +7115,23 @@ async function handleCommand2(input){
   }
   cmdLog('不明なコマンドです: ' + input + '（/all command で一覧を確認できます）', 'cmd-error');
 }
+/* 【v5.3で新規追加】@newの解除フラグ。コマンド一覧ページ（command-list）に
+   隠してある「コマンド検索」から ">_" → "@new" の順に入力すると解除され、
+   同じブラウザで開いているこのアプリでも @newコマンド一覧が見られるように
+   なる（DLCの有効状態などと同じく、localStorageを介してページ間で共有する
+   従来からの仕組みに合わせた）。解除していなくても /new ヘルプ や個々の
+   /new コマンド自体はこれまで通りそのまま使える。あくまで「/all command」
+   （＝一覧表示）だけを特別扱いする。 */
+const NEW_CMD_UNLOCK_KEY = 'yomiNewCmdUnlocked';
+function isNewCmdUnlocked(){
+  try { return localStorage.getItem(NEW_CMD_UNLOCK_KEY) === 'true'; } catch(e){ return false; }
+}
+function listNewCommands(){
+  cmdLog('[@new] 研究開発コマンド一覧：', 'cmd-ok');
+  cmdLog('  /new ocr compare  ―― このページで「従来方式」と「局所適応二値化（実験的）」のOCR結果を比較', 'cmd-ok');
+  cmdLog('  /new blank compare ―― このページで「従来方式」と「行間・余白まで検出する強化版」の自動配置候補数を比較', 'cmd-ok');
+  cmdLog('  /new bracket compare ―― このページで「従来方式」と「括弧・□の入れ子に対応した強化版」の自動配置候補数を比較', 'cmd-ok');
+}
 async function handleCommandNew(input){
   /* @new は「追加コンテンツ用の試験的な入口」に加え、v5.2からは
      OCR品質・テキストボックス自動配置システムの研究開発（実験的な手法の
@@ -7026,13 +7139,16 @@ async function handleCommandNew(input){
      安全のため、.js / .py など実行可能なコードをそのまま読み込んで実行する
      ことは引き続き行わない（任意コード実行は重大なセキュリティリスクのため）。 */
   if (/^\/all\s+command\s*$/i.test(input)){
-    cmdLog('@new は試験用の特別モードのため、コマンド一覧には表示されません。', 'cmd-error');
+    if (isNewCmdUnlocked()){
+      cmdLog('[@new] コマンド一覧ページで解除コードが入力済みのため、一覧を表示します：', 'cmd-ok');
+      listNewCommands();
+    } else {
+      cmdLog('@new は試験用の特別モードのため、コマンド一覧には表示されません。', 'cmd-error');
+    }
     return;
   }
   if (/^\/new\s+help\s*$/i.test(input) || /^\/help\s*$/i.test(input)){
-    cmdLog('[@new] 研究開発コマンド一覧：', 'cmd-ok');
-    cmdLog('  /new ocr compare  ―― このページで「従来方式」と「局所適応二値化（実験的）」のOCR結果を比較', 'cmd-ok');
-    cmdLog('  /new blank compare ―― このページで「従来方式」と「行間・余白まで検出する強化版」の自動配置候補数を比較', 'cmd-ok');
+    listNewCommands();
     return;
   }
   if (/^\/new\s+ocr\s+compare\s*$/i.test(input)){
@@ -7041,6 +7157,10 @@ async function handleCommandNew(input){
   }
   if (/^\/new\s+blank\s+compare\s*$/i.test(input)){
     await cmdNewBlankCompare();
+    return;
+  }
+  if (/^\/new\s+bracket\s+compare\s*$/i.test(input)){
+    await cmdNewBracketCompare();
     return;
   }
   cmdLog('[@new] 拡張コンテンツ用の試験モードです。安全のため、任意のコード実行には対応していません。', 'cmd-error');
@@ -7093,6 +7213,24 @@ async function cmdNewBlankCompare(){
   cmdLog('  従来方式（行内の隙間のみ）： ' + oldGaps.length + '件', 'cmd-ok');
   cmdLog('  強化版（行間・末尾の余白も検出）： ' + newGaps.length + '件　（内訳：行間 ' + interRowCount + '件／末尾余白 ' + trailingCount + '件）', 'cmd-ok');
   cmdLog('→ 実際に配置するかどうかは、この後の画像内容判定（図表／空白の分類）を通ってから決まります。', 'cmd-ok');
+}
+/* 【v5.3で新規追加】括弧・□の入れ子対応システム研究開発 ――― @newでの実証実験。
+   同じページのOCR結果に対して、ブロックのテキストの中に含まれる（）［］や
+   単独の□を実際に走査し、何件・どんな内訳（括弧ペア／単独□、入れ子の有無）で
+   見つかるかを比較する。detectGapRegionsのようなブロック間の空白検出とは
+   独立した仕組みで、こちらはブロック内側の文字そのものを見る点が異なる。 */
+async function cmdNewBracketCompare(){
+  const page = notestate.pages[currentPageIndex];
+  const autoBlocks = page.ocrBlocks.filter(b => b.source === 'auto');
+  if (autoBlocks.length < 1){ cmdLog('[@new] 比較には、まずこのページをOCR認識しておいてください。', 'cmd-error'); return; }
+  const spans = detectBracketBlanks(autoBlocks, page.vertical);
+  const pairCount = spans.filter(s => s.kind === 'bracketPair').length;
+  const boxCount = spans.filter(s => s.kind === 'bracketBox').length;
+  const nestedCount = spans.filter(s => s.depth > 0).length;
+  cmdLog('[@new] テキストボックス自動配置：括弧・□の入れ子対応版の候補件数', 'cmd-ok');
+  cmdLog('  従来方式（ブロック間の空白のみ検出。ブロック内の括弧・□の文字までは見ていない）： 0件', 'cmd-ok');
+  cmdLog('  新方式（ブロック内の（）［］□を走査。何重の入れ子にも対応）： ' + spans.length + '件　（内訳：括弧ペア ' + pairCount + '件／単独□ ' + boxCount + '件、うち入れ子（深さ1以上） ' + nestedCount + '件）', 'cmd-ok');
+  cmdLog('→ まだ研究開発段階のため、実際の自動配置（OCR後の自動テキストボックス生成）には反映されていません。', 'cmd-ok');
 }
 function cmdDeletePage(n){
   const idx = n - 1;
