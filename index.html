@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v5.4</title>
+<title>読みノート v5.5 </title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -624,7 +624,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v5.4</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v5.5</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
       <span class="offline-badge hidden" id="offlineBadge" title="インターネットに接続されていません。音声入力は端末によっては引き続き使える場合がありますが、多くの環境では通信が必要です。">🔌 オフライン</span>
       <span class="test-mode-badge hidden" id="testModeBadge" title="テストモード中は、自動で公式が出てくる機能やリンク・動画がブロックされています">🧪 テストモード中</span>
       <span class="test-mode-badge hidden" id="testModeTimerBadge" style="background:#3A6EA5;" title="テストモードの残り時間">⏳ --:--</span>
@@ -650,10 +650,10 @@
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
     <button class="btn accent" id="exportZipBtn" title="各ページの画像とノートデータをZIPでまとめて書き出す">🗜️ ZIP書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v30.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
-    <a class="icon-btn" id="featureLinkBtn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv6.html" target="_blank" rel="noopener" title="機能紹介 / Features" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">✨</a>
-    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v23.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
-    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v21.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v31.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="featureLinkBtn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv7.html" target="_blank" rel="noopener" title="機能紹介 / Features" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">✨</a>
+    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v24.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
+    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v22.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
     <button class="icon-btn" id="fullscreenBtn" title="全画面表示に切り替え">⛶</button>
     <button class="icon-btn" id="ocrLangBtn" title="OCRで認識する言語を選ぶ（日本語＋外国語など）">🌐</button>
@@ -989,7 +989,7 @@
     <div class="cmd-panel" id="cmdPanel">
       <div class="cmd-panel-header">
         <span class="cmd-mode-label">コマンド <span id="cmdModeLabel">@0</span></span>
-        <a class="cmd-help-link" href="./command-list-v16.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
+        <a class="cmd-help-link" href="./command-list-v17.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
         <button class="cmd-close-btn" id="cmdCloseBtn" title="閉じる">✕</button>
       </div>
       <div class="cmd-log" id="cmdLog"></div>
@@ -1075,8 +1075,8 @@
         </p>
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
-          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v21.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
-          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v23.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
+          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v22.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
+          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v24.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
         </div>
       </div>
     </aside>
@@ -2739,7 +2739,7 @@ function showFirstTimeIntro(){
   }
   document.getElementById('introCloseBtn').addEventListener('click', dismiss);
   document.getElementById('introUsageBtn').addEventListener('click', () => {
-    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v23.html', '_blank', 'noopener');
+    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v24.html', '_blank', 'noopener');
     dismiss();
   });
 }
@@ -4013,30 +4013,36 @@ function buildOcrBlocksFromWords(data, scale, vertical, dividers){
       segs.forEach((seg, si) => {
         const x0 = Math.min.apply(null, seg.map(w=>w.x)), x1 = Math.max.apply(null, seg.map(w=>w.x+w.w));
         const y0 = Math.min.apply(null, seg.map(w=>w.y)), y1 = Math.max.apply(null, seg.map(w=>w.y+w.h));
-        blocks.push({
+        const vb = {
           id: 'ocr_' + Date.now() + '_' + ci + '_' + si,
           text: seg.map(w=>w.text).join(''),
           x:x0, y:y0, w:x1-x0, h:y1-y0,
           source: 'auto', confidence: median(seg.map(w=>w.confidence)) || 0
-        });
+        };
+        /* v5.5：単語の座標を実験用に一時保持（enumerable:falseなので保存データには入らない） */
+        Object.defineProperty(vb, '_words', { value: seg.slice(), enumerable: false, writable: true });
+        blocks.push(vb);
       });
     });
   } else {
     const rows = clusterWordsPerp(words, false);
     const lines = rows.map(r => {
       const x0 = Math.min.apply(null, r.words.map(w=>w.x)), x1 = Math.max.apply(null, r.words.map(w=>w.x+w.w));
-      return { x:x0, y:r.y0, w:x1-x0, h:r.y1-r.y0, text:r.words.map(w=>w.text).join(' '), confidence: median(r.words.map(w=>w.confidence)) || 0 };
+      return { x:x0, y:r.y0, w:x1-x0, h:r.y1-r.y0, text:r.words.map(w=>w.text).join(' '), confidence: median(r.words.map(w=>w.confidence)) || 0, words: r.words };
     }).sort((a,b) => a.y - b.y);
     const segs = splitByGapAlong(lines, 'y', 'h', hDiv);
     segs.forEach((seg, si) => {
       const x0 = Math.min.apply(null, seg.map(l=>l.x)), x1 = Math.max.apply(null, seg.map(l=>l.x+l.w));
       const y0 = Math.min.apply(null, seg.map(l=>l.y)), y1 = Math.max.apply(null, seg.map(l=>l.y+l.h));
-      blocks.push({
+      const hb = {
         id: 'ocr_' + Date.now() + '_' + si,
         text: seg.map(l=>l.text).join(' '),
         x:x0, y:y0, w:x1-x0, h:y1-y0,
         source: 'auto', confidence: median(seg.map(l=>l.confidence)) || 0
-      });
+      };
+      /* v5.5：単語の座標を実験用に一時保持（enumerable:falseなので保存データには入らない） */
+      Object.defineProperty(hb, '_words', { value: [].concat.apply([], seg.map(l => l.words || [])), enumerable: false, writable: true });
+      blocks.push(hb);
     });
   }
   return blocks;
@@ -4702,6 +4708,363 @@ function detectBracketBlanks(blocks, vertical){
   });
   return results;
 }
+/* 【v5.5で新規追加】構造ベースの「図」「枠（□）」検出。
+   ―――― v5.4の実験結果から分かったこと ――――
+   PDFから作ったテスト用プリント（32ページ）で、従来の図表判定（明暗・彩度・行の周期性の
+   3信号）をそのまま動かしたところ、グラフ・実験装置・電子配置図など図のあるページでも
+   除外候補が0件だった。白い紙に細い黒線だけで描かれた線画は、明暗も彩度も周期性も
+   「文章とほぼ同じ値」になり、3信号では区別できないことが原因（図のマスのスコアは
+   0.1〜0.4で、しきい値0.54に届かない）。一方、この検出は「長い水平・垂直の連なり（罫線）」
+   と「ピクセルの連結成分（つながった線のかたまり）」という構造から探すので、色や濃淡に
+   頼らずに済む。
+     ・水平/垂直の罫線で四辺が揃うもの → 枠（box）／内部にも罫線があれば表（grid）
+     ・枠の罫線を取り除いた残りで、大きな（または大きくてスカスカな）つながりを → 図
+     ・図ではないが四角に近い小さな輪郭 → □（空欄）の候補
+   枠の中身は「文字」「図」「混在」「空」に分けて報告する（□の中の画像と文字の振り分け）。
+   カメラ撮影ページは影や明るさのムラを図と誤認しやすいため、本番の自動除外への
+   組み込みは行わず、@newの実験コマンドだけで使う。 */
+/* layoutAnalyzeGray: 罫線(枠・表)と線画(図・グラフ)をピクセルの連結成分から構造的に見つける。
+   gray: 長さW*Hの輝度配列(0=黒)。戻り値の座標はこの配列上の座標。 */
+function layoutAnalyzeGray(gray, W, H, th){
+  const N = W*H, TH = (th||170);
+  const ink = new Uint8Array(N);
+  for (let i=0;i<N;i++) ink[i] = gray[i] < TH ? 1 : 0;
+  const longSide = Math.max(W,H);
+  const minRun = Math.max(24, Math.round(longSide*0.03));
+  const hMask = new Uint8Array(N), vMask = new Uint8Array(N);
+  /* 1) 長い水平・垂直の連なり（gap1px許容） */
+  for (let y=0;y<H;y++){
+    let x=0; const row=y*W;
+    while (x<W){
+      if (!ink[row+x]){ x++; continue; }
+      let s=x, e=x, gap=0;
+      while (e+1<W && (ink[row+e+1] || (gap<1 && e+2<W && ink[row+e+2]))){ if(!ink[row+e+1]){gap++;} else gap=0; e++; if(gap>1)break; }
+      while (e>s && !ink[row+e]) e--;
+      if (e-s+1 >= minRun) for (let k=s;k<=e;k++) hMask[row+k]=1;
+      x = e+1;
+    }
+  }
+  for (let x=0;x<W;x++){
+    let y=0;
+    while (y<H){
+      if (!ink[y*W+x]){ y++; continue; }
+      let s=y, e=y, gap=0;
+      while (e+1<H && (ink[(e+1)*W+x] || (gap<1 && e+2<H && ink[(e+2)*W+x]))){ if(!ink[(e+1)*W+x]){gap++;} else gap=0; e++; if(gap>1)break; }
+      while (e>s && !ink[e*W+x]) e--;
+      if (e-s+1 >= minRun) for (let k=s;k<=e;k++) vMask[k*W+x]=1;
+      y = e+1;
+    }
+  }
+  /* 2) 罫線マスクの連結成分 → 四辺が揃っていれば枠 */
+  const hv = new Uint8Array(N);
+  for (let i=0;i<N;i++) hv[i] = (hMask[i]||vMask[i]) ? 1:0;
+  const lab1 = new Int32Array(N); const comps1 = [];
+  labelComponents(hv, W, H, lab1, comps1);
+  const frames = [];
+  const frameLabels = new Set();
+  comps1.forEach(c => {
+    const bw=c.x1-c.x0+1, bh=c.y1-c.y0+1;
+    if (bw < 40 || bh < 25) return;
+    const band = 3;
+    const cover = (mask, horiz, fixed0, fixed1, from, to) => { /* 帯の中で from..to のうち何割が覆われるか */
+      let hit=0;
+      for (let t=from;t<=to;t++){
+        let ok=false;
+        for (let f=fixed0; f<=fixed1 && !ok; f++){
+          const idx = horiz ? (f*W+t) : (t*W+f);
+          if (mask[idx] && lab1[idx]===c.id) ok=true;
+        }
+        if (ok) hit++;
+      }
+      return hit/(to-from+1);
+    };
+    const top = cover(hMask,true,c.y0,Math.min(c.y1,c.y0+band),c.x0,c.x1);
+    const bot = cover(hMask,true,Math.max(c.y0,c.y1-band),c.y1,c.x0,c.x1);
+    const lef = cover(vMask,false,c.x0,Math.min(c.x1,c.x0+band),c.y0,c.y1);
+    const rig = cover(vMask,false,Math.max(c.x0,c.x1-band),c.x1,c.y0,c.y1);
+    if (top>=0.75 && bot>=0.75 && lef>=0.75 && rig>=0.75){
+      /* 内部の罫線本数（端を除く）で「表」か「単なる枠」かを見分ける */
+      let innerH=0, innerV=0, prev=-9;
+      for (let y=c.y0+band+2;y<=c.y1-band-2;y++){
+        let hit=0; for (let x=c.x0;x<=c.x1;x++) if (hMask[y*W+x]&&lab1[y*W+x]===c.id) hit++;
+        if (hit/bw>=0.6){ if (y-prev>3) innerH++; prev=y; }
+      }
+      prev=-9;
+      for (let x=c.x0+band+2;x<=c.x1-band-2;x++){
+        let hit=0; for (let y=c.y0;y<=c.y1;y++) if (vMask[y*W+x]&&lab1[y*W+x]===c.id) hit++;
+        if (hit/bh>=0.6){ if (x-prev>3) innerV++; prev=x; }
+      }
+      frames.push({ x:c.x0, y:c.y0, w:bw, h:bh, kind:(innerH>=1&&innerV>=1)?'grid':'box', innerH, innerV, id:c.id });
+      frameLabels.add(c.id);
+    }
+  });
+  /* 3) 枠の罫線を除いた残り（残余インク） */
+  const res = new Uint8Array(ink);
+  for (let i=0;i<N;i++){ if (hv[i] && frameLabels.has(lab1[i])) res[i]=0; }
+  /* 罫線1px分の縁残りを消す */
+  for (let y=1;y<H-1;y++) for (let x=1;x<W-1;x++){
+    const i=y*W+x;
+    if (res[i] && ((frameLabels.has(lab1[i-1])&&hv[i-1])||(frameLabels.has(lab1[i+1])&&hv[i+1])||(frameLabels.has(lab1[i-W])&&hv[i-W])||(frameLabels.has(lab1[i+W])&&hv[i+W])) ){
+      /* 罫線に接した薄い縁だけ消す（太い文字は残るよう、罫線と同じ行/列の細い部分のみ） */
+      let nb=0; for (let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++) if(res[i+dy*W+dx]) nb++;
+      if (nb<=4) res[i]=0;
+    }
+  }
+  /* 4) 残余インクの連結成分 */
+  const lab2 = new Int32Array(N); const comps = [];
+  labelComponents(res, W, H, lab2, comps);
+  const hs = comps.filter(c=>c.area>=6 && (c.y1-c.y0+1)<=0.06*H && (c.y1-c.y0+1)>=4).map(c=>c.y1-c.y0+1).sort((a,b)=>a-b);
+  const medianH = hs.length ? hs[Math.floor(hs.length/2)] : 12;
+  const hvRes = (c) => { let n=0; for (let y=c.y0;y<=c.y1;y++) for (let x=c.x0;x<=c.x1;x++){ const i=y*W+x; if (lab2[i]===c.id && (hMask[i]||vMask[i])) n++; } return n; };
+  const seeds=[], rules=[], smalls=[], noisyFrames=[];
+  const rectLike = (c, b, need) => {
+    const cov=(horiz,fixed0,fixed1,from,to)=>{ let hit=0; for(let t=from;t<=to;t++){ let ok=false; for(let f=fixed0;f<=fixed1&&!ok;f++){ const idx=horiz?(f*W+t):(t*W+f); if(res[idx]&&lab2[idx]===c.id) ok=true;} if(ok)hit++;} return hit/(to-from+1); };
+    return cov(true,c.y0,Math.min(c.y1,c.y0+b),c.x0,c.x1)>=need && cov(true,Math.max(c.y0,c.y1-b),c.y1,c.x0,c.x1)>=need
+        && cov(false,c.x0,Math.min(c.x1,c.x0+b),c.y0,c.y1)>=need && cov(false,Math.max(c.x0,c.x1-b),c.x1,c.y0,c.y1)>=need;
+  };
+  const bigT = Math.max(70, 6*medianH);
+  comps.forEach(c => {
+    c.w=c.x1-c.x0+1; c.h=c.y1-c.y0+1;
+    const thin = Math.min(c.w,c.h) <= 5 && Math.max(c.w,c.h) >= minRun;
+    if (thin){ rules.push(c); return; }
+    const mx = Math.max(c.w,c.h);
+    if (mx >= 44){
+      c.lineFrac = hvRes(c)/c.area;
+      c.fill = c.area/(c.w*c.h);
+      if (c.fill <= 0.3 && rectLike(c, 3, 0.72)){ noisyFrames.push(c); return; }
+      const bigEnough = mx >= bigT || (c.fill <= 0.2 && mx >= Math.max(44, 4*medianH));
+      if (bigEnough){
+        if (c.lineFrac >= 0.8) { c.gridLike = true; return; }
+        seeds.push(c); return;
+      }
+    }
+    smalls.push(c);
+  });
+  /* 5) 種を近さでまとめて図領域にする */
+  const G = Math.max(14, Math.round(longSide*0.014));
+  const parent = seeds.map((_,i)=>i);
+  const find = (a)=>{ while(parent[a]!==a){ parent[a]=parent[parent[a]]; a=parent[a]; } return a; };
+  for (let i=0;i<seeds.length;i++) for (let j=i+1;j<seeds.length;j++){
+    const a=seeds[i], b=seeds[j];
+    const dx = Math.max(0, Math.max(a.x0,b.x0)-Math.min(a.x1,b.x1)), dy=Math.max(0, Math.max(a.y0,b.y0)-Math.min(a.y1,b.y1));
+    if (dx<=G && dy<=G) parent[find(i)]=find(j);
+  }
+  const groups = {};
+  seeds.forEach((s,i)=>{ const r=find(i); (groups[r]=groups[r]||[]).push(s); });
+  const graphics = Object.values(groups).map(g=>{
+    const x0=Math.min(...g.map(c=>c.x0)), y0=Math.min(...g.map(c=>c.y0)), x1=Math.max(...g.map(c=>c.x1)), y1=Math.max(...g.map(c=>c.y1));
+    return { x:x0, y:y0, w:x1-x0+1, h:y1-y0+1, parts:g.length, lineFrac: g.reduce((a,c)=>a+c.lineFrac*c.area,0)/g.reduce((a,c)=>a+c.area,0) };
+  });
+  noisyFrames.forEach(c=>frames.push({ x:c.x0, y:c.y0, w:c.w, h:c.h, kind:'box', innerH:0, innerV:0, id:-c.id, noisy:true }));
+  /* 6) 枠ごとの中身判定 */
+  const inside = (r, cx, cy) => cx>r.x+3 && cx<r.x+r.w-3 && cy>r.y+3 && cy<r.y+r.h-3;
+  frames.forEach(f => {
+    let textN=0;
+    smalls.forEach(c => { if (inside(f,(c.x0+c.x1)/2,(c.y0+c.y1)/2)) textN++; });
+    let gArea=0; graphics.forEach(g => { const ox=Math.max(0,Math.min(f.x+f.w,g.x+g.w)-Math.max(f.x,g.x)), oy=Math.max(0,Math.min(f.y+f.h,g.y+g.h)-Math.max(f.y,g.y)); gArea+=ox*oy; });
+    f.textParts=textN; f.graphicFrac=gArea/(f.w*f.h);
+    f.content = (f.graphicFrac>0.02 && textN>=3) ? 'mixed' : (f.graphicFrac>0.02 ? 'graphic' : (textN>=1?'text':'empty'));
+  });
+  /* 7) 小さな□（空欄記号）：残余インクの小さな中空の四角 */
+  const smallBoxes=[];
+  smalls.forEach(c=>{
+    if (c.w<0.7*medianH || c.h<0.7*medianH || c.w>8*medianH || c.h>4*medianH) return;
+    const b=2;
+    const cov=(horiz,fixed0,fixed1,from,to)=>{ let hit=0; for(let t=from;t<=to;t++){ let ok=false; for(let f=fixed0;f<=fixed1&&!ok;f++){ const idx=horiz?(f*W+t):(t*W+f); if(res[idx]&&lab2[idx]===c.id) ok=true;} if(ok)hit++;} return hit/(to-from+1); };
+    const top=cov(true,c.y0,Math.min(c.y1,c.y0+b),c.x0,c.x1), bot=cov(true,Math.max(c.y0,c.y1-b),c.y1,c.x0,c.x1);
+    const lef=cov(false,c.x0,Math.min(c.x1,c.x0+b),c.y0,c.y1), rig=cov(false,Math.max(c.x0,c.x1-b),c.x1,c.y0,c.y1);
+    if (top<0.8||bot<0.8||lef<0.8||rig<0.8) return;
+    const ix0=c.x0+Math.round(c.w*0.25), ix1=c.x1-Math.round(c.w*0.25), iy0=c.y0+Math.round(c.h*0.25), iy1=c.y1-Math.round(c.h*0.25);
+    let ii=0,it=0; for(let y=iy0;y<=iy1;y++)for(let x=ix0;x<=ix1;x++){ it++; if(res[y*W+x]) ii++; }
+    const innerInk = it? ii/it : 0;
+    const sizeRatio=c.h/medianH;
+    if (sizeRatio<1.8 || innerInk>0.25) return;
+    const cx=(c.x0+c.x1)/2, cy=(c.y0+c.y1)/2;
+    if (graphics.some(g=>cx>=g.x&&cx<=g.x+g.w&&cy>=g.y&&cy<=g.y+g.h)) return;
+    smallBoxes.push({ x:c.x0,y:c.y0,w:c.w,h:c.h, sizeRatio, innerInk, empty: innerInk<0.06 });
+  });
+  return { frames, graphics, rules:rules.length, medianH, minRun, smallBoxes, gridLikeComps: comps.filter(c=>c.gridLike).length, W, H };
+}
+function labelComponents(bin, W, H, lab, out){
+  let id=0; const stack=new Int32Array(W*H);
+  for (let y=0;y<H;y++) for (let x=0;x<W;x++){
+    const i=y*W+x; if (!bin[i]||lab[i]) continue;
+    id++; let sp=0; stack[sp++]=i; lab[i]=id;
+    let x0=x,x1=x,y0=y,y1=y,area=0;
+    while(sp){
+      const p=stack[--sp]; const py=(p/W)|0, px=p-py*W; area++;
+      if(px<x0)x0=px; if(px>x1)x1=px; if(py<y0)y0=py; if(py>y1)y1=py;
+      for(let dy=-1;dy<=1;dy++){ const ny=py+dy; if(ny<0||ny>=H)continue;
+        for(let dx=-1;dx<=1;dx++){ const nx=px+dx; if(nx<0||nx>=W)continue; const q=ny*W+nx;
+          if(bin[q]&&!lab[q]){ lab[q]=id; stack[sp++]=q; } } }
+    }
+    out.push({id,x0,x1,y0,y1,area});
+  }
+}
+
+
+function pageImageToGray(img, pageW, pageH){
+  const longSide = Math.max(pageW, pageH);
+  const scale = Math.min(1, 1200 / longSide);
+  const aw = Math.max(1, Math.round(pageW * scale)), ah = Math.max(1, Math.round(pageH * scale));
+  const c = document.createElement('canvas'); c.width = aw; c.height = ah;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, aw, ah);
+  ctx.drawImage(img, 0, 0, aw, ah);
+  const d = ctx.getImageData(0, 0, aw, ah).data;
+  const gray = new Uint8ClampedArray(aw * ah);
+  for (let i = 0; i < gray.length; i++) gray[i] = 0.299 * d[i*4] + 0.587 * d[i*4+1] + 0.114 * d[i*4+2];
+  return { gray: gray, aw: aw, ah: ah, scale: scale };
+}
+/* ページ画像を構造解析して、ページ座標（＝ページ画像の座標）で結果を返す。 */
+function analyzePageLayout(img, pageW, pageH){
+  const g = pageImageToGray(img, pageW, pageH);
+  const r = layoutAnalyzeGray(g.gray, g.aw, g.ah, 200);
+  const k = 1 / g.scale;
+  const sc = o => Object.assign({}, o, { x: o.x * k, y: o.y * k, w: o.w * k, h: o.h * k });
+  return {
+    frames: r.frames.map(sc), graphics: r.graphics.map(sc), smallBoxes: r.smallBoxes.map(sc),
+    rules: r.rules, medianH: r.medianH * k, scale: g.scale, gridLikeComps: r.gridLikeComps
+  };
+}
+
+/* 【v5.5で新規追加】単語の座標を使った括弧・□の検知（V2）。
+   ―――― v5.4の実験結果から分かったこと ――――
+   /new paren test の出力は「2 年 ( ) 組 ( ) 番 氏名」のように、日本語の文字ごとにスペースが
+   入っていた（OCRの単語をスペースでつないでブロックの文章を作っているため）。従来の
+   detectBracketBlanksは「文字位置の比率」でブロック内の位置を推定していたので、この
+   余計なスペースぶんだけ位置がずれてしまう。また（ア）のような「選択肢の記号」と
+   （　ア　）のような「解答欄」も区別できなかった。
+   V2はOCRの各単語の座標（b._words。保存データには含めない一時的な情報）から、
+   「（」の右端〜「）」の左端の実際の隙間を空欄の位置として求める。中身が空、または
+   短い記号（ア・①・a など）で隙間が文字幅の約2.2倍以上なら「空欄」、それ未満なら
+   「ラベル（選択肢の記号など）」、それ以外は「文章」に分類する。 */
+const BLANK_LABEL_RE = /^[ァ-ヶア-ンa-zA-Zａ-ｚＡ-Ｚ0-9０-９①-⑳㋐-㋾ⅰ-ⅹⅠ-Ⅹ]{1,3}$/;
+function wordCharStream(words){
+  const chars = [];
+  words.forEach((w, wi) => {
+    const t = (w.text || '').replace(/\s+/g, ''); const n = t.length; if (!n) return;
+    for (let k = 0; k < n; k++) chars.push({ ch: t[k], wi: wi, x0: w.x + w.w * k / n, x1: w.x + w.w * (k + 1) / n, y: w.y, h: w.h });
+  });
+  return chars;
+}
+function medianCharWidth(blocks){
+  const ws = [];
+  blocks.forEach(b => (b._words || []).forEach(w => { const n = (w.text || '').replace(/\s+/g, '').length; if (n) ws.push(w.w / n); }));
+  ws.sort((a, b) => a - b);
+  return ws.length ? ws[Math.floor(ws.length / 2)] : 0;
+}
+function detectBracketBlanksV2(blocks){
+  const results = [];
+  const cw = medianCharWidth(blocks);
+  blocks.forEach(b => {
+    if (!b._words || !b._words.length) return;
+    const chars = wordCharStream(b._words);
+    const stacks = {};
+    const depthNow = () => Object.keys(stacks).reduce((n, k) => n + stacks[k].length, 0);
+    chars.forEach((c, i) => {
+      const od = BRACKET_PAIR_DEFS.find(p => p.open === c.ch);
+      if (od){ (stacks[od.open] = stacks[od.open] || []).push(i); return; }
+      const cd = BRACKET_PAIR_DEFS.find(p => p.close === c.ch);
+      if (cd){
+        const st = stacks[cd.open]; if (!st || !st.length) return;
+        const oi = st.pop(); const o = chars[oi];
+        const inner = chars.slice(oi + 1, i).map(z => z.ch).join('').trim();
+        const depth = depthNow();
+        const sameLine = Math.abs((o.y + o.h / 2) - (c.y + c.h / 2)) < Math.max(o.h, c.h) * 0.6;
+        if (!sameLine){ results.push({ kind: 'pair', skipped: 'crossLine', inner: inner, depth: depth, sourceBlockId: b.id }); return; }
+        const x = o.x1, w = Math.max(2, c.x0 - o.x1), y = Math.min(o.y, c.y), h = Math.max(o.y + o.h, c.y + c.h) - y;
+        let cls;
+        if (!inner) cls = (w >= 0.8 * cw) ? 'blank' : 'tooNarrow';
+        else if (BLANK_LABEL_RE.test(inner)) cls = (cw && w >= 2.2 * cw) ? 'blank' : 'label';
+        else cls = 'text';
+        results.push({ kind: 'pair', x: x, y: y, w: w, h: h, inner: inner, cls: cls, depth: depth, slotRatio: cw ? w / cw : 0, sourceBlockId: b.id });
+        return;
+      }
+      if (SOLO_BLANK_CHARS.indexOf(c.ch) !== -1){
+        results.push({ kind: 'box', x: c.x0, y: c.y, w: c.x1 - c.x0, h: c.h, inner: '', cls: 'blank', depth: depthNow(), sourceBlockId: b.id });
+      }
+    });
+  });
+  return results;
+}
+function blocksWithWords(page){
+  return page.ocrBlocks.filter(b => b.source === 'auto' && b._words && b._words.length);
+}
+/* 実験用の小さな共通部品 ------------------------------------------------ */
+/* 従来の図表判定と同じ計算でスコアそのものを返す（しきい値に届いたかだけでなく、
+   どれだけ足りなかったかを実験で確かめるため。classifyRegionContent本体は変更しない）。 */
+function graphicScoreOfRect(imgEl, rect){
+  try {
+    const sw = clampNum(Math.round(rect.w), 1, 210), sh = clampNum(Math.round(rect.h), 1, 210);
+    const c = document.createElement('canvas'); c.width = sw; c.height = sh;
+    const ctx = c.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(imgEl, rect.x, rect.y, rect.w, rect.h, 0, 0, sw, sh);
+    const d = ctx.getImageData(0, 0, sw, sh).data;
+    let black = 0, mid = 0, chroma = 0; const total = sw * sh;
+    const rowInk = new Float32Array(sh), colInk = new Float32Array(sw);
+    for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++){
+      const i = (y * sw + x) * 4, r = d[i], g = d[i+1], b = d[i+2];
+      const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+      if (gray < 60) black++; else if (gray <= 235) mid++;
+      if ((Math.max(r, g, b) - Math.min(r, g, b)) / 255 > 0.12 && gray < 245) chroma++;
+      if (gray < 170){ rowInk[y]++; colInk[x]++; }
+    }
+    const per = (arr, len) => {
+      if (len < 6) return 0;
+      let m = 0; for (let i = 0; i < len; i++) if (arr[i] > m) m = arr[i];
+      if (m < 1) return 0;
+      const fl = m * 0.22, pk = [];
+      for (let i = 1; i < len - 1; i++) if (arr[i] >= arr[i-1] && arr[i] >= arr[i+1] && arr[i] > fl){ if (!pk.length || i - pk[pk.length-1] > 1) pk.push(i); }
+      if (pk.length < 3) return 0;
+      const g = []; for (let i = 1; i < pk.length; i++) g.push(pk[i] - pk[i-1]);
+      const mg = g.reduce((a, b) => a + b, 0) / g.length; if (mg <= 0) return 0;
+      const v = g.reduce((a, b) => a + (b - mg) * (b - mg), 0) / g.length;
+      return clampNum(1 - Math.sqrt(v) / mg, 0, 1);
+    };
+    const periodicity = Math.max(per(rowInk, sh), per(colInk, sw));
+    const sp = currentSensitivityParams();
+    const midRatio = mid / total, blackRatio = black / total, chromaRatio = chroma / total;
+    const lum = (midRatio > sp.midRatio || blackRatio > sp.blackRatio) ? 1 : clampNum(midRatio / sp.midRatio * 0.5 + blackRatio / sp.blackRatio * 0.5, 0, 1);
+    const score = 0.45 * lum + 0.30 * clampNum(chromaRatio / sp.chromaThreshold, 0, 1) + 0.25 * (1 - periodicity);
+    return { score: score, blackRatio: blackRatio, midRatio: midRatio, chromaRatio: chromaRatio, periodicity: periodicity };
+  } catch(e){ return { score: 0, blackRatio: 0, midRatio: 0, chromaRatio: 0, periodicity: 0 }; }
+}
+/* 矩形内の「インク（暗い画素）の割合」。矩形はページ範囲内に収めてから測る。 */
+function rectInkRatio(imgEl, rect, pageW, pageH){
+  const x0 = clampNum(rect.x, 0, pageW - 1), y0 = clampNum(rect.y, 0, pageH - 1);
+  const x1 = clampNum(rect.x + rect.w, x0 + 1, pageW), y1 = clampNum(rect.y + rect.h, y0 + 1, pageH);
+  const w = Math.max(1, Math.min(64, Math.round(x1 - x0))), h = Math.max(1, Math.min(64, Math.round(y1 - y0)));
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+  ctx.drawImage(imgEl, x0, y0, x1 - x0, y1 - y0, 0, 0, w, h);
+  const d = ctx.getImageData(0, 0, w, h).data; let ink = 0;
+  for (let i = 0; i < w * h; i++){ if (0.299 * d[i*4] + 0.587 * d[i*4+1] + 0.114 * d[i*4+2] < 170) ink++; }
+  return ink / (w * h);
+}
+/* 2つの文章の似ている度合い（文字2連続の一致で測るDice係数。0〜1）。空白は無視する。 */
+function bigramDice(a, b){
+  const norm = s => (s || '').replace(/\s+/g, '');
+  a = norm(a); b = norm(b);
+  if (!a.length && !b.length) return 1;
+  if (a.length < 2 || b.length < 2) return a === b ? 1 : 0;
+  const m = new Map();
+  for (let i = 0; i < a.length - 1; i++){ const k = a.slice(i, i + 2); m.set(k, (m.get(k) || 0) + 1); }
+  let hit = 0;
+  for (let i = 0; i < b.length - 1; i++){ const k = b.slice(i, i + 2); const n = m.get(k) || 0; if (n > 0){ hit++; m.set(k, n - 1); } }
+  return 2 * hit / ((a.length - 1) + (b.length - 1));
+}
+async function ocrForExperiment(page, dataUrl, opts, excludeZones){
+  const base = { shadingCorrection: !!page.fromCamera, adaptiveBinarization: !!page.fromCamera };
+  const t0 = performance.now();
+  const result = await runOcrOnDataUrl(dataUrl, page.vertical, false, null, excludeZones, Object.assign(base, opts || {}));
+  return {
+    text: (result.data.text || '').trim(), conf: Math.round(result.data.confidence || 0),
+    words: result.data.words || [], sec: (performance.now() - t0) / 1000
+  };
+}
+
 function loadImageAsync(src){
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -7130,18 +7493,24 @@ function listNewCommands(){
   cmdLog('[@new] 研究開発コマンド一覧：', 'cmd-ok');
   cmdLog('◆ テキストボックス自動配置', 'cmd-ok');
   cmdLog('  /new blank compare ―― 「従来方式」と「行間・余白まで検出する強化版」の自動配置候補数を比較', 'cmd-ok');
-  cmdLog('  /new bracket compare ―― 「従来方式」と「括弧・□の入れ子に対応した強化版」の自動配置候補数を比較', 'cmd-ok');
-  cmdLog('  /new box test ―― 単独の□をどこまで検知・判定できているかを1件ずつ書き出して確認', 'cmd-ok');
-  cmdLog('  /new paren test ―― （）などの括弧ペアをどこまで検知・判定できているかを1件ずつ書き出して確認', 'cmd-ok');
-  cmdLog('  /new bracket overlap test ―― 括弧・□の検知候補が、既存の空白検出やテキストボックスと二重に重なっていないか確認', 'cmd-ok');
+  cmdLog('  /new bracket compare ―― 括弧・□の候補件数を従来方式とV2（単語の座標）で比較', 'cmd-ok');
+  cmdLog('  /new box test ―― □を「文字として認識されたもの」と「画像の四角い輪郭」の両方から検知して確認', 'cmd-ok');
+  cmdLog('  /new paren test ―― （）を空欄／ラベル（ア・①など）／文章に分類して1件ずつ確認', 'cmd-ok');
+  cmdLog('  /new frame test ―― 枠（□で囲まれた領域）と、その中の空欄・入れ子を確認', 'cmd-ok');
+  cmdLog('  /new bracket overlap test ―― 検知した空欄が既存の空白検出やテキストボックスと重なっていないか確認', 'cmd-ok');
   cmdLog('◆ OCR除外（図表検出）', 'cmd-ok');
-  cmdLog('  /new graphic test ―― ページをマス目に分けて図表／文章／空白の判定内訳を確認', 'cmd-ok');
-  cmdLog('  /new box content test ―― 枠（除外領域）の中に画像と文字が混在していないかを分割して確認', 'cmd-ok');
-  cmdLog('  /new graphic sensitivity test ―― 検出の強さ（弱め／標準／強め）を変えたときの除外候補数の変化を確認', 'cmd-ok');
+  cmdLog('  /new graphic test ―― 従来の3信号方式と構造方式（罫線・線画）の検出結果を比較', 'cmd-ok');
+  cmdLog('  /new graphic all test ―― ノート全ページで従来方式と構造方式を比べるサーベイ', 'cmd-ok');
+  cmdLog('  /new box content test ―― 枠の中身を「文字だけ／図だけ／混在／空」に振り分け', 'cmd-ok');
+  cmdLog('  /new figure text test ―― 図の中にある文字ラベルの数（図ごと除外したときに消える文字）を確認', 'cmd-ok');
+  cmdLog('  /new graphic sensitivity test ―― 検出の強さ別に、スコアとしきい値の差まで含めて確認', 'cmd-ok');
   cmdLog('◆ OCR認識そのもの', 'cmd-ok');
   cmdLog('  /new ocr compare ―― 「従来方式」と「局所適応二値化（実験的）」のOCR結果を比較', 'cmd-ok');
-  cmdLog('  /new ocr psm test ―― ページ分割モード（自動レイアウト解析／まばらな文章）を変えたときのOCR結果を比較', 'cmd-ok');
+  cmdLog('  /new ocr psm test ―― ページ分割モードを変えたときのOCR結果を比較', 'cmd-ok');
   cmdLog('  /new ocr scale test ―― 拡大目標の解像度を変えたときのOCR結果を比較', 'cmd-ok');
+  cmdLog('  /new ocr words test ―― 低信頼度の単語の数と実例（誤読の場所）を確認', 'cmd-ok');
+  cmdLog('  /new ocr agree test ―― 4方式の文章の一致率と低信頼度単語数を比較', 'cmd-ok');
+  cmdLog('  /new ocr degrade test ―― 縮小・ぼかし・ノイズの劣化画像でどの方式が粘るか確認', 'cmd-ok');
 }
 async function handleCommandNew(input){
   /* @new は「追加コンテンツ用の試験的な入口」に加え、v5.2からは
@@ -7206,6 +7575,15 @@ async function handleCommandNew(input){
     await cmdNewGraphicSensitivityTest();
     return;
   }
+  const extra = [
+    [/^\/new\s+frame\s+test\s*$/i, cmdNewFrameTest],
+    [/^\/new\s+graphic\s+all\s+test\s*$/i, cmdNewGraphicAllTest],
+    [/^\/new\s+figure\s+text\s+test\s*$/i, cmdNewFigureTextTest],
+    [/^\/new\s+ocr\s+words\s+test\s*$/i, cmdNewOcrWordsTest],
+    [/^\/new\s+ocr\s+agree\s+test\s*$/i, cmdNewOcrAgreeTest],
+    [/^\/new\s+ocr\s+degrade\s+test\s*$/i, cmdNewOcrDegradeTest]
+  ];
+  for (const [re, fn] of extra){ if (re.test(input)){ await fn(); return; } }
   cmdLog('[@new] 拡張コンテンツ用の試験モードです。安全のため、任意のコード実行には対応していません。', 'cmd-error');
   cmdLog('研究開発コマンドは /new help で一覧を確認できます。', 'cmd-ok');
 }
@@ -7273,35 +7651,173 @@ async function cmdNewBracketCompare(){
   cmdLog('[@new] テキストボックス自動配置：括弧・□の入れ子対応版の候補件数', 'cmd-ok');
   cmdLog('  従来方式（ブロック間の空白のみ検出。ブロック内の括弧・□の文字までは見ていない）： 0件', 'cmd-ok');
   cmdLog('  新方式（ブロック内の（）［］□を走査。何重の入れ子にも対応）： ' + spans.length + '件　（内訳：括弧ペア ' + pairCount + '件／単独□ ' + boxCount + '件、うち入れ子（深さ1以上） ' + nestedCount + '件）', 'cmd-ok');
+  const w2 = blocksWithWords(page);
+  if (w2.length){
+    const v2 = detectBracketBlanksV2(w2);
+    const c2 = expCount(v2.filter(r => r.kind === 'pair'), 'cls');
+    cmdLog('  V2（単語の座標で判定）： 括弧 ' + v2.filter(r => r.kind === 'pair').length + '件（空欄 ' + (c2.blank || 0) + '／ラベル ' + (c2.label || 0) + '／文章 ' + (c2.text || 0) + '）＋単独□ ' + v2.filter(r => r.kind === 'box').length + '件', 'cmd-ok');
+  }
   cmdLog('→ まだ研究開発段階のため、実際の自動配置（OCR後の自動テキストボックス生成）には反映されていません。', 'cmd-ok');
 }
-/* 【v5.4で新規追加】□検知の判定精度実験 ――― @newでの実証実験。
-   detectBracketBlanksが拾った「単独□」の候補を、周辺の文字列と一緒に
-   1件ずつ書き出す。件数だけでは「本当に正しい場所を□として判定できて
-   いるか」までは分からないため、実際の検知内容を目視で確認できるように
-   した監査用コマンド。あわせて、○／〇のように□と同じ用途（記入式の
-   空欄記号）で使われる別の記号がどれくらいあるかも参考情報として出す
-   （現時点では□しか対応しておらず、今後の対応候補になる）。 */
+/* ============================================================
+   【v5.5で新規追加・全面見直し】研究開発コマンド（実験）群
+   v5.4の実験結果（k8.pdf＝32ページのプリントで実測）を受けて、次のように直した。
+   ・「除外候補 0件」「枠が登録されていません」で終わって何も分からなかった実験を、
+     構造ベースの検出（analyzePageLayout）と生スコアの表示に置き換えた。
+   ・OCRは「信頼度90%前後で頭打ち」だったため、信頼度ではなく「別方式との文章の一致率」
+     「低信頼度の単語数」「劣化画像での粘り」で比べる実験を追加した。
+   どのコマンドもログを出すだけで、ページの内容は一切変更しない（非破壊）。
+   ============================================================ */
+const SLOT_JA = { blank:'空欄', label:'ラベル(選択肢の記号など)', text:'文章', tooNarrow:'狭すぎ', crossLine:'行またぎ' };
+function expNeedOcr(page){
+  if (!page.ocrBlocks.some(b => b.source === 'auto')){ cmdLog('[@new] 実験には、まずこのページをOCR認識しておいてください。', 'cmd-error'); return false; }
+  return true;
+}
+function expNeedWords(page){
+  if (!expNeedOcr(page)) return null;
+  const withW = blocksWithWords(page);
+  if (!withW.length){ cmdLog('[@new] このページのOCR結果には単語の座標がありません（v5.5より前にOCRしたページです）。もう一度OCRし直してから実行してください。', 'cmd-error'); return null; }
+  return withW;
+}
+function expInside(r, x, y){ return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; }
+function expCount(list, key){ const m = {}; list.forEach(o => { m[o[key]] = (m[o[key]] || 0) + 1; }); return m; }
 async function cmdNewBoxTest(){
   const page = notestate.pages[currentPageIndex];
-  const autoBlocks = page.ocrBlocks.filter(b => b.source === 'auto');
-  if (autoBlocks.length < 1){ cmdLog('[@new] 実験には、まずこのページをOCR認識しておいてください。', 'cmd-error'); return; }
-  let found = 0;
-  autoBlocks.forEach(b => {
-    findBracketBlankSpans(b.text).filter(s => s.type === 'box').forEach(sp => {
-      found++;
-      const ctxStart = Math.max(0, sp.start - 6), ctxEnd = Math.min(b.text.length, sp.end + 7);
-      const snippet = b.text.slice(ctxStart, sp.start) + '【□】' + b.text.slice(sp.end + 1, ctxEnd);
-      cmdLog('  検知' + found + '： …' + snippet + '…　(深さ' + sp.depth + ')', 'cmd-ok');
-    });
-  });
-  let circleCount = 0;
-  autoBlocks.forEach(b => { circleCount += (b.text.match(/[○〇]/g) || []).length; });
-  cmdLog('[@new] □検知テスト：合計 ' + found + '件を検知（判定内容は上記の通り）', 'cmd-ok');
-  if (circleCount > 0){
-    cmdLog('→ 参考：○／〇（同じ用途で使われることが多い記号）が ' + circleCount + '件見つかりました。現状は□のみ対応のため、今後の対応候補になります。', 'cmd-ok');
-  }
+  if (!page.bgImage){ cmdLog('[@new] このページには画像がありません。', 'cmd-error'); return; }
+  const img = await loadImageAsync(page.bgImage);
+  const lay = analyzePageLayout(img, page.width, page.height);
+  const withW = blocksWithWords(page);
+  const textBoxes = detectBracketBlanksV2(withW).filter(r => r.kind === 'box');
+  let legacy = 0; page.ocrBlocks.filter(b => b.source === 'auto').forEach(b => { legacy += findBracketBlankSpans(b.text).filter(s => s.type === 'box').length; });
+  const emptyImg = lay.smallBoxes.filter(b => b.empty);
+  lay.smallBoxes.slice(0, 8).forEach((b, i) => cmdLog('  画像から検知' + (i + 1) + '： 位置(' + Math.round(b.x) + ',' + Math.round(b.y) + ') 大きさ' + Math.round(b.w) + '×' + Math.round(b.h) + (b.empty ? '　中は空' : '　中に何かある'), 'cmd-ok'));
+  cmdLog('[@new] □検知テスト', 'cmd-ok');
+  cmdLog('  ①文字として認識された□（OCRの文章に含まれる）： ' + Math.max(textBoxes.length, legacy) + '件', 'cmd-ok');
+  cmdLog('  ②画像の中の四角い輪郭（□の形を直接探す）： ' + lay.smallBoxes.length + '件（うち中が空 ' + emptyImg.length + '件）', 'cmd-ok');
+  const circles = page.ocrBlocks.filter(b => b.source === 'auto').reduce((n, b) => n + (b.text.match(/[○〇]/g) || []).length, 0);
+  if (circles) cmdLog('  参考：○／〇 が ' + circles + '件（現状は空欄記号として扱っていません）', 'cmd-ok');
+  cmdLog('→ OCRは印刷された□を文字として返さないことが多いため、②の画像から直接探す方式が主役になります。', 'cmd-ok');
 }
+async function cmdNewFrameTest(){
+  const page = notestate.pages[currentPageIndex];
+  if (!page.bgImage){ cmdLog('[@new] このページには画像がありません。', 'cmd-error'); return; }
+  const img = await loadImageAsync(page.bgImage);
+  const lay = analyzePageLayout(img, page.width, page.height);
+  const blanks = detectBracketBlanksV2(blocksWithWords(page)).filter(r => r.cls === 'blank');
+  cmdLog('[@new] 枠（□で囲まれた領域）の検知テスト： ' + lay.frames.length + '件', 'cmd-ok');
+  let nested = 0, blanksInFrames = 0;
+  lay.frames.slice(0, 14).forEach((f, i) => {
+    const inside = blanks.filter(b => expInside(f, b.x + b.w / 2, b.y + b.h / 2)).length;
+    const inner = lay.frames.filter(g => g !== f && g.x >= f.x && g.y >= f.y && g.x + g.w <= f.x + f.w && g.y + g.h <= f.y + f.h).length;
+    if (inner) nested++;
+    blanksInFrames += inside;
+    cmdLog('  枠' + (i + 1) + '： ' + (f.kind === 'grid' ? '表' : '四角い枠') + ' ' + Math.round(f.w) + '×' + Math.round(f.h) + '　中身=' + ({ text:'文字', graphic:'図', mixed:'図と文字が混在', empty:'空' }[f.content] || f.content) + '　中の空欄 ' + inside + '個　中の枠 ' + inner + '個', 'cmd-ok');
+  });
+  cmdLog('→ 枠の中に空欄がある例（□の中に（）がある入れ子）： ' + blanksInFrames + '個／枠の中に枠がある例： ' + nested + '件', 'cmd-ok');
+}
+async function cmdNewGraphicAllTest(){
+  const pages = notestate.pages.map((p, i) => ({ p: p, i: i })).filter(o => o.p.bgImage);
+  if (!pages.length){ cmdLog('[@new] 画像のあるページがありません。', 'cmd-error'); return; }
+  const list = pages.slice(0, 40);
+  cmdLog('[@new] ノート全体の図表検知サーベイ（' + list.length + 'ページ。少し時間がかかります）...', 'cmd-ok');
+  let tOld = 0, tNew = 0, tFrames = 0, missed = 0;
+  for (const o of list){
+    const img = await loadImageAsync(o.p.bgImage);
+    const old = scanPageForGraphicRegions(img, o.p.width, o.p.height).length;
+    const lay = analyzePageLayout(img, o.p.width, o.p.height);
+    tOld += old; tNew += lay.graphics.length; tFrames += lay.frames.length;
+    if (old === 0 && lay.graphics.length > 0) missed++;
+    if (old || lay.graphics.length || lay.frames.length) cmdLog('  ' + (o.i + 1) + 'ページ： 従来 ' + old + '件／構造 図' + lay.graphics.length + '・枠' + lay.frames.length, 'cmd-ok');
+    await new Promise(r => setTimeout(r, 0));
+  }
+  cmdLog('[@new] 合計： 従来方式 ' + tOld + '件／構造方式 図 ' + tNew + '件・枠 ' + tFrames + '件。従来が0件なのに構造で図が見つかったページ： ' + missed + '枚', 'cmd-ok');
+}
+async function cmdNewFigureTextTest(){
+  const page = notestate.pages[currentPageIndex];
+  if (!page.bgImage){ cmdLog('[@new] このページには画像がありません。', 'cmd-error'); return; }
+  if (!expNeedOcr(page)) return;
+  const img = await loadImageAsync(page.bgImage);
+  const lay = analyzePageLayout(img, page.width, page.height);
+  if (!lay.graphics.length){ cmdLog('[@new] このページには図が見つかりませんでした。図のあるページで試してください。', 'cmd-ok'); return; }
+  const blocks = page.ocrBlocks.filter(b => b.source === 'auto');
+  let lost = 0;
+  cmdLog('[@new] 図の中の文字ラベルの確認（図 ' + lay.graphics.length + '件）', 'cmd-ok');
+  lay.graphics.slice(0, 10).forEach((g, i) => {
+    const ins = blocks.filter(b => expInside(g, b.x + b.w / 2, b.y + b.h / 2));
+    lost += ins.length;
+    cmdLog('  図' + (i + 1) + '： 中にOCRブロック ' + ins.length + '個' + (ins.length ? '（例：「' + ins.slice(0, 3).map(b => b.text.replace(/\s+/g, '').slice(0, 8)).join('」「') + '」）' : ''), 'cmd-ok');
+  });
+  cmdLog('→ 図を丸ごと除外すると、上の文字ラベル ' + lost + '個が読み上げから消えます。図の線だけ除外して文字は残す方式が必要かの判断材料です。', 'cmd-ok');
+}
+async function cmdNewOcrWordsTest(){
+  const page = notestate.pages[currentPageIndex];
+  if (!page.bgImage){ cmdLog('[@new] このページには画像がありません。', 'cmd-error'); return; }
+  cmdLog('[@new] 低信頼度の単語の分布を調べます...', 'cmd-ok');
+  const r = await ocrForExperiment(page, page.bgImage, {}, page.excludeZones);
+  const ws = r.words.filter(w => w.text && w.text.trim());
+  const low60 = ws.filter(w => (w.confidence || 0) < 60), low40 = ws.filter(w => (w.confidence || 0) < 40);
+  cmdLog('  単語 ' + ws.length + '個／平均信頼度 ' + r.conf + '%／信頼度60%未満 ' + low60.length + '個（' + Math.round(100 * low60.length / Math.max(1, ws.length)) + '%）／40%未満 ' + low40.length + '個', 'cmd-ok');
+  low60.sort((a, b) => a.confidence - b.confidence).slice(0, 8).forEach(w => cmdLog('    「' + w.text.trim() + '」 ' + Math.round(w.confidence) + '%', 'cmd-ok'));
+  cmdLog('→ 平均が90%でも、少数の低信頼度単語が誤読の場所です。ここを減らせる手法が「強化」の成果になります。', 'cmd-ok');
+}
+async function cmdNewOcrAgreeTest(){
+  const page = notestate.pages[currentPageIndex];
+  if (!page.bgImage){ cmdLog('[@new] このページには画像がありません。', 'cmd-error'); return; }
+  if (typeof Tesseract === 'undefined'){ cmdLog('[@new] OCRライブラリが読み込まれていません。', 'cmd-error'); return; }
+  cmdLog('[@new] OCR方式どうしの一致率を調べます（4回OCRします。時間がかかります）...', 'cmd-ok');
+  const vs = [
+    { label:'現行の既定値', opts:{} },
+    { label:'局所適応二値化', opts:{ adaptiveBinarization:true, shadingCorrection:true } },
+    { label:'PSM11（まばらな文章）', opts:{ psm:'11' } },
+    { label:'高解像度（2600px）', opts:{ targetMin:2600 } }
+  ];
+  const outs = [];
+  for (const v of vs){ const r = await ocrForExperiment(page, page.bgImage, v.opts, page.excludeZones); outs.push({ v: v, r: r }); }
+  const base = outs[0].r;
+  outs.forEach((o, i) => {
+    const low = o.r.words.filter(w => (w.confidence || 0) < 60).length;
+    cmdLog('  ' + o.v.label + '： 文字数=' + o.r.text.replace(/\s/g, '').length + '　低信頼度単語=' + low + '個　所要=' + o.r.sec.toFixed(1) + '秒' + (i ? '　既定値との一致率=' + Math.round(100 * bigramDice(base.text, o.r.text)) + '%' : ''), 'cmd-ok');
+  });
+  cmdLog('→ 一致率が100%に近いほど「どの方式でも同じ結果」（改善の余地が小さいページ）、低いほど方式選びで結果が変わるページです。', 'cmd-ok');
+}
+function makeDegradedDataUrl(img, kind){
+  const w = img.width, h = img.height;
+  const k = kind === 'small' ? 0.5 : 1;
+  const c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+  if (kind === 'blur' && 'filter' in ctx) ctx.filter = 'blur(1.4px)';
+  ctx.drawImage(img, 0, 0, c.width, c.height);
+  if (kind === 'noise'){
+    const d = ctx.getImageData(0, 0, c.width, c.height), a = d.data;
+    for (let i = 0; i < a.length; i += 4){
+      const n = (Math.random() - 0.5) * 60;
+      for (let j = 0; j < 3; j++) a[i+j] = clampNum(128 + (a[i+j] - 128) * 0.7 + n + 25, 0, 255);
+    }
+    ctx.putImageData(d, 0, 0);
+  }
+  return c.toDataURL('image/png');
+}
+async function cmdNewOcrDegradeTest(){
+  const page = notestate.pages[currentPageIndex];
+  if (!page.bgImage){ cmdLog('[@new] このページには画像がありません。', 'cmd-error'); return; }
+  if (typeof Tesseract === 'undefined'){ cmdLog('[@new] OCRライブラリが読み込まれていません。', 'cmd-error'); return; }
+  cmdLog('[@new] 劣化画像でのOCRの粘りを調べます（縮小・ぼかし・ノイズ×2方式＋基準。7回OCRするので数十秒かかります）...', 'cmd-ok');
+  const img = await loadImageAsync(page.bgImage);
+  const clean = await ocrForExperiment(page, page.bgImage, {}, page.excludeZones);
+  const kinds = [['small', '半分に縮小'], ['blur', 'ぼかし'], ['noise', 'ノイズ＋低コントラスト']];
+  const sum = { plain: 0, adaptive: 0 };
+  for (const [kind, label] of kinds){
+    const du = makeDegradedDataUrl(img, kind);
+    const a = await ocrForExperiment(page, du, { shadingCorrection: false, adaptiveBinarization: false }, []);
+    const b = await ocrForExperiment(page, du, { shadingCorrection: true, adaptiveBinarization: true }, []);
+    const da = bigramDice(clean.text, a.text), db = bigramDice(clean.text, b.text);
+    sum.plain += da; sum.adaptive += db;
+    cmdLog('  ' + label + '： 従来 ' + Math.round(100 * da) + '%／局所適応 ' + Math.round(100 * db) + '%（元画像の結果との一致率）', 'cmd-ok');
+  }
+  cmdLog('→ 平均一致率 従来 ' + Math.round(100 * sum.plain / 3) + '%／局所適応 ' + Math.round(100 * sum.adaptive / 3) + '%。' + (sum.adaptive > sum.plain + 0.03 ? '劣化画像では局所適応が有利です（カメラ撮影ページ向けの根拠）。' : sum.plain > sum.adaptive + 0.03 ? '劣化画像でも従来方式が有利でした。' : '大きな差はありませんでした。'), 'cmd-ok');
+}
+
 /* 【v5.4で新規追加】括弧ペア検知の判定精度実験 ――― @newでの実証実験。
    □検知テストと同様に、（）［］()[]の検知内容を1件ずつ書き出す。あわせて、
    開き・閉じの数が一致しない括弧（＝OCRの読み落としや行の途中切れの
