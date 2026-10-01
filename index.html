@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v5.6</title>
+<title>読みノート v5.7</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -55,7 +55,7 @@
   }
   #bottomBar.hidden{display:none;}
   /* 【v4.6で追加】テストモード中に隠すリンク類 */
-  #homeLinkBtn.hidden, #usageLinkBtn.hidden, #featureLinkBtn.hidden, #savedTabUsageLinkSep.hidden{display:none;}
+  #homeLinkBtn.hidden, #usageLinkBtn.hidden, #featureLinkBtn.hidden, #researchLinkBtn.hidden, #savedTabUsageLinkSep.hidden{display:none;}
   #ocrToolHintText.hidden, #testSettingsBtn.hidden{display:none;}
   .bottom-cmd-btn{
     display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;
@@ -624,7 +624,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v5.6</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v5.7</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
       <span class="offline-badge hidden" id="offlineBadge" title="インターネットに接続されていません。音声入力は端末によっては引き続き使える場合がありますが、多くの環境では通信が必要です。">🔌 オフライン</span>
       <span class="test-mode-badge hidden" id="testModeBadge" title="テストモード中は、自動で公式が出てくる機能やリンク・動画がブロックされています">🧪 テストモード中</span>
       <span class="test-mode-badge hidden" id="testModeTimerBadge" style="background:#3A6EA5;" title="テストモードの残り時間">⏳ --:--</span>
@@ -650,10 +650,11 @@
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
     <button class="btn accent" id="exportZipBtn" title="各ページの画像とノートデータをZIPでまとめて書き出す">🗜️ ZIP書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v32.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
-    <a class="icon-btn" id="featureLinkBtn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv8.html" target="_blank" rel="noopener" title="機能紹介 / Features" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">✨</a>
-    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v25.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
-    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v23.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v33.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="featureLinkBtn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv9.html" target="_blank" rel="noopener" title="機能紹介 / Features" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">✨</a>
+    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v26.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
+    <a class="icon-btn" id="researchLinkBtn" href="./%E7%A0%94%E7%A9%B6v0_1.html" target="_blank" rel="noopener" title="研究ページ / Research" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🔬</a>
+    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v24.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
     <button class="icon-btn" id="fullscreenBtn" title="全画面表示に切り替え">⛶</button>
     <button class="icon-btn" id="ocrLangBtn" title="OCRで認識する言語を選ぶ（日本語＋外国語など）">🌐</button>
@@ -955,6 +956,11 @@
         <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockRuler"><label for="tsBlockRuler" style="margin:0;">定規ツールをブロックする</label></div>
         <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockLasso"><label for="tsBlockLasso" style="margin:0;">輪投げツールをブロックする</label></div>
         <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockGrade"><label for="tsBlockGrade" style="margin:0;">学年モードの変更をブロックする</label></div>
+        <div class="modal-row" style="margin:10px 0 2px;font-size:12px;font-weight:700;color:var(--ink-soft);">数式パレットの「タップすると答え（公式・化学式）が出てくる一覧」</div>
+        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockFormulaBook"><label for="tsBlockFormulaBook" style="margin:0;">「よく使う公式」の一覧をブロックする</label></div>
+        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockChemIons"><label for="tsBlockChemIons" style="margin:0;">化学「よく使うイオン」の一覧をブロックする</label></div>
+        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockPhysics"><label for="tsBlockPhysics" style="margin:0;">物理「よく使う公式」の一覧をブロックする</label></div>
+        <p class="empty-hint" style="margin:2px 0 10px;">電荷の上付き文字・反応の矢印・分数・行列などの「書き方の道具」は答えそのものではないため、ここをチェックしてもテスト中に使えます。</p>
         <div class="modal-row">
           <label>制限時間（分・任意）</label>
           <input type="number" id="tsTimeLimit" min="1" max="600" step="1" placeholder="空欄なら制限時間なし" style="max-width:140px;">
@@ -989,7 +995,7 @@
     <div class="cmd-panel" id="cmdPanel">
       <div class="cmd-panel-header">
         <span class="cmd-mode-label">コマンド <span id="cmdModeLabel">@0</span></span>
-        <a class="cmd-help-link" href="./command-list-v18.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
+        <a class="cmd-help-link" href="./command-list-v19.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
         <button class="cmd-close-btn" id="cmdCloseBtn" title="閉じる">✕</button>
       </div>
       <div class="cmd-log" id="cmdLog"></div>
@@ -1075,8 +1081,8 @@
         </p>
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
-          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v23.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
-          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v25.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
+          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v24.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
+          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v26.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
         </div>
       </div>
     </aside>
@@ -2750,7 +2756,7 @@ function showFirstTimeIntro(){
   }
   document.getElementById('introCloseBtn').addEventListener('click', dismiss);
   document.getElementById('introUsageBtn').addEventListener('click', () => {
-    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v25.html', '_blank', 'noopener');
+    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v26.html', '_blank', 'noopener');
     dismiss();
   });
 }
@@ -5801,7 +5807,7 @@ const FORMULA_CATEGORIES = [
     { label:'2×1（縦）', symbolOnly:'(▯/▯)', insert:'\\begin{pmatrix}{}\\\\{}\\end{pmatrix}', template:true },
     { label:'行列式', symbolOnly:'|▯▯/▯▯|', insert:'\\begin{vmatrix}{}&{}\\\\{}&{}\\end{vmatrix}', template:true }
   ]},
-  { name:'よく使う公式', level:1, hideInTestMode: true, items:[
+  { name:'よく使う公式', level:1, testBlockKey:'blockFormulaBook', items:[
     { label:'円の面積', insert:'S=\\pi r^2', template:true, level:1 },
     { label:'円周の長さ', insert:'l=2\\pi r', template:true, level:1 },
     { label:'速さ＝距離÷時間', insert:'v=\\frac{x}{t}', template:true, level:1 },
@@ -5833,7 +5839,7 @@ const FORMULA_CATEGORIES = [
   /* 【v5.6で新規追加】よく使うイオン式。タップするだけで完成した化学式が
      出てくる「暗記事項の一覧」に近いため、通常の公式集（よく使う公式）と
      同じ扱いとし、テストモード中は除外する（hideInTestMode）。 */
-  { name:'化学（よく使うイオン）', level:2, hideInTestMode: true, items:[
+  { name:'化学（よく使うイオン）', level:2, testBlockKey:'blockChemIons', items:[
     { label:'H⁺', insert:'\\text{H}^{+}' }, { label:'Na⁺', insert:'\\text{Na}^{+}' },
     { label:'Cl⁻', insert:'\\text{Cl}^{-}' }, { label:'OH⁻', insert:'\\text{OH}^{-}' },
     { label:'Ca²⁺', insert:'\\text{Ca}^{2+}' }, { label:'Al³⁺', insert:'\\text{Al}^{3+}' },
@@ -5844,7 +5850,7 @@ const FORMULA_CATEGORIES = [
   /* 【v5.6で新規追加】物理でよく使う計算式。数値や記号をそのまま当てはめる
      だけで解けてしまう「公式そのもの」なので、上の「よく使う公式」と同じ
      考え方でテストモード中は除外する。 */
-  { name:'物理（よく使う公式）', level:2, hideInTestMode: true, items:[
+  { name:'物理（よく使う公式）', level:2, testBlockKey:'blockPhysicsFormulas', items:[
     { label:'速度', insert:'v=v_0+at', template:true },
     { label:'変位', insert:'x=v_0t+\\frac{1}{2}at^2', template:true },
     { label:'運動方程式', insert:'F=ma', template:true },
@@ -5869,7 +5875,7 @@ const SCHOOL_LEVELS = { elementary: 1, middle: 2, high: 3, university: 4 };
 const SCHOOL_MODE_KEY = 'yomiSchoolMode';
 let schoolMode = localStorage.getItem(SCHOOL_MODE_KEY) || 'university';
 function currentSchoolLevel(){ return SCHOOL_LEVELS[schoolMode] || 4; }
-/* 【v5.6でhideInTestMode方式に一般化】テストモード中は「タップすると
+/* 【v5.6でhideInTestMode方式に一般化→v5.7でtestBlockKey（詳細設定のチェック）方式に変更】テストモード中は「タップすると
    完成した答え（公式・イオン式）がそのまま出てくる」カテゴリを除外する。
    以前は「よく使う公式」という名前を直接チェックしていたが、v5.6で
    化学のイオン式・物理の公式カテゴリも同じ理由で除外対象になったため、
@@ -5879,7 +5885,9 @@ function currentSchoolLevel(){ return SCHOOL_LEVELS[schoolMode] || 4; }
 function getVisibleFormulaCategories(){
   const maxLevel = currentSchoolLevel();
   return FORMULA_CATEGORIES.map(cat => {
-    if (testModeOn && cat.hideInTestMode) return null;
+    /* 【v5.7】v5.6の「hideInTestMode（常に非表示）」を、詳細設定のチェックで切り替えられる
+       testBlockKey方式に変更した。キーが未設定の古い保存データでは、安全側（＝ブロック）に倒す。 */
+    if (testModeOn && cat.testBlockKey && testModeSettings[cat.testBlockKey] !== false) return null;
     const items = cat.items.filter(item => (item.level || cat.level || 1) <= maxLevel);
     return items.length ? { name: cat.name, items } : null;
   }).filter(Boolean);
@@ -6024,7 +6032,10 @@ const TEST_LOG_KEY = 'yomiTestModeLog';
 const TEST_LOG_PW_KEY = 'yomiTestModeLogPwHash';
 const TEST_TIMER_END_KEY = 'yomiTestModeTimerEnd';
 let testModeSettings = Object.assign(
-  { blockImage: true, blockCamera: true, blockRuler: true, blockLasso: true, blockGradeChange: true, timeLimitMinutes: null },
+  { blockImage: true, blockCamera: true, blockRuler: true, blockLasso: true, blockGradeChange: true,
+    /* 【v5.7で追加】答えそのものが出てくる公式一覧のブロック（既定はすべてブロック） */
+    blockFormulaBook: true, blockChemIons: true, blockPhysicsFormulas: true,
+    timeLimitMinutes: null },
   (() => { try { return JSON.parse(localStorage.getItem(TEST_SETTINGS_KEY) || '{}'); } catch(e){ return {}; } })()
 );
 function saveTestModeSettings(){
@@ -6116,7 +6127,7 @@ function setTestMode(on){
   try { sessionStorage.setItem(TEST_MODE_KEY, testModeOn ? '1' : '0'); } catch(e){}
   if (prev !== testModeOn){
     appendLogRaw(testModeOn ? 'テストモードON' : 'テストモードOFF',
-      testModeOn ? ('設定：画像=' + (testModeSettings.blockImage?'ブロック':'許可') + '／カメラ=' + (testModeSettings.blockCamera?'ブロック':'許可') + '／定規=' + (testModeSettings.blockRuler?'ブロック':'許可') + '／輪投げ=' + (testModeSettings.blockLasso?'ブロック':'許可') + '／学年変更=' + (testModeSettings.blockGradeChange?'ブロック':'許可')) : '');
+      testModeOn ? ('設定：画像=' + (testModeSettings.blockImage?'ブロック':'許可') + '／カメラ=' + (testModeSettings.blockCamera?'ブロック':'許可') + '／定規=' + (testModeSettings.blockRuler?'ブロック':'許可') + '／輪投げ=' + (testModeSettings.blockLasso?'ブロック':'許可') + '／学年変更=' + (testModeSettings.blockGradeChange?'ブロック':'許可') + '／よく使う公式=' + (testModeSettings.blockFormulaBook!==false?'ブロック':'許可') + '／化学イオン一覧=' + (testModeSettings.blockChemIons!==false?'ブロック':'許可') + '／物理公式一覧=' + (testModeSettings.blockPhysicsFormulas!==false?'ブロック':'許可')) : '');
   }
   const btn = document.getElementById('testModeBtn');
   if (btn){
@@ -6205,7 +6216,7 @@ function setTestMode(on){
   /* 【v4.6で追加】テストモード中は「追加コンテンツ（🧩）」「利用規約（📜）」以外の
      リンク・コマンド機能を非表示にする。ツールバーの位置切替（⬆️/⬅️）は
      上部バーのボタンからそのまま使えるので、コマンドが使えなくても困らない。 */
-  ['homeLinkBtn','usageLinkBtn','featureLinkBtn'].forEach(id => {
+  ['homeLinkBtn','usageLinkBtn','featureLinkBtn','researchLinkBtn'].forEach(id => {
     const el = document.getElementById(id);
 
     if (el) el.classList.toggle('hidden', testModeOn);
@@ -6865,7 +6876,7 @@ document.getElementById('schoolModeSelect').addEventListener('change', e => {
 });
 document.getElementById('testModeBtn').addEventListener('click', () => {
   setTestMode(!testModeOn);
-  flashToast(testModeOn ? 'テストモードをONにしました（公式パレット・リンク・動画をブロック）' : 'テストモードをOFFにしました');
+  flashToast(testModeOn ? 'テストモードをONにしました（詳細設定に従い、公式一覧・リンク・動画などをブロック）' : 'テストモードをOFFにしました');
 });
 /* 【v4.6で追加】/tool up・/tool side と同じ機能を上部バーのボタンからも使えるようにする
    （テストモード中はコマンドパレットが使えなくなるため、必須の代替導線として追加） */
@@ -7391,20 +7402,39 @@ function updateCommandPromptUI(){
   document.getElementById('cmdModeLabel').textContent = commandMode;
   document.getElementById('cmdPromptLabel').textContent = cmdPromptPrefix();
 }
-function cmdLog(text, cls){
+/* 【v5.7で追加】一括実行（/run all command）の結果をまとめてコピーできるよう、
+   実行中だけ出力を newRunCapture に溜める。noCapture=true の行（実行中に打たれた
+   別コマンドのエコーなど）は結果に混ざらないよう溜めない。 */
+let newRunBusy = false, newRunAbort = false, newRunCapture = null, newLastRunText = '';
+function cmdLog(text, cls, noCapture){
   const log = document.getElementById('cmdLog');
   const line = document.createElement('div');
   line.className = 'cmd-line ' + (cls || '');
   line.textContent = text;
   log.appendChild(line);
   log.scrollTop = log.scrollHeight;
+  if (newRunCapture && !noCapture) newRunCapture.push({ text: String(text), cls: cls || '' });
+}
+function cmdLogButton(label, onClick){
+  const log = document.getElementById('cmdLog');
+  const line = document.createElement('div');
+  line.className = 'cmd-line';
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = label;
+  btn.style.cssText = 'background:#2a3340;color:#fff;border:1px solid #556070;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;margin:4px 0;';
+  btn.addEventListener('click', () => onClick(btn));
+  line.appendChild(btn);
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+  return btn;
 }
 async function executeCommand(raw){
   const input = (raw || '').trim();
   if (!input) return;
-  cmdLog(cmdPromptPrefix() + ' ' + input, 'cmd-echo');
+  cmdLog(cmdPromptPrefix() + ' ' + input, 'cmd-echo', newRunBusy);
   if (input.charAt(0) !== '/'){
-    cmdLog('コマンドは / から始めてください（例: /all command）', 'cmd-error');
+    cmdLog('コマンドは / から始めてください（例: /all command）', 'cmd-error', newRunBusy);
     return;
   }
   /* /command mode はどのモードからでも使えるようにしている。@0専用にしてしまうと、
@@ -7418,6 +7448,20 @@ async function executeCommand(raw){
     commandMode = target;
     updateCommandPromptUI();
     cmdLog('モードを ' + target + ' に切り替えました', 'cmd-ok');
+    return;
+  }
+  /* 【v5.7で追加】一括実行中の中止・コピー。実行中は他のコマンドを受け付けない
+     （ページ表示を切り替えながら検証しているため、別の操作と干渉するのを防ぐ）。 */
+  if (commandMode === '@new' || newRunBusy){
+    if (/^\/run\s+stop\s*$/i.test(input)){
+      if (newRunBusy){ newRunAbort = true; cmdLog('[@new] 中止を受け付けました。実行中のコマンドが終わり次第、止まります。', 'cmd-ok', true); }
+      else cmdLog('[@new] 実行中の一括実行はありません。', 'cmd-error', true);
+      return;
+    }
+    if (/^\/run\s+copy\s*$/i.test(input)){ await copyNewRunResult(); return; }
+  }
+  if (newRunBusy){
+    cmdLog('[@new] 一括実行中です。完了を待つか、/run stop で中止してください。', 'cmd-error', true);
     return;
   }
   try {
@@ -7461,7 +7505,7 @@ function listAllCommands(){
       '/note mode @5 ― 部分OCRの精度を優先（画像・動画・URL・グラフ挿入は使用不可）',
       '/tool up ― ツールバーを上端表示に切り替える（ページ一覧が見やすくなる）',
       '/tool side ― ツールバーを左（通常）表示に戻す',
-      '/test mode on ― テストモードON（公式パレット「よく使う公式」・リンク・動画をブロック）',
+      '/test mode on ― テストモードON（詳細設定に従い、数式の公式一覧・リンク・動画などをブロック）',
       '/test mode off ― テストモードOFF',
       '/import dlc ― 追加DLC（.jsファイル）を選んで取り込む（複数取り込み可）',
       '/dlc on [番号] ― DLCを有効にする（番号省略ですべて）',
@@ -7587,7 +7631,7 @@ async function handleCommand2(input){
   /* 【v4.5で追加】テストモードのON/OFF切替コマンド */
   if (/^\/test\s+mode\s+on\s*$/i.test(input)){
     setTestMode(true);
-    cmdLog('テストモードをONにしました（公式パレット・リンク・動画をブロックしました）', 'cmd-ok');
+    cmdLog('テストモードをONにしました（詳細設定に従い、公式一覧・リンク・動画などをブロックしました）', 'cmd-ok');
     return;
   }
   if (/^\/test\s+mode\s+off\s*$/i.test(input)){
@@ -7610,17 +7654,15 @@ async function handleCommand2(input){
   }
   cmdLog('不明なコマンドです: ' + input + '（/all command で一覧を確認できます）', 'cmd-error');
 }
-/* 【v5.3で新規追加】@newの解除フラグ。コマンド一覧ページ（command-list）に
-   隠してある「コマンド検索」から ">_" → "@new" の順に入力すると解除され、
-   同じブラウザで開いているこのアプリでも @newコマンド一覧が見られるように
-   なる（DLCの有効状態などと同じく、localStorageを介してページ間で共有する
-   従来からの仕組みに合わせた）。解除していなくても /new ヘルプ や個々の
-   /new コマンド自体はこれまで通りそのまま使える。あくまで「/all command」
-   （＝一覧表示）だけを特別扱いする。 */
-const NEW_CMD_UNLOCK_KEY = 'yomiNewCmdUnlocked';
-function isNewCmdUnlocked(){
-  try { return localStorage.getItem(NEW_CMD_UNLOCK_KEY) === 'true'; } catch(e){ return false; }
-}
+/* 【v5.7で変更】v5.3〜v5.6では、コマンド一覧ページで解除コードを入力すると
+   localStorageに解除状態が残り、この本体アプリの /all command にも@new一覧が
+   出る仕組みだった。しかしlocalStorageは何も操作しなくても永久に残るため、
+   一度でも解除した端末では「初期状態から@newコマンドが見える」ことになり、
+   管理者専用の機能という位置づけに合わなかった。v5.7では解除状態を保存しない
+   （コマンド一覧ページ側もタブを閉じると元に戻る）。古い版が残した解除状態は
+   起動時に消去する。@newはもともと /command mode @new と入力した管理者だけが
+   入るモードなので、そのモード内の /all command は一覧をそのまま表示する。 */
+try { localStorage.removeItem('yomiNewCmdUnlocked'); } catch(e){}
 function listNewCommands(){
   cmdLog('[@new] 研究開発コマンド一覧：', 'cmd-ok');
   cmdLog('◆ テキストボックス自動配置', 'cmd-ok');
@@ -7645,6 +7687,11 @@ function listNewCommands(){
   cmdLog('  /new ocr degrade test ―― 縮小・ぼかし・ノイズの劣化画像でどの方式が粘るか確認', 'cmd-ok');
   cmdLog('◆ 数式・化学式', 'cmd-ok');
   cmdLog('  /new formula detect test ―― 見た目が数式・化学式らしいブロックや、分数らしき上下2段の組み合わせを検知', 'cmd-ok');
+  cmdLog('◆ 一括実行（研究開発の効率化）', 'cmd-ok');
+  cmdLog('  /run all command ―― 上のすべての検証を、今いるページで順番に実行（結果はコピー可能）', 'cmd-ok');
+  cmdLog('  /run all command @all pages ―― すべての検証を全ページで順番に実行（ノート全体の調査は最初に1回だけ）', 'cmd-ok');
+  cmdLog('  /run stop ―― 一括実行を中止（実行中のコマンドが終わり次第止まります）', 'cmd-ok');
+  cmdLog('  /run copy ―― 直前の一括実行の結果をもう一度コピー（実行中は途中経過をコピー）', 'cmd-ok');
 }
 async function handleCommandNew(input){
   /* @new は「追加コンテンツ用の試験的な入口」に加え、v5.2からは
@@ -7653,17 +7700,16 @@ async function handleCommandNew(input){
      安全のため、.js / .py など実行可能なコードをそのまま読み込んで実行する
      ことは引き続き行わない（任意コード実行は重大なセキュリティリスクのため）。 */
   if (/^\/all\s+command\s*$/i.test(input)){
-    if (isNewCmdUnlocked()){
-      cmdLog('[@new] コマンド一覧ページで解除コードが入力済みのため、一覧を表示します：', 'cmd-ok');
-      listNewCommands();
-    } else {
-      cmdLog('@new は試験用の特別モードのため、コマンド一覧には表示されません。', 'cmd-error');
-    }
+    listNewCommands();
     return;
   }
   if (/^\/new\s+help\s*$/i.test(input) || /^\/help\s*$/i.test(input)){
     listNewCommands();
     return;
+  }
+  {
+    const runMatch = input.match(/^\/run\s+all\s+command(\s+@all\s+pages?)?\s*$/i);
+    if (runMatch){ await runAllNewCommands(!!runMatch[1]); return; }
   }
   if (/^\/new\s+ocr\s+compare\s*$/i.test(input)){
     await cmdNewOcrCompare();
@@ -7721,6 +7767,161 @@ async function handleCommandNew(input){
   for (const [re, fn] of extra){ if (re.test(input)){ await fn(); return; } }
   cmdLog('[@new] 拡張コンテンツ用の試験モードです。安全のため、任意のコード実行には対応していません。', 'cmd-error');
   cmdLog('研究開発コマンドは /new help で一覧を確認できます。', 'cmd-ok');
+}
+/* ============================================================
+   【v5.7で新規追加】研究開発の効率化 ―― 検証コマンドの一括実行（@new）
+   ------------------------------------------------------------
+   これまでは検証コマンドを1つずつ入力し、ページを切り替えてはまた入力し直す
+   必要があり、32ページのプリントを調べるだけでも大変だった。
+   ・/run all command           今いるページで、すべての検証コマンドを順番に実行
+   ・/run all command @all pages すべての検証コマンドを、全ページで順番に実行
+   ・/run stop / /run copy       中止／結果のコピー
+   どちらも「順次進行」で、1つのコマンドが終わってから次へ進む（OCRを何度も
+   走らせる検証が含まれるため、全ページだと30分前後かかることがある）。
+   各検証はもともと「ログを出すだけでノートの内容は変更しない（非破壊）」ように
+   作ってあるので、一括実行でもノートは変わらない。ただし全ページ実行では
+   進行を見せるため実際にページを切り替え、終わったら元のページへ戻す。
+   結果は newRunCapture に溜めてあり、完了後のボタンまたは /run copy で
+   そのままコピーできる（そのまま研究メモ・論文のデータとして貼れる形式）。
+   ============================================================ */
+const NEW_RUN_LIST = [
+  { cmd:'/new blank compare',            short:'空白の比較',        fn:cmdNewBlankCompare,            need:'ocr' },
+  { cmd:'/new bracket compare',          short:'括弧・□の比較',     fn:cmdNewBracketCompare,          need:'ocr' },
+  { cmd:'/new box test',                 short:'□検知',             fn:cmdNewBoxTest,                 need:'image' },
+  { cmd:'/new paren test',               short:'（）検知',          fn:cmdNewParenTest,               need:'ocr' },
+  { cmd:'/new frame test',               short:'枠検知',            fn:cmdNewFrameTest,               need:'image' },
+  { cmd:'/new bracket overlap test',     short:'検知の重複',        fn:cmdNewBracketOverlapTest,      need:'ocr' },
+  { cmd:'/new graphic test',             short:'図表検知',          fn:cmdNewGraphicTest,             need:'image' },
+  { cmd:'/new graphic all test',         short:'図表サーベイ',      fn:cmdNewGraphicAllTest,          scope:'note' },
+  { cmd:'/new box content test',         short:'枠の中身',          fn:cmdNewBoxContentTest,          need:'zones' },
+  { cmd:'/new figure text test',         short:'図の中の文字',      fn:cmdNewFigureTextTest,          need:'imageocr' },
+  { cmd:'/new graphic sensitivity test', short:'検出の強さ別',      fn:cmdNewGraphicSensitivityTest,  need:'image' },
+  { cmd:'/new ocr compare',              short:'OCR前処理比較',     fn:cmdNewOcrCompare,              need:'image' },
+  { cmd:'/new ocr psm test',             short:'OCR分割モード',     fn:cmdNewOcrPsmTest,              need:'image' },
+  { cmd:'/new ocr scale test',           short:'OCR解像度',         fn:cmdNewOcrScaleTest,            need:'image' },
+  { cmd:'/new ocr words test',           short:'低信頼度単語',      fn:cmdNewOcrWordsTest,            need:'image' },
+  { cmd:'/new ocr agree test',           short:'OCR一致率',         fn:cmdNewOcrAgreeTest,            need:'image' },
+  { cmd:'/new ocr degrade test',         short:'劣化画像耐性',      fn:cmdNewOcrDegradeTest,          need:'image' },
+  { cmd:'/new formula detect test',      short:'数式候補検知',      fn:cmdNewFormulaDetectTest,       need:'ocr' }
+];
+function newRunMissing(page, item){
+  const hasImg = !!page.bgImage;
+  const hasOcr = (page.ocrBlocks || []).some(b => b.source === 'auto');
+  if (item.need === 'image') return hasImg ? '' : '画像なし';
+  if (item.need === 'ocr') return hasOcr ? '' : 'OCR未実施';
+  if (item.need === 'imageocr') return !hasImg ? '画像なし' : (!hasOcr ? 'OCR未実施' : '');
+  if (item.need === 'zones') return !hasImg ? '画像なし' : ((page.excludeZones || []).length ? '' : '除外領域なし');
+  return '';
+}
+function newRunFormatTime(ms){
+  const s = Math.round(ms / 1000), m = Math.floor(s / 60);
+  return (m ? m + '分' : '') + (s % 60) + '秒';
+}
+function buildNewRunText(lines, metaLines){
+  return metaLines.concat([''], lines.map(l => l.text)).join('\n');
+}
+async function copyTextToClipboard(text){
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText){ await navigator.clipboard.writeText(text); return true; }
+  } catch(e){}
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;';
+    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+    const ok = document.execCommand('copy'); ta.remove();
+    return !!ok;
+  } catch(e){ return false; }
+}
+let newRunMeta = [];
+async function copyNewRunResult(btn){
+  const text = newRunBusy
+    ? buildNewRunText(newRunCapture || [], newRunMeta.concat(['※ 実行中の途中経過です']))
+    : newLastRunText;
+  if (!text){ cmdLog('[@new] コピーできる一括実行の結果がまだありません。', 'cmd-error', true); return; }
+  const ok = await copyTextToClipboard(text);
+  if (btn && ok) btn.textContent = '✅ コピーしました（' + text.length + '文字）';
+  cmdLog(ok ? '[@new] 結果をコピーしました（' + text.length + '文字）。' : '[@new] コピーに失敗しました。ブラウザの権限をご確認ください。', ok ? 'cmd-ok' : 'cmd-error', true);
+}
+async function runAllNewCommands(allPages){
+  if (newRunBusy){ cmdLog('[@new] すでに一括実行中です。', 'cmd-error', true); return; }
+  const pages = notestate.pages;
+  const startIndex = currentPageIndex;
+  const sens0 = (typeof autoSettings !== 'undefined') ? autoSettings.sensitivity : undefined;
+  const t0 = performance.now();
+  let ran = 0, skipped = 0, errLines = 0, donePages = 0;
+  newRunBusy = true; newRunAbort = false; newRunCapture = [];
+  newRunMeta = [
+    '読みノート v5.7 研究開発コマンド 一括実行結果',
+    '実行日時：' + new Date().toLocaleString('ja-JP'),
+    '対象：' + (allPages ? '全ページ（' + pages.length + 'ページ）' : '今いるページ（' + (startIndex + 1) + '／' + pages.length + 'ページ目）')
+  ];
+  cmdLogButton('⏹ 中止する（実行中のコマンドが終わり次第止まります）', btn => {
+    newRunAbort = true; btn.disabled = true; btn.textContent = '⏹ 中止を受け付けました…';
+  });
+  flashToast('検証コマンドの一括実行を開始しました', 2500);
+  const runOne = async (item) => {
+    cmdLog(cmdPromptPrefix() + ' ' + item.cmd, 'cmd-echo');
+    const before = newRunCapture.length;
+    try { await item.fn(); }
+    catch(err){ cmdLog('[@new] 実行中にエラー：' + (err && err.message ? err.message : String(err)), 'cmd-error'); }
+    if (sens0 !== undefined) autoSettings.sensitivity = sens0;   /* 強さ別の検証が途中で失敗しても設定を元に戻す */
+    newRunCapture.slice(before).forEach(l => { if (l.cls === 'cmd-error') errLines++; });
+    ran++;
+    await new Promise(r => setTimeout(r, 0));
+  };
+  let aborted = false;
+  try {
+    if (!allPages){
+      cmdLog('[@new] 一括実行を開始します（今いるページ：' + (startIndex + 1) + '／' + pages.length + 'ページ目。全' + NEW_RUN_LIST.length + 'コマンド）。OCRを繰り返す検証が含まれるため、1分前後かかります。', 'cmd-ok');
+      for (const item of NEW_RUN_LIST){
+        if (newRunAbort){ aborted = true; break; }
+        await runOne(item);
+      }
+    } else {
+      const noteItems = NEW_RUN_LIST.filter(i => i.scope === 'note');
+      const pageItems = NEW_RUN_LIST.filter(i => i.scope !== 'note');
+      cmdLog('[@new] 全ページの一括実行を開始します（' + pages.length + 'ページ×' + pageItems.length + 'コマンド＋ノート全体の調査' + noteItems.length + '件）。OCRを繰り返す検証が含まれるため、1ページあたり1分前後、全体で30分以上かかることがあります。端末をスリープさせず、このタブを開いたままにしてください。', 'cmd-ok');
+      cmdLog('=== ノート全体の調査（最初に1回だけ実行） ===', 'cmd-title');
+      for (const item of noteItems){
+        if (newRunAbort){ aborted = true; break; }
+        await runOne(item);
+      }
+      for (let i = 0; i < pages.length && !aborted; i++){
+        if (newRunAbort){ aborted = true; break; }
+        loadPage(i);
+        cmdLog('=== ページ ' + (i + 1) + '／' + pages.length + '（進行 ' + Math.round(i / pages.length * 100) + '%・経過 ' + newRunFormatTime(performance.now() - t0) + '） ===', 'cmd-title');
+        const page = pages[i];
+        if (!page.bgImage && !(page.ocrBlocks || []).length){
+          cmdLog('  画像もOCR結果もないページのため、すべて省略しました。', 'cmd-ok');
+          skipped += pageItems.length; donePages++;
+          continue;
+        }
+        const skipNotes = [];
+        for (const item of pageItems){
+          if (newRunAbort){ aborted = true; break; }
+          const miss = newRunMissing(page, item);
+          if (miss){ skipNotes.push(item.short + '（' + miss + '）'); skipped++; continue; }
+          await runOne(item);
+        }
+        if (skipNotes.length) cmdLog('  ※ 省略：' + skipNotes.join('、'), 'cmd-ok');
+        if (!aborted) donePages++;
+      }
+    }
+  } catch(err){
+    cmdLog('[@new] 一括実行が予期しないエラーで止まりました：' + (err && err.message ? err.message : String(err)), 'cmd-error');
+  } finally {
+    if (allPages && startIndex < pages.length){ try { loadPage(startIndex); } catch(e){} }
+    if (sens0 !== undefined) autoSettings.sensitivity = sens0;
+  }
+  const elapsed = newRunFormatTime(performance.now() - t0);
+  cmdLog('[@new] 一括実行を' + (aborted ? '中止しました' : '完了しました') + '（実行 ' + ran + '件／省略 ' + skipped + '件／エラー表示 ' + errLines + '行' + (allPages ? '／処理ページ ' + donePages + '／' + pages.length : '') + '／所要 ' + elapsed + '）', aborted ? 'cmd-error' : 'cmd-ok');
+  newRunMeta.push('結果：' + (aborted ? '中止' : '完了') + '（実行 ' + ran + '件／省略 ' + skipped + '件／エラー表示 ' + errLines + '行／所要 ' + elapsed + '）');
+  newLastRunText = buildNewRunText(newRunCapture, newRunMeta);
+  newRunCapture = null; newRunBusy = false; newRunAbort = false;
+  cmdLogButton('📋 結果をコピー', btn => copyNewRunResult(btn));
+  cmdLog('下のボタン、または /run copy で、ここまでの結果をまとめてコピーできます。', 'cmd-ok', true);
+  flashToast('検証コマンドの一括実行が' + (aborted ? '中止されました' : '完了しました') + '（結果はコピーできます）', 4000);
 }
 /* 【v5.2で新規追加】OCR品質研究開発 ――― @newでの実証実験。
    現在のページ画像に対して、①これまでの方式（パーセンタイル・コントラスト伸長）
@@ -8644,6 +8845,9 @@ document.getElementById('testSettingsBtn').addEventListener('click', () => {
   document.getElementById('tsBlockRuler').checked = testModeSettings.blockRuler;
   document.getElementById('tsBlockLasso').checked = testModeSettings.blockLasso;
   document.getElementById('tsBlockGrade').checked = testModeSettings.blockGradeChange;
+  document.getElementById('tsBlockFormulaBook').checked = testModeSettings.blockFormulaBook !== false;
+  document.getElementById('tsBlockChemIons').checked = testModeSettings.blockChemIons !== false;
+  document.getElementById('tsBlockPhysics').checked = testModeSettings.blockPhysicsFormulas !== false;
   document.getElementById('tsTimeLimit').value = testModeSettings.timeLimitMinutes || '';
   document.getElementById('tsLogPassword').value = '';
   document.getElementById('testSettingsModal').classList.remove('hidden');
@@ -8657,6 +8861,9 @@ document.getElementById('testSettingsSaveBtn').addEventListener('click', async (
   testModeSettings.blockRuler = document.getElementById('tsBlockRuler').checked;
   testModeSettings.blockLasso = document.getElementById('tsBlockLasso').checked;
   testModeSettings.blockGradeChange = document.getElementById('tsBlockGrade').checked;
+  testModeSettings.blockFormulaBook = document.getElementById('tsBlockFormulaBook').checked;
+  testModeSettings.blockChemIons = document.getElementById('tsBlockChemIons').checked;
+  testModeSettings.blockPhysicsFormulas = document.getElementById('tsBlockPhysics').checked;
   const tlRaw = parseInt(document.getElementById('tsTimeLimit').value, 10);
   testModeSettings.timeLimitMinutes = (isNaN(tlRaw) || tlRaw <= 0) ? null : clampNum(tlRaw, 1, 600);
   saveTestModeSettings();
