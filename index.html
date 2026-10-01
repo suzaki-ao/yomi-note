@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v5.5 </title>
+<title>読みノート v5.6</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -624,7 +624,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v5.5</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v5.6</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
       <span class="offline-badge hidden" id="offlineBadge" title="インターネットに接続されていません。音声入力は端末によっては引き続き使える場合がありますが、多くの環境では通信が必要です。">🔌 オフライン</span>
       <span class="test-mode-badge hidden" id="testModeBadge" title="テストモード中は、自動で公式が出てくる機能やリンク・動画がブロックされています">🧪 テストモード中</span>
       <span class="test-mode-badge hidden" id="testModeTimerBadge" style="background:#3A6EA5;" title="テストモードの残り時間">⏳ --:--</span>
@@ -650,10 +650,10 @@
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
     <button class="btn accent" id="exportZipBtn" title="各ページの画像とノートデータをZIPでまとめて書き出す">🗜️ ZIP書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v31.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
-    <a class="icon-btn" id="featureLinkBtn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv7.html" target="_blank" rel="noopener" title="機能紹介 / Features" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">✨</a>
-    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v24.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
-    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v22.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v32.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="featureLinkBtn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv8.html" target="_blank" rel="noopener" title="機能紹介 / Features" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">✨</a>
+    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v25.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
+    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v23.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
     <button class="icon-btn" id="fullscreenBtn" title="全画面表示に切り替え">⛶</button>
     <button class="icon-btn" id="ocrLangBtn" title="OCRで認識する言語を選ぶ（日本語＋外国語など）">🌐</button>
@@ -989,7 +989,7 @@
     <div class="cmd-panel" id="cmdPanel">
       <div class="cmd-panel-header">
         <span class="cmd-mode-label">コマンド <span id="cmdModeLabel">@0</span></span>
-        <a class="cmd-help-link" href="./command-list-v17.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
+        <a class="cmd-help-link" href="./command-list-v18.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
         <button class="cmd-close-btn" id="cmdCloseBtn" title="閉じる">✕</button>
       </div>
       <div class="cmd-log" id="cmdLog"></div>
@@ -1075,8 +1075,8 @@
         </p>
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
-          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v22.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
-          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v24.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
+          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v23.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
+          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v25.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
         </div>
       </div>
     </aside>
@@ -1093,7 +1093,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
-<script>window.MathJax = { startup: { typeset: false } };</script>
+<script>
+/* 【v5.6で新規追加】化学式をきちんと組版できるよう、MathJaxの化学式拡張
+   （mhchem）を追加で読み込む設定。\ce{...} で反応式・イオン式を
+   書けるようになる（例：\ce{2H2 + O2 -> 2H2O}）。既存のtex-svg.js本体は
+   そのままで、拡張だけを追加読み込みするだけなので、これまで作成した
+   数式（LaTeX）データや表示には一切影響しない。 */
+window.MathJax = {
+  startup: { typeset: false },
+  loader: { load: ['[tex]/mhchem'] },
+  tex: { packages: { '[+]': ['mhchem'] } }
+};
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js" id="mathjax-script"></script>
 
 <script>
@@ -2739,7 +2750,7 @@ function showFirstTimeIntro(){
   }
   document.getElementById('introCloseBtn').addEventListener('click', dismiss);
   document.getElementById('introUsageBtn').addEventListener('click', () => {
-    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v24.html', '_blank', 'noopener');
+    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v25.html', '_blank', 'noopener');
     dismiss();
   });
 }
@@ -4708,6 +4719,79 @@ function detectBracketBlanks(blocks, vertical){
   });
   return results;
 }
+/* 【v5.6で新規追加】自作「数式候補」検知システム（研究開発）。
+   ―――― v5.5までの実験結果から分かったこと ――――
+   実際の化学プリント（k8.pdf）で/new paren testなどを動かした結果、
+   OCRが数式・化学式の部分で軒並み読み取りに失敗していることが分かった
+   （例：「ca**」「OH-~」「so (4」「[wo]」「HFR:」のような文字化け）。
+   これはTesseract（既存のOCRエンジン）が元々「ふつうの文章」用に
+   作られており、上付き・下付き文字や分数の罫線、根号・矢印などの
+   数式特有の見た目を文字として学習していないために起きる、OCR
+   エンジンそのものの限界である。
+   「数式を正しく読み取れるOCRを自作する」ことは、実際には画像認識の
+   研究テーマ1つ分に相当する規模の課題であり、このアプリ単体で
+   一から作るのは現実的ではない。そこで本バージョンでは、方向性を
+   次のように切り替えた：
+     ①数式「らしい」場所を、文字そのものを読み取るのではなく、
+       見た目の特徴（数字・記号の密度、分数のような上下2段組み＋
+       間の罫線、など）から検出する（＝detectFormulaRegions）。
+     ②検出した場所は、ガタガタのOCR文字列をそのまま読み上げ対象に
+       せず除外し（自作OCR除外システム）、かわりに手動で数式を
+       組み立てられる数式パレット（v5.6で化学・物理に対応済み）を
+       その場で開けるようにする。
+   「読み取る」のではなく「読み取れない場所を見つけて、手入力に
+   橋渡しする」という設計により、OCRエンジン自体を変えなくても
+   実用的に数式・化学式に対応できる。 */
+function looksLikeFormulaText(text){
+  const t = (text || '').replace(/\s+/g, '');
+  if (t.length < 2) return false;
+  const kana = (t.match(/[ぁ-んァ-ヶ一-龠]/g) || []).length;
+  const formulaChars = (t.match(/[0-9+\-=×÷^_(){}\/*.<>~]/g) || []).length;
+  const latinLetters = (t.match(/[A-Za-z]/g) || []).length;
+  const ratio = (formulaChars + latinLetters) / t.length;
+  /* 日本語の文章（かなが多い）は除外し、数字・記号・ラテン文字が
+     半分以上を占めるような、いかにも数式・化学式らしい文字列だけを拾う。 */
+  return ratio >= 0.5 && kana <= Math.ceil(t.length * 0.2);
+}
+/* ブロックが上下2段に積み重なっていて、間がごく狭い（＝分数の罫線や
+   根号などで分断されたとみられる）組み合わせを探す。OCRは分数を
+   「分子」「分母」の2つの別ブロックとして誤認識することが多いため、
+   この形を分数（＝数式）の手がかりとして使う。 */
+function detectFractionLikePairs(blocks){
+  const results = [];
+  for (let i = 0; i < blocks.length; i++){
+    for (let j = 0; j < blocks.length; j++){
+      if (i === j) continue;
+      const a = blocks[i], b = blocks[j];
+      if (b.y <= a.y) continue;
+      const gap = b.y - (a.y + a.h);
+      const overlapX = Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x));
+      const minW = Math.min(a.w, b.w);
+      const avgH = (a.h + b.h) / 2;
+      if (gap >= -2 && gap < avgH * 0.7 && minW > 0 && overlapX > minW * 0.55){
+        results.push({
+          x: Math.min(a.x, b.x), y: a.y, w: Math.max(a.x + a.w, b.x + b.w) - Math.min(a.x, b.x), h: (b.y + b.h) - a.y,
+          topText: a.text, bottomText: b.text, topId: a.id, bottomId: b.id
+        });
+      }
+    }
+  }
+  return results;
+}
+/* ページ内のOCRブロックから「数式候補」をまとめて検出する。
+   種類は2つ：①文字そのものが数式らしい見た目のブロック（symbol）、
+   ②上下2段＋狭い間隔で分数らしく見える組み合わせ（fraction）。
+   どちらも「ここはOCRが信用できないので、人が数式パレットで打ち直す
+   候補」として報告するためのもの。 */
+function detectFormulaRegions(blocks){
+  const auto = blocks.filter(b => b.source === 'auto' && b.text);
+  const symbolHits = auto.filter(b => looksLikeFormulaText(b.text))
+    .map(b => ({ x: b.x, y: b.y, w: b.w, h: b.h, text: b.text, kind: 'symbol', sourceBlockId: b.id }));
+  const fractionHits = detectFractionLikePairs(auto)
+    .map(r => Object.assign({ kind: 'fraction' }, r));
+  return symbolHits.concat(fractionHits);
+}
+
 /* 【v5.5で新規追加】構造ベースの「図」「枠（□）」検出。
    ―――― v5.4の実験結果から分かったこと ――――
    PDFから作ったテスト用プリント（32ページ）で、従来の図表判定（明暗・彩度・行の周期性の
@@ -5717,7 +5801,7 @@ const FORMULA_CATEGORIES = [
     { label:'2×1（縦）', symbolOnly:'(▯/▯)', insert:'\\begin{pmatrix}{}\\\\{}\\end{pmatrix}', template:true },
     { label:'行列式', symbolOnly:'|▯▯/▯▯|', insert:'\\begin{vmatrix}{}&{}\\\\{}&{}\\end{vmatrix}', template:true }
   ]},
-  { name:'よく使う公式', level:1, items:[
+  { name:'よく使う公式', level:1, hideInTestMode: true, items:[
     { label:'円の面積', insert:'S=\\pi r^2', template:true, level:1 },
     { label:'円周の長さ', insert:'l=2\\pi r', template:true, level:1 },
     { label:'速さ＝距離÷時間', insert:'v=\\frac{x}{t}', template:true, level:1 },
@@ -5729,6 +5813,51 @@ const FORMULA_CATEGORIES = [
     { label:'食塩水の濃度', insert:'\\text{濃度}=\\frac{\\text{食塩の重さ}}{\\text{食塩水の重さ}}\\times100', template:true, level:2 },
     { label:'三平方の定理', insert:'a^2+b^2=c^2', template:true, level:2 },
     { label:'二次方程式の解の公式', insert:'x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}', template:true, level:2 }
+  ]},
+  /* 【v5.6で新規追加】化学式を書くための記法（電荷の上付き文字・矢印・状態
+     など）。これらは「答えそのもの」ではなく、化学式を書くための道具
+     （キーボードの延長）なので、テストモード中も引き続き使える。 */
+  { name:'化学（記法）', level:2, items:[
+    { label:'⁺', insert:'^{+}', level:2 }, { label:'⁻', insert:'^{-}', level:2 },
+    { label:'²⁺', insert:'^{2+}', level:2 }, { label:'²⁻', insert:'^{2-}', level:2 },
+    { label:'³⁺', insert:'^{3+}', level:2 }, { label:'³⁻', insert:'^{3-}', level:2 },
+    { label:'下付き数字', insert:'_{}', level:2 },
+    { label:'→', insert:'\\rightarrow', level:2 }, { label:'⇌', insert:'\\rightleftharpoons', level:2 },
+    { label:'Δ（加熱）', insert:'\\Delta', level:2 },
+    { label:'↓（沈殿）', insert:'\\downarrow', level:3 }, { label:'↑（気体）', insert:'\\uparrow', level:3 },
+    { label:'(固)', insert:'\\text{(固)}', level:2 }, { label:'(液)', insert:'\\text{(液)}', level:2 },
+    { label:'(気)', insert:'\\text{(気)}', level:2 }, { label:'(水溶液)', insert:'\\text{(水溶液)}', level:2 },
+    { label:'mol', insert:'\\text{mol}', level:2 }, { label:'mol/L', insert:'\\text{mol/L}', level:2 },
+    { label:'化学反応式（mhchem記法）', symbolOnly:'\\ce{▯}', insert:'\\ce{}', template:true, level:3 }
+  ]},
+  /* 【v5.6で新規追加】よく使うイオン式。タップするだけで完成した化学式が
+     出てくる「暗記事項の一覧」に近いため、通常の公式集（よく使う公式）と
+     同じ扱いとし、テストモード中は除外する（hideInTestMode）。 */
+  { name:'化学（よく使うイオン）', level:2, hideInTestMode: true, items:[
+    { label:'H⁺', insert:'\\text{H}^{+}' }, { label:'Na⁺', insert:'\\text{Na}^{+}' },
+    { label:'Cl⁻', insert:'\\text{Cl}^{-}' }, { label:'OH⁻', insert:'\\text{OH}^{-}' },
+    { label:'Ca²⁺', insert:'\\text{Ca}^{2+}' }, { label:'Al³⁺', insert:'\\text{Al}^{3+}' },
+    { label:'O²⁻', insert:'\\text{O}^{2-}' }, { label:'NH₄⁺', insert:'\\text{NH}_4^{+}' },
+    { label:'SO₄²⁻', insert:'\\text{SO}_4^{2-}' }, { label:'CO₃²⁻', insert:'\\text{CO}_3^{2-}' },
+    { label:'NO₃⁻', insert:'\\text{NO}_3^{-}' }, { label:'PO₄³⁻', insert:'\\text{PO}_4^{3-}' }
+  ]},
+  /* 【v5.6で新規追加】物理でよく使う計算式。数値や記号をそのまま当てはめる
+     だけで解けてしまう「公式そのもの」なので、上の「よく使う公式」と同じ
+     考え方でテストモード中は除外する。 */
+  { name:'物理（よく使う公式）', level:2, hideInTestMode: true, items:[
+    { label:'速度', insert:'v=v_0+at', template:true },
+    { label:'変位', insert:'x=v_0t+\\frac{1}{2}at^2', template:true },
+    { label:'運動方程式', insert:'F=ma', template:true },
+    { label:'運動量', insert:'p=mv', template:true },
+    { label:'仕事', insert:'W=Fx', template:true },
+    { label:'運動エネルギー', insert:'E=\\frac{1}{2}mv^2', template:true },
+    { label:'位置エネルギー', insert:'U=mgh', template:true },
+    { label:'力学的エネルギー保存', insert:'\\frac{1}{2}mv^2+mgh=\\text{一定}', template:true, level:3 },
+    { label:'フックの法則', insert:'F=kx', template:true },
+    { label:'オームの法則', insert:'V=IR', template:true },
+    { label:'電力', insert:'P=IV', template:true },
+    { label:'熱量', insert:'Q=mc\\Delta T', template:true, level:3 },
+    { label:'波の速さ', insert:'v=f\\lambda', template:true, level:3 }
   ]}
 ];
 /* 【v4.3で追加】学年モード（小学生／中学生／高校生／大学生）に応じて、
@@ -5740,14 +5869,17 @@ const SCHOOL_LEVELS = { elementary: 1, middle: 2, high: 3, university: 4 };
 const SCHOOL_MODE_KEY = 'yomiSchoolMode';
 let schoolMode = localStorage.getItem(SCHOOL_MODE_KEY) || 'university';
 function currentSchoolLevel(){ return SCHOOL_LEVELS[schoolMode] || 4; }
+/* 【v5.6でhideInTestMode方式に一般化】テストモード中は「タップすると
+   完成した答え（公式・イオン式）がそのまま出てくる」カテゴリを除外する。
+   以前は「よく使う公式」という名前を直接チェックしていたが、v5.6で
+   化学のイオン式・物理の公式カテゴリも同じ理由で除外対象になったため、
+   カテゴリ側に hideInTestMode:true を付ける方式に一般化した。
+   分数・行列・場合分け・化学の電荷や矢印などの「記法の骨組み」は
+   答えそのものではないので、テストモード中も引き続き使える。 */
 function getVisibleFormulaCategories(){
   const maxLevel = currentSchoolLevel();
-  /* 【v4.5で追加】テストモード中は「よく使う公式」カテゴリ（タップすると
-     完成した公式がそのまま出てくるカンニング的な項目）をパレットごと除外する。
-     分数・行列・場合分けなどの「記法の骨組み」は公式そのものではないので
-     テストモード中も引き続き使える。 */
   return FORMULA_CATEGORIES.map(cat => {
-    if (testModeOn && cat.name === 'よく使う公式') return null;
+    if (testModeOn && cat.hideInTestMode) return null;
     const items = cat.items.filter(item => (item.level || cat.level || 1) <= maxLevel);
     return items.length ? { name: cat.name, items } : null;
   }).filter(Boolean);
@@ -7511,6 +7643,8 @@ function listNewCommands(){
   cmdLog('  /new ocr words test ―― 低信頼度の単語の数と実例（誤読の場所）を確認', 'cmd-ok');
   cmdLog('  /new ocr agree test ―― 4方式の文章の一致率と低信頼度単語数を比較', 'cmd-ok');
   cmdLog('  /new ocr degrade test ―― 縮小・ぼかし・ノイズの劣化画像でどの方式が粘るか確認', 'cmd-ok');
+  cmdLog('◆ 数式・化学式', 'cmd-ok');
+  cmdLog('  /new formula detect test ―― 見た目が数式・化学式らしいブロックや、分数らしき上下2段の組み合わせを検知', 'cmd-ok');
 }
 async function handleCommandNew(input){
   /* @new は「追加コンテンツ用の試験的な入口」に加え、v5.2からは
@@ -7581,7 +7715,8 @@ async function handleCommandNew(input){
     [/^\/new\s+figure\s+text\s+test\s*$/i, cmdNewFigureTextTest],
     [/^\/new\s+ocr\s+words\s+test\s*$/i, cmdNewOcrWordsTest],
     [/^\/new\s+ocr\s+agree\s+test\s*$/i, cmdNewOcrAgreeTest],
-    [/^\/new\s+ocr\s+degrade\s+test\s*$/i, cmdNewOcrDegradeTest]
+    [/^\/new\s+ocr\s+degrade\s+test\s*$/i, cmdNewOcrDegradeTest],
+    [/^\/new\s+formula\s+detect\s+test\s*$/i, cmdNewFormulaDetectTest]
   ];
   for (const [re, fn] of extra){ if (re.test(input)){ await fn(); return; } }
   cmdLog('[@new] 拡張コンテンツ用の試験モードです。安全のため、任意のコード実行には対応していません。', 'cmd-error');
@@ -7816,6 +7951,30 @@ async function cmdNewOcrDegradeTest(){
     cmdLog('  ' + label + '： 従来 ' + Math.round(100 * da) + '%／局所適応 ' + Math.round(100 * db) + '%（元画像の結果との一致率）', 'cmd-ok');
   }
   cmdLog('→ 平均一致率 従来 ' + Math.round(100 * sum.plain / 3) + '%／局所適応 ' + Math.round(100 * sum.adaptive / 3) + '%。' + (sum.adaptive > sum.plain + 0.03 ? '劣化画像では局所適応が有利です（カメラ撮影ページ向けの根拠）。' : sum.plain > sum.adaptive + 0.03 ? '劣化画像でも従来方式が有利でした。' : '大きな差はありませんでした。'), 'cmd-ok');
+}
+/* 【v5.6で新規追加】数式候補の検知実験 ――― @newでの実証実験。
+   detectFormulaRegionsが拾った「数式らしきブロック」「分数らしき
+   上下2段の組み合わせ」を1件ずつ書き出す。OCRの生テキストがどれだけ
+   文字化けしているか（looksLikeFormulaTextに引っかかった理由）も
+   あわせて確認できる。まだ研究開発段階のため、検知結果を実際の
+   読み上げ除外や数式ボックスへの置き換えには反映していない。 */
+async function cmdNewFormulaDetectTest(){
+  const page = notestate.pages[currentPageIndex];
+  if (!expNeedOcr(page)) return;
+  const auto = page.ocrBlocks.filter(b => b.source === 'auto');
+  const hits = detectFormulaRegions(auto);
+  const symbolHits = hits.filter(h => h.kind === 'symbol');
+  const fractionHits = hits.filter(h => h.kind === 'fraction');
+  cmdLog('[@new] 数式候補の検知テスト', 'cmd-ok');
+  symbolHits.slice(0, 10).forEach((h, i) => {
+    cmdLog('  記号密度' + (i + 1) + '： 「' + h.text.replace(/\s+/g, '').slice(0, 20) + '」', 'cmd-ok');
+  });
+  if (symbolHits.length > 10) cmdLog('  …ほか ' + (symbolHits.length - 10) + '件', 'cmd-ok');
+  fractionHits.slice(0, 6).forEach((h, i) => {
+    cmdLog('  分数らしき組み合わせ' + (i + 1) + '： 上「' + h.topText.replace(/\s+/g, '').slice(0, 12) + '」／下「' + h.bottomText.replace(/\s+/g, '').slice(0, 12) + '」', 'cmd-ok');
+  });
+  cmdLog('  見た目が数式らしいブロック： ' + symbolHits.length + '件／分数らしき上下組み： ' + fractionHits.length + '件', 'cmd-ok');
+  cmdLog('→ これはOCRで数式を正しく読み取る機能ではなく、「OCRが信用できない場所」を見た目の特徴から見つける検知です。まだ研究開発段階のため、実際の読み上げ除外や数式ボックスへの置き換えには反映していません。', 'cmd-ok');
 }
 
 /* 【v5.4で新規追加】括弧ペア検知の判定精度実験 ――― @newでの実証実験。
