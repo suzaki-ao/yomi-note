@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究ページ ― 読みノート (Yomi-Note)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F2; --paper-deep:#F3EEE3; --ink:#22262E; --ink-soft:#5B6270;
+    --line:#DAD3C4; --accent:#B5432E; --accent-soft:#EFD9CF; --teal:#3E6E63; --white:#FFFFFF;
+    --blue:#2F5D8C; --blue-soft:#DCE8F4; --amber:#8A6414; --amber-soft:#FBEFCF; --green-soft:#DDEEE6; --grey-soft:#E7E7E7;
+    --shadow:0 6px 22px rgba(34,38,46,0.14);
+  }
+  *{box-sizing:border-box;}
+  .hidden{display:none !important;}
+  html.dlc-ud-font, html.dlc-ud-font body, html.dlc-ud-font button, html.dlc-ud-font h1,
+  html.dlc-ud-font h2, html.dlc-ud-font h3, html.dlc-ud-font p, html.dlc-ud-font li, html.dlc-ud-font a,
+  html.dlc-ud-font td, html.dlc-ud-font th, html.dlc-ud-font code{
+    font-family:'BIZ UDGothic','BIZ UDPGothic','Yu Gothic UI',sans-serif !important;
+  }
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;background:var(--paper-deep);color:var(--ink);font-family:"Noto Sans JP",sans-serif;line-height:1.8;}
+  h1,h2,h3{font-family:"Shippori Mincho",serif;}
+  a{color:var(--teal);}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px 80px;}
+
+  .hero{background:linear-gradient(160deg, var(--ink) 0%, #2E3440 100%);color:#fff;padding:44px 24px 54px;margin-bottom:-40px;}
+  .hero-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .hanko{width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;
+    font-family:"Shippori Mincho",serif;font-weight:700;font-size:26px;flex-shrink:0;
+    box-shadow:inset 0 0 0 3px rgba(255,255,255,0.35),0 6px 18px rgba(0,0,0,0.35);}
+  .hero h1{font-size:26px;margin:0 0 4px;color:#fff;}
+  .hero p.tagline{margin:0;font-size:13.5px;color:#C9D0D8;}
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .cta-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:24px;font-size:13px;text-decoration:none;font-weight:700;
+    background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.3);cursor:pointer;font-family:inherit;}
+  .cta-btn.primary{background:var(--accent);border-color:var(--accent);}
+  .cta-btn:hover{filter:brightness(1.08);}
+
+  .quicknav{position:sticky;top:0;z-index:5;background:rgba(251,248,242,0.96);border-bottom:1px solid var(--line);margin:0 -24px 22px;padding:10px 24px;
+    display:flex;gap:8px;flex-wrap:wrap;backdrop-filter:blur(4px);}
+  .quicknav a{font-size:12.5px;font-weight:700;text-decoration:none;color:var(--ink-soft);padding:6px 12px;border:1px solid var(--line);border-radius:16px;background:#fff;}
+  .quicknav a:hover{background:var(--accent-soft);color:var(--accent);}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 28px;box-shadow:var(--shadow);margin-bottom:22px;}
+  .card h2{font-size:19px;margin:0 0 6px;display:flex;align-items:center;gap:8px;}
+  .card h3{font-size:15.5px;margin:22px 0 6px;padding-left:10px;border-left:4px solid var(--accent);}
+  .card .lead{font-size:12.5px;color:var(--ink-soft);margin:0 0 14px;}
+  .card p{font-size:13.5px;margin:8px 0;}
+  .card ul,.card ol{font-size:13.5px;padding-left:22px;margin:8px 0;}
+  .card li{margin-bottom:5px;}
+
+  .note-box{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-soft);margin:12px 0;}
+  .warn-box{background:#FFF6E9;border:1px solid #E7C77C;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#7A5B12;margin:12px 0;}
+
+  .table-scroll{overflow-x:auto;margin:10px 0 4px;}
+  table{border-collapse:collapse;width:100%;font-size:12.8px;min-width:560px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:var(--paper-deep);font-weight:700;white-space:nowrap;}
+  td.num,th.num{text-align:right;white-space:nowrap;}
+  caption{caption-side:top;text-align:left;font-size:12.5px;font-weight:700;color:var(--ink);padding:0 0 6px;}
+  tr.hl td{background:#FFFBEF;}
+
+  .stage{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:12px;white-space:nowrap;margin:1px 0;}
+  .s-adopt{background:var(--green-soft);color:#245A45;}
+  .s-verify{background:var(--blue-soft);color:var(--blue);}
+  .s-dev{background:var(--amber-soft);color:var(--amber);}
+  .s-explore{background:var(--grey-soft);color:#555;}
+  .legend{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:12.5px;margin:10px 0 4px;}
+  .legend span.desc{color:var(--ink-soft);}
+
+  .theme{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0;background:var(--paper);}
+  .theme h3{margin:0 0 8px;border-left:none;padding-left:0;font-size:15.5px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
+  .theme dl{margin:0;font-size:13.2px;}
+  .theme dt{font-weight:700;color:var(--accent);margin-top:8px;font-size:12.5px;}
+  .theme dd{margin:2px 0 0;}
+
+  .paper-title{font-family:"Shippori Mincho",serif;font-size:20px;line-height:1.5;margin:6px 0 4px;}
+  .paper-meta{font-size:12.5px;color:var(--ink-soft);margin:0 0 14px;}
+  .abstract{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:12px 0;font-size:13.3px;}
+  .abstract b{font-family:"Shippori Mincho",serif;}
+  .kw{font-size:12.5px;color:var(--ink-soft);}
+  .tbl-note{font-size:11.8px;color:var(--ink-soft);margin:2px 0 14px;}
+
+  footer{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:10px;padding:24px 0 0;}
+  @media (max-width:600px){
+    .hero{padding:36px 18px 46px;} .card{padding:20px 16px;} .wrap{padding:0 14px 60px;}
+    .quicknav{margin:0 -14px 18px;padding:8px 14px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hanko">読</div>
+    <div>
+      <h1>研究ページ <span style="font-size:14px;color:#C9D0D8;font-weight:500;">Research</span></h1>
+      <p class="tagline">読みノートの研究開発の状況・改善点・技術報告（論文）をまとめたページです</p>
+      <div class="cta-row" style="margin-top:10px;margin-bottom:2px;">
+        <span class="cta-btn" style="cursor:default;background:var(--accent,#B5432E);border-color:transparent;">研究 v0.1</span>
+      </div>
+      <div class="cta-row">
+        <a class="cta-btn primary" href="./index.html">📓 アプリを開く</a>
+        <a class="cta-btn" href="./Yomi_note_home_v33.html">🏠 ホームに戻る</a>
+        <a class="cta-btn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v26.html">📖 使い方</a>
+        <a class="cta-btn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv9.html">✨ 機能紹介</a>
+        <button class="cta-btn" id="readAloudBtn" type="button">🔊 このページを読み上げる</button>
+        <button class="cta-btn" id="udFontToggleBtn" type="button">Aa UDフォント</button>
+        <span class="cta-btn" id="readRateLabel" style="cursor:default;user-select:none;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <nav class="quicknav">
+    <a href="#about">このページについて</a>
+    <a href="#status">研究の状況と改善点</a>
+    <a href="#method">研究の進め方</a>
+    <a href="#paper">論文（技術報告）</a>
+    <a href="#history">改訂履歴</a>
+  </nav>
+
+  <div class="card" id="about">
+    <h2>① このページについて</h2>
+    <p class="lead">読みノートは、実際の学校のプリントでOCR（文字認識）や読み上げを試しながら改良している個人開発のアプリです。</p>
+    <p>OCRは、数式・化学式・図・空欄の多い理科のプリントがとくに苦手です。そこで、どこまで読めるのか、どうすれば読めるようになるのかを、実際のプリントで数値を取りながら調べています。このページは、その研究の<b>内容・現在の状況・改善点</b>と、結果をまとめた<b>技術報告（論文）</b>を公開するものです。</p>
+    <div class="warn-box">このページは個人開発者による研究記録であり、第三者の査読を受けた学術論文ではありません。結果は特定のプリントと特定の環境での検証に基づくもので、すべてのプリントや端末に当てはまるとは限りません。研究は途中段階で、内容はバージョンが上がるたびに更新されます（現在は v0.1）。</div>
+  </div>
+
+  <div class="card" id="status">
+    <h2>② 研究の状況と改善点</h2>
+    <p class="lead">6つのテーマごとに、研究の段階・現在の状況・これからの改善点をまとめています。</p>
+
+    <div class="legend">
+      <span><span class="stage s-adopt">本体に採用</span> <span class="desc">アプリで実際に使える</span></span>
+      <span><span class="stage s-verify">検証済み</span> <span class="desc">実データで比較し、結果が出ている</span></span>
+      <span><span class="stage s-dev">研究開発中</span> <span class="desc">試作段階。アプリの動作にはまだ反映していない</span></span>
+      <span><span class="stage s-explore">調査中</span> <span class="desc">課題の整理・情報収集の段階</span></span>
+    </div>
+
+    <div class="theme">
+      <h3>1. 数式・化学式への対応 <span class="stage s-adopt">一部は本体に採用</span> <span class="stage s-dev">検知は研究開発中</span></h3>
+      <dl>
+        <dt>現在の状況</dt>
+        <dd>「書く」側：数式パレットに、化学の記法（イオンの電荷・反応の矢印・状態の表記）と物理でよく使う計算式を追加し、化学反応式をきれいに表示できるようにしました（v5.6で採用済み）。「読む」側：見た目の特徴（記号の密度、分数のような上下2段の並び）から「OCRが信用できない場所」を見つける検知を試作しています。文字を読み取る機能ではなく、読み取れない場所を見つけて手入力へつなぐための仕組みで、読み上げの除外にはまだ反映していません。</dd>
+        <dt>改善点・次の課題</dt>
+        <dd>検知に誤検知があります。1ページの試験では、分数に見えた組み合わせが、実際には別々の文の断片でした。また、OCR自体が数式・化学式を読めない問題は解決していないため、検知した場所を手入力に結びつける流れが必要です。</dd>
+      </dl>
+    </div>
+
+    <div class="theme">
+      <h3>2. 図表の検出（OCR除外） <span class="stage s-verify">検証済み</span> <span class="stage s-dev">本体への組み込み待ち</span></h3>
+      <dl>
+        <dt>現在の状況</dt>
+        <dd>従来の判定（明るさ・色・行の周期性を見る方式）は、32ページのプリントで図を1件も見つけられませんでした。罫線と線のつながりから探す「構造ベース」の方式では、同じ32ページで図25件・枠79件を検出できました（詳しくは論文を参照）。</dd>
+        <dt>改善点・次の課題</dt>
+        <dd>枠には表や囲み枠も含まれるため、図・表・囲み枠の区別が必要です。図ごと除外すると、図の中の文字ラベル（A・Bなど）が読み上げから消える点の扱いも決める必要があります。検出が正しいかどうか（本当に図がある場所との照合）は、まだ行っていません。</dd>
+      </dl>
+    </div>
+
+    <div class="theme">
+      <h3>3. テキストボックスの自動配置（空欄・括弧・□） <span class="stage s-dev">研究開発中</span></h3>
+      <dl>
+        <dt>現在の状況</dt>
+        <dd>行間・行末の余白の検出に加え、括弧（）や□の位置をOCRの単語の座標から求める方式と、印刷された□の形を画像から直接探す方式を試験しています。1ページの試験では、従来方式で0件だった括弧が、新方式で31件見つかりました。アプリの自動配置にはまだ反映していません。</dd>
+        <dt>改善点・次の課題</dt>
+        <dd>括弧の「開き」と「閉じ」が合わない箇所が2件分ありました（読み取り漏れや行の途中切れの可能性）。括弧の中の括弧（入れ子）や□の検出は、試験したページに実例がなく、実際のプリントでの確認が済んでいません。□はOCRが文字として返さないことが多く、画像からの検出が中心になる見込みです。</dd>
+      </dl>
+    </div>
+
+    <div class="theme">
+      <h3>4. OCR認識の品質 <span class="stage s-verify">検証済み（大きな改善は見られず）</span></h3>
+      <dl>
+        <dt>現在の状況</dt>
+        <dd>画像の前処理（局所適応二値化）、ページの分割モード、拡大する解像度の3つを比べました。平均の信頼度は83〜86%の範囲にとどまり、頭打ちでした。縮小・ぼかしなどで画像を劣化させると、従来の前処理の方が元の結果をよく保ちました。そのため、局所適応二値化は現在、カメラで撮影したページにのみ適用しています。</dd>
+        <dt>改善点・次の課題</dt>
+        <dd>誤読の中心は、信頼度の低い少数の単語（1ページで全体の9%）です。ここを減らす手法を探すことが課題です。また、正解の文章を用意していないため、「本当に正しく読めたか」は信頼度では測れません。カメラ撮影したページでの比較も、まだ行っていません。</dd>
+      </dl>
+    </div>
+
+    <div class="theme">
+      <h3>5. テストモード（試験対応） <span class="stage s-adopt">本体に採用・改善を継続</span></h3>
+      <dl>
+        <dt>現在の状況</dt>
+        <dd>v5.7で、数式パレットの「よく使う公式」「化学のよく使うイオン」「物理のよく使う公式」を、詳細設定のチェックでそれぞれブロックできるようにしました（既定はすべてブロック）。電荷の上付き文字・矢印・分数・行列など「書き方の道具」は、答えそのものではないため、テスト中も使えます。</dd>
+        <dt>改善点・次の課題</dt>
+        <dd>「タップすると答えが出てくる機能」がほかにないか、洗い出しを続けます。制限を回避されにくい設計かどうかの確認も継続します。</dd>
+      </dl>
+    </div>
+
+    <div class="theme">
+      <h3>6. 研究開発の効率化（検証の一括実行） <span class="stage s-adopt">v5.7で実装（管理者用）</span></h3>
+      <dl>
+        <dt>現在の状況</dt>
+        <dd>これまで1つずつ実行していた検証を、まとめて順番に実行できるようにしました。「今いるページだけ」と「全ページ」を選べ、結果はそのままコピーして記録に使えます。</dd>
+        <dt>改善点・次の課題</dt>
+        <dd>OCRを何度も走らせる検証を含むため、全ページでは30分以上かかる見込みです。結果の自動集計と、表やグラフへの整理が次の課題です。</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="card" id="method">
+    <h2>③ 研究の進め方</h2>
+    <p class="lead">どの研究も、次の4つの決まりで進めています。</p>
+    <ol>
+      <li><b>実際のプリントで測る。</b>想像や少数の例ではなく、学校のプリントなど実際の教材で調べます。</li>
+      <li><b>同じ条件で並べて比べる。</b>新しい方式と従来の方式を同じ画像・同じ条件で実行し、数値を並べます。</li>
+      <li><b>ノートの内容は変えない。</b>検証はログを出すだけで、ノートや保存データを書き換えません。</li>
+      <li><b>実データで明確に良いときだけ、本体に採用する。</b>結果が悪かった方式は、採用せずにその理由を記録します（実際に、局所適応二値化は劣化画像で不利だったため、採用範囲をカメラ撮影ページに絞っています）。</li>
+    </ol>
+    <div class="note-box">検証のための管理者用機能の具体的な操作方法は、安全と混乱防止のため公開していません。</div>
+  </div>
+
+  <div class="card" id="paper">
+    <h2>④ 論文（技術報告）</h2>
+    <p class="lead">研究の結果を、論文の形式でまとめたものです（第0.1版）。</p>
+
+    <p class="paper-title">学校配布の理科プリントに対するOCR読み上げの課題と、構造ベースの図表検出・括弧検知の試み<br><span style="font-size:15px;">― 読みノート開発報告（第0.1版）―</span></p>
+    <p class="paper-meta">著者：suzaki-ao（読みノート開発者）／ 2026年10月 ／ 種別：技術報告（査読なし・個人開発）</p>
+
+    <div class="abstract">
+      <b>要旨</b><br>
+      ブラウザ内のOCRで学校のプリントを読み上げるアプリ「読みノート」では、数式・化学式・図・空欄の多い理科のプリントで文字認識がうまくいかない。本報告では、学校配布の理科プリント32ページを対象に、(A)図表の検出、(B)括弧・□の検知、(C)OCRの前処理・ページ分割・解像度の比較、(D)劣化画像への耐性、(E)数式らしい箇所の検知、を試験した。その結果、(1)従来の図表判定は32ページで0件だったのに対し、構造ベースの方式では図25件・枠79件を検出できた、(2)OCRの平均信頼度は前処理・分割モード・解像度を変えても83〜86%の範囲にとどまり、頭打ちだった、(3)局所適応二値化は縮小・ぼかしを加えた画像で、元の結果との一致率が従来の前処理より大きく低かった（平均47%対84%）、(4)括弧の検知は従来方式の0件から31件に増えた、(5)数式らしい箇所の検知には誤検知があった、ことが分かった。ただし、検証は1つの教材・主に1ページの結果であり、正解の文章との照合も行っていないため、結果は暫定的なものである。<br>
+      <span class="kw">キーワード：OCR、読み上げ、理科プリント、図表検出、括弧検知、数式・化学式</span>
+    </div>
+
+    <h3>1. はじめに</h3>
+    <p>読みノートは、手書き・PDF・画像のノートを、ブラウザの中でOCRして読み上げるアプリである。目の疲れやすい人、読むことが苦手な人も含め、学習をアクセシブルにすることを目的としている。</p>
+    <p>実際に学校のプリントを読み込ませると、文章だけのページは読めても、数式・化学式・図・（　）や□の空欄の多い理科のプリントでは、読み上げが不自然になったり、図の中の線が文字として誤認識されたりする問題が目立った。本報告は、その原因を実際のプリントの数値で確かめ、改善の方向を探る最初の記録である。</p>
+
+    <h3>2. 方法</h3>
+    <p><b>2.1 対象。</b>学校で配布された理科（化学・物理に関する内容）の課題プリントのPDF、32ページ。教材の著作権に配慮し、本文や問題の内容は掲載しない。</p>
+    <p><b>2.2 環境。</b>ブラウザ内で動くOCRライブラリ（Tesseract.js 5.0.4、日本語）を用いた。検証は、読みノート v5.2〜v5.6 に組み込んだ研究用の検証機能で行った。すべての検証はログを出すだけで、ノートの内容は変更しない。</p>
+    <p><b>2.3 評価の指標。</b>正解の文章を用意していないため、正解率は求められない。代わりに次の指標を用いた：OCRが自己評価する信頼度（平均）、認識した文字数、方式どうしの文章の一致率、信頼度60%未満の単語の数、劣化画像での「元の画像の結果との一致率」、検出した件数。信頼度や一致率は「正しさ」そのものではないことに注意が必要である。</p>
+    <p><b>2.4 実験。</b>(A)図表検出：従来方式と構造方式（罫線・線のつながり）の比較（32ページ全体）。(B)括弧・□の検知：従来方式と、OCRの単語の座標を使う方式の比較（1ページ）。(C)OCR前処理・分割モード・解像度の比較（1ページ）。(D)劣化画像（縮小・ぼかし・ノイズ＋低コントラスト）への耐性（1ページ）。(E)数式らしい箇所の検知（1ページ）。(B)〜(E)は、プリントの1ページ（文字数589字程度）での結果である。</p>
+
+    <h3>3. 結果</h3>
+    <p><b>3.1 図表の検出（32ページ）。</b>従来方式は全ページで0件だった。構造方式では図25件・枠79件を検出し、図が見つかったのは12ページで、そのすべてで従来方式は0件だった。</p>
+    <div class="table-scroll"><table>
+      <caption>表1　図表検出の件数（32ページ全体）</caption>
+      <thead><tr><th>方式</th><th class="num">図（件）</th><th class="num">枠（件）</th><th>備考</th></tr></thead>
+      <tbody>
+        <tr><td>従来方式（明暗・彩度・行の周期性）</td><td class="num">0</td><td class="num">―</td><td>枠は検出対象外</td></tr>
+        <tr class="hl"><td>構造方式（罫線・線のつながり）</td><td class="num">25</td><td class="num">79</td><td>図が見つかったページは12ページ</td></tr>
+      </tbody>
+    </table></div>
+    <p class="tbl-note">検出があったのは18ページ。件数が多かったのは、21ページ（図6・枠6）、29ページ（枠16）、30ページ（図3・枠13）、31ページ（枠13）、32ページ（枠21）など。枠には表や囲み枠を含む。</p>
+    <p>なお、試験した1ページ（文章が多いページ）では、判定対象140マスのうち、図表らしいマスが1、文章らしいマスが55、空白が84で、従来方式の除外候補は0件だった。</p>
+
+    <p><b>3.2 OCRの前処理・分割モード・解像度（1ページ）。</b>どの条件でも平均信頼度は83〜86%の範囲に収まり、大きな差は見られなかった。文字数は、PSM11（まばらな文章向けの分割モード）と高解像度で増えたが、信頼度は上がらなかった。</p>
+    <div class="table-scroll"><table>
+      <caption>表2　OCR条件の比較（同じ1ページ）</caption>
+      <thead><tr><th>条件</th><th class="num">文字数</th><th class="num">平均信頼度</th><th class="num">所要（秒）</th><th class="num">既定値との一致率</th><th class="num">低信頼度単語</th></tr></thead>
+      <tbody>
+        <tr class="hl"><td>既定（従来の前処理・自動レイアウト解析・長辺2000px）</td><td class="num">589</td><td class="num">86%</td><td class="num">2.8</td><td class="num">―</td><td class="num">37個</td></tr>
+        <tr><td>局所適応二値化</td><td class="num">592〜593</td><td class="num">83%</td><td class="num">2.9</td><td class="num">89%</td><td class="num">53個</td></tr>
+        <tr><td>PSM11（まばらな文章）</td><td class="num">619</td><td class="num">86%</td><td class="num">3.0</td><td class="num">90%</td><td class="num">36個</td></tr>
+        <tr><td>高解像度（長辺2600px）</td><td class="num">613</td><td class="num">85%</td><td class="num">3.5</td><td class="num">91%</td><td class="num">36個</td></tr>
+      </tbody>
+    </table></div>
+    <p class="tbl-note">低信頼度単語は信頼度60%未満の単語の数。局所適応二値化の文字数は、実験ごとに593字と592字で、1字異なった（原因は未調査）。既定の条件では、認識した単語401個のうち、信頼度60%未満が37個（9%）、40%未満が16個だった。</p>
+
+    <p><b>3.3 劣化画像への耐性（1ページ）。</b>画像を劣化させたとき、元の画像の結果とどれだけ一致するかを調べた。すべての劣化で従来の前処理の方が一致率が高く、局所適応二値化は縮小とぼかしで大きく下がった。</p>
+    <div class="table-scroll"><table>
+      <caption>表3　劣化画像での元画像の結果との一致率</caption>
+      <thead><tr><th>劣化の種類</th><th class="num">従来の前処理</th><th class="num">局所適応二値化</th></tr></thead>
+      <tbody>
+        <tr><td>半分に縮小</td><td class="num">81%</td><td class="num">45%</td></tr>
+        <tr><td>ぼかし</td><td class="num">77%</td><td class="num">24%</td></tr>
+        <tr><td>ノイズ＋低コントラスト</td><td class="num">93%</td><td class="num">71%</td></tr>
+        <tr class="hl"><td>平均</td><td class="num">84%</td><td class="num">47%</td></tr>
+      </tbody>
+    </table></div>
+
+    <p><b>3.4 括弧・□の検知（1ページ）。</b>従来方式（ブロック間の空白のみ）では0件だったが、OCRの単語の座標を使う新方式では括弧ペアが31件見つかった。31件の括弧はすべて入れ子の深さが0で、開きと閉じの数が合わないものが2件分あった。□は、OCRが文字として返したものも、画像から四角い輪郭として見つけたものも0件で、枠（□で囲まれた領域）も0件だった。括弧の検知候補が、既存の空白検出や配置済みのテキストボックスと重なる例は0件だった。</p>
+
+    <p><b>3.5 数式らしい箇所の検知（1ページ）。</b>見た目が数式らしいブロックは0件、分数らしき上下の組み合わせは1件見つかった。ただし、この1件は、実際には別々の文の断片（見出しの記号と、問いの文の一部）であり、分数ではなかった。</p>
+
+    <h3>4. 考察</h3>
+    <ul>
+      <li><b>図表検出：</b>従来方式は、白い紙に細い黒線だけで描かれた図（グラフ・実験装置・電子配置図など）を見つけられないと考えられる。構造方式はこれらを見つけられたが、枠79件には表や囲み枠が含まれるため、「図を除外する」用途に使うには、図と表・囲み枠の区別が必要である。また、検出が正しいかどうかは、本当に図がある場所との照合をしていないため、確認できていない。</li>
+      <li><b>OCRの品質：</b>前処理・分割モード・解像度を変えても、平均信頼度は83〜86%の範囲にとどまり、大きくは変わらなかった。PSM11と高解像度では文字数が増えたが、増えた文字が正しいかどうかは、正解の文章がないため分からない。信頼度が頭打ちという結果は、これらの調整だけでは改善が難しく、誤読の中心である少数の低信頼度の単語（約9%）に対する別の手法が必要であることを示唆する。</li>
+      <li><b>局所適応二値化：</b>縮小やぼかしを加えた画像で、元の結果との一致率が大きく下がった。「元の結果との一致率」は正解との一致ではないが、画像の状態に敏感な方式であることを示す。現在の「カメラ撮影ページにのみ適用」という使い方は、この結果とは矛盾しないと考えられるが、カメラ撮影したページ自体での比較は行っていないため、この判断の裏づけは不十分である。</li>
+      <li><b>括弧の検知：</b>従来方式の0件から31件に増えたことは、座標を使う方式の有効性を示す。一方で、今回のページには入れ子や□の実例がなく、これらの機能は実際のプリントでは未検証である。開閉の不一致は、OCRの読み取り漏れや行の途中切れが原因の可能性がある。</li>
+      <li><b>数式：</b>今回の1ページでは、数式らしい箇所の検知は実際の数式を見つけられず、分数らしき組み合わせも誤検知だった。OCRが数式・化学式を読めないという問題の根本は、「読めない」こと自体にあり、検知だけでは解決しない。そのため、「書く」側の道具（数式パレットの化学・物理の記法）を整える方向が、現実的な対策として並行して必要である。</li>
+    </ul>
+
+    <h3>5. 限界</h3>
+    <ul>
+      <li>対象は1つの教材（32ページ）であり、図表検出以外の結果は主に1ページの値である。ほかのプリントや科目で同じ結果になるとは限らない。</li>
+      <li>正解の文章がなく、文字の正解率（誤りの割合）は求めていない。信頼度・一致率・件数は、正しさの代わりの指標でしかない。</li>
+      <li>検出した図・括弧・数式が本当に正しいかの照合（適合率・再現率）を行っていない。</li>
+      <li>単一の環境での測定で、所要時間は端末によって異なる。同じ方式でも、実験ごとに文字数が1字異なる例があった。</li>
+      <li>検証者は開発者1人であり、第三者による再現・検証を受けていない。</li>
+    </ul>
+
+    <h3>6. 今後の課題</h3>
+    <ol>
+      <li>数ページ分でよいので、手で書き起こした正解の文章を用意し、文字の誤り率で比較する。</li>
+      <li>v5.7で実装した検証の一括実行を使い、32ページ全体の結果を集めて、次版（第0.2版）で表1〜3を全ページ分に置き換える。</li>
+      <li>図・表・囲み枠を区別し、図の中の文字ラベルを読み上げに残す方法を決める。</li>
+      <li>数式らしい箇所の検知の誤検知率を、複数ページで評価する。</li>
+      <li>カメラ撮影したページで、前処理の方式を比較する。</li>
+    </ol>
+
+    <h3>7. おわりに</h3>
+    <p>理科のプリントでOCR読み上げがうまくいかない原因の一部が、図表の検出方式と、OCRの前処理の限界にあることを、実際のプリントの数値で確かめられた。一方で、検証の範囲はまだ狭く、結論は暫定的である。引き続き、検証の範囲を広げながら、この報告を更新していく。</p>
+
+    <h3>使用したソフトウェア</h3>
+    <ul>
+      <li>Tesseract.js 5.0.4（ブラウザ内OCR）</li>
+      <li>MathJax（数式の表示）と、その化学式拡張 mhchem（化学反応式の表示）</li>
+    </ul>
+    <p class="tbl-note">各ソフトウェアの著作権・ライセンスは、それぞれの開発者に帰属します。</p>
+  </div>
+
+  <div class="card" id="history">
+    <h2>⑤ 改訂履歴</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th>版</th><th>時期</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td>v0.1</td><td>2026年10月</td><td>初版。研究の状況と改善点（6テーマ）、研究の進め方、論文（技術報告）第0.1版を公開。</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note-box">次の版（v0.2）では、全ページの検証結果を加えて表1〜3を更新する予定です。</div>
+  </div>
+
+  <footer>
+    読みノート (Yomi-Note) 研究 v0.1 ／ © <span id="footerYear">2026</span> Yomi-Note Project. All rights reserved.<br>
+    <a href="./Yomi_note_home_v33.html">🏠 ホームに戻る</a> ／ <a href="./index.html">📓 アプリを開く</a>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+  (function(){
+    var queue = [], playing = false, idx = 0, rate = 1.0;
+    var RATE_MIN=0.5, RATE_MAX=3.0, RATE_STEP=0.1;
+    function clampRate(r){ r=Math.round(r*10)/10; return Math.max(RATE_MIN,Math.min(RATE_MAX,r)); }
+    function updateRateLabel(){
+      var el = document.getElementById('readRateLabel');
+      if (el) el.textContent = '速度 ' + rate.toFixed(1) + '倍（＋/－キーで変更）';
+    }
+    function clean(t){ return t.trim().replace(/\s+/g,' '); }
+    function buildQueue(){
+      var list = [];
+      var h1 = document.querySelector('.hero h1'); if (h1) list.push(clean(h1.textContent));
+      var tg = document.querySelector('.hero p.tagline'); if (tg) list.push(clean(tg.textContent));
+      document.querySelectorAll('.card').forEach(function(card){
+        card.querySelectorAll('h2, h3, p, li, tr, .abstract').forEach(function(el){
+          if (el.closest('.hidden')) return;
+          if (el.tagName === 'P' && el.closest('.abstract')) return;
+          if (el.tagName === 'TR'){
+            var cells = Array.prototype.map.call(el.children, function(c){ return clean(c.textContent); });
+            var t = cells.join('、');
+            if (t) list.push(t);
+            return;
+          }
+          if (el.tagName === 'LI' && el.closest('.theme')) return;
+          var s = clean(el.textContent);
+          if (s) list.push(s);
+        });
+      });
+      return list;
+    }
+    function updateBtn(){
+      document.getElementById('readAloudBtn').textContent = playing ? '⏹ 読み上げを停止' : '🔊 このページを読み上げる';
+    }
+    function speak(i){
+      if (!playing || i >= queue.length){ playing=false; updateBtn(); return; }
+      idx = i;
+      var u = new SpeechSynthesisUtterance(queue[i]);
+      u.lang='ja-JP'; u.rate=rate;
+      u.onend=function(){ speak(i+1); };
+      u.onerror=function(){ playing=false; updateBtn(); };
+      window.speechSynthesis.speak(u);
+    }
+    document.getElementById('readAloudBtn').addEventListener('click', function(){
+      if (!('speechSynthesis' in window)){ alert('このブラウザは読み上げに対応していません'); return; }
+      if (playing){ playing=false; window.speechSynthesis.cancel(); updateBtn(); return; }
+      queue = buildQueue();
+      if (!queue.length) return;
+      playing=true; updateBtn();
+      window.speechSynthesis.cancel();
+      speak(0);
+    });
+    document.addEventListener('keydown', function(e){
+      var tag=(e.target&&e.target.tagName)||'';
+      if (tag==='INPUT'||tag==='TEXTAREA'||e.metaKey||e.ctrlKey||e.altKey) return;
+      var changed=false;
+      if (e.key==='+'||e.key==='='){ rate=clampRate(rate+RATE_STEP); changed=true; }
+      else if (e.key==='-'||e.key==='_'){ rate=clampRate(rate-RATE_STEP); changed=true; }
+      else if (e.key==='0'){ rate=1.0; changed=true; }
+      if (changed){ e.preventDefault(); updateRateLabel(); if(playing){ window.speechSynthesis.cancel(); speak(idx); } }
+    });
+    updateRateLabel();
+  })();
+  (function(){
+    var KEY = 'yomiDlcUdFontEnabled';
+    var btn = document.getElementById('udFontToggleBtn');
+    function apply(){
+      var on = false;
+      try { on = localStorage.getItem(KEY) === 'true'; } catch(e){}
+      document.documentElement.classList.toggle('dlc-ud-font', on);
+      if (btn) btn.style.background = on ? 'var(--accent,#B5432E)' : '';
+      if (btn) btn.style.color = on ? '#fff' : '';
+    }
+    if (btn) btn.addEventListener('click', function(){
+      var on = document.documentElement.classList.contains('dlc-ud-font');
+      try { localStorage.setItem(KEY, on ? 'false' : 'true'); } catch(e){}
+      apply();
+    });
+    apply();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>コマンド一覧 ― 読みノート (Yomi-Note)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F2; --paper-deep:#F3EEE3; --ink:#22262E; --ink-soft:#5B6270;
+    --line:#DAD3C4; --accent:#B5432E; --accent-soft:#EFD9CF; --teal:#3E6E63; --white:#FFFFFF;
+    --shadow:0 6px 22px rgba(34,38,46,0.14);
+  }
+  *{box-sizing:border-box;}
+  .hidden{display:none !important;}
+  html.dlc-ud-font, html.dlc-ud-font body, html.dlc-ud-font button, html.dlc-ud-font h1,
+  html.dlc-ud-font h2, html.dlc-ud-font h3, html.dlc-ud-font p, html.dlc-ud-font li, html.dlc-ud-font a,
+  html.dlc-ud-font code{
+    font-family:'BIZ UDGothic','BIZ UDPGothic','Yu Gothic UI',sans-serif !important;
+  }
+  html,body{margin:0;padding:0;background:var(--paper-deep);color:var(--ink);font-family:"Noto Sans JP",sans-serif;line-height:1.75;}
+  h1,h2,h3{font-family:"Shippori Mincho",serif;}
+  a{color:var(--teal);}
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px 80px;}
+
+  .hero{
+    background:linear-gradient(160deg, var(--ink) 0%, #2E3440 100%);
+    color:#fff;padding:44px 24px 54px;margin-bottom:-40px;
+  }
+  .hero-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .hanko{
+    width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:"Shippori Mincho",serif;
+    font-weight:700;font-size:26px;flex-shrink:0;box-shadow:inset 0 0 0 3px rgba(255,255,255,0.35),0 6px 18px rgba(0,0,0,0.35);
+  }
+  .hero h1{font-size:26px;margin:0 0 4px;color:#fff;}
+  .hero p.tagline{margin:0;font-size:13.5px;color:#C9D0D8;}
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .cta-btn{
+    display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:24px;
+    font-size:13px;text-decoration:none;font-weight:700;background:rgba(255,255,255,0.1);color:#fff;
+    border:1px solid rgba(255,255,255,0.3);cursor:pointer;
+  }
+  .cta-btn.primary{background:var(--accent);border-color:var(--accent);}
+  .cta-btn:hover{filter:brightness(1.08);}
+
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 28px;
+    box-shadow:var(--shadow);margin-bottom:22px;
+  }
+  .card h2{font-size:18px;margin:0 0 6px;display:flex;align-items:center;gap:8px;}
+  .card .lead{font-size:12.5px;color:var(--ink-soft);margin:0 0 16px;}
+
+  .mode-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .mode-tab{
+    padding:7px 14px;border-radius:16px;font-size:12.5px;font-weight:700;cursor:pointer;
+    border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);
+  }
+  .mode-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .mode-panel{display:none;}
+  .mode-panel.active{display:block;}
+  .cmd-row{
+    display:flex;gap:14px;padding:10px 0;border-bottom:1px dashed var(--line);align-items:flex-start;
+  }
+  .cmd-row:last-child{border-bottom:none;}
+  .cmd-syntax{
+    font-family:"Courier New",monospace;font-size:13px;background:var(--accent-soft);color:var(--accent);
+    padding:3px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;min-width:150px;text-align:center;
+  }
+  .cmd-desc{font-size:13px;color:var(--ink);padding-top:3px;}
+  .note-box{
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+    font-size:12.5px;color:var(--ink-soft);margin-top:14px;
+  }
+  .warn-box{background:#FFF6E9;border:1px solid #E7C77C;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#7A5B12;margin-top:10px;}
+
+  footer{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:10px;padding:24px 0 0;}
+  @media (max-width:600px){
+    .hero{padding:36px 18px 46px;} .card{padding:20px 18px;}
+    .cmd-row{flex-direction:column;gap:4px;}
+    .cmd-syntax{min-width:0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hanko">読</div>
+    <div>
+      <h1>コマンド一覧 <span style="font-size:14px;color:#C9D0D8;font-weight:500;">Command Reference</span></h1>
+      <p class="tagline">コマンドパレット（@0・@1・@2 各モード）で使えるコマンドの一覧です</p>
+      <div class="cta-row" style="margin-top:10px;margin-bottom:2px;">
+        <span class="cta-btn" style="cursor:default;background:var(--accent,#B5432E);border-color:transparent;">コマンド一覧 v19</span>
+      </div>
+      <div class="cta-row">
+        <a class="cta-btn primary" href="./index.html">📓 アプリを開く</a>
+        <a class="cta-btn" href="./Yomi_note_home_v33.html">🏠 ホームに戻る</a>
+        <a class="cta-btn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v26.html">📖 使い方</a>
+        <a class="cta-btn" href="./%E7%A0%94%E7%A9%B6v0_1.html">🔬 研究</a>
+        <button class="cta-btn" id="readAloudBtn" type="button">🔊 このページを読み上げる</button>
+        <button class="cta-btn" id="udFontToggleBtn" type="button">Aa UDフォント</button>
+        <span class="cta-btn" id="readRateLabel" style="cursor:default;user-select:none;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>① コマンドパレットの使い方</h2>
+    <p class="lead">キーボード操作に慣れている方向けの、テキスト入力によるコマンド実行方法です。</p>
+    <ol style="font-size:13px;color:var(--ink-soft);padding-left:20px;margin:0;">
+      <li style="margin-bottom:8px;">画面下部のコマンド入力欄に、<code>/</code>から始まるコマンドを入力してEnterキーを押します。</li>
+      <li style="margin-bottom:8px;">コマンドには3つのモードがあります。<b>@0</b>＝通常（ページ・OCR操作）、<b>@1</b>＝数式、<b>@2</b>＝システム（表示・DLC管理）。<code>/command mode @0</code> のように入力すると切り替えられます。</li>
+      <li>どのモードからでも <code>/all command</code> と入力すると、今のモードで使えるコマンドの一覧がその場に表示されます（このページの内容と同じです）。</li>
+    </ol>
+    <div class="note-box">💡 数式や図形の挿入は、コマンド入力よりも、ツールバーの「∑数式」ボタンからタップ操作で組み立てる方法の方が直感的です（詳しくは使い方ガイドをご覧ください）。コマンドは主に、キーボード操作に慣れている方向けの早道として用意しています。</div>
+  </div>
+
+  <div class="card">
+    <h2>② コマンド一覧</h2>
+    <div class="mode-tabs">
+      <div class="mode-tab active" data-mode="m0">@0：通常モード</div>
+      <div class="mode-tab" data-mode="m1">@1：数式モード</div>
+      <div class="mode-tab" data-mode="m2">@2：システムモード</div>
+    </div>
+
+    <div class="mode-panel active" id="m0">
+      <div class="cmd-row"><span class="cmd-syntax">/text</span><span class="cmd-desc">ページ中央にテキストボックスを作成</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/input</span><span class="cmd-desc">PDF/画像を追加読み込み（縦横選択→自動でその範囲をOCR）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/camera</span><span class="cmd-desc">カメラで撮影して画像挿入・OCR</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/output [pdf|image]</span><span class="cmd-desc">作成した全ページを書き出す（省略時はPDF）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/delete{N}</span><span class="cmd-desc">Nページ目を削除</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/ocr {N}</span><span class="cmd-desc">Nページ目を再OCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/slide ocr {N}</span><span class="cmd-desc">Nページ目を再スライドOCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/out of ocr{N}</span><span class="cmd-desc">Nページ目のOCR除外範囲（図・写真など）を自動検知</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all ocr</span><span class="cmd-desc">全ページを再OCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all slide ocr</span><span class="cmd-desc">全ページを再スライドOCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all out of ocr</span><span class="cmd-desc">全ページのOCR除外範囲を自動検知</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/command mode @0|@1|@2</span><span class="cmd-desc">コマンドモードを切り替える</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all command</span><span class="cmd-desc">このコマンド一覧を表示</span></div>
+    </div>
+
+    <div class="mode-panel" id="m1">
+      <div class="cmd-row"><span class="cmd-syntax">/text ○</span><span class="cmd-desc">LaTeXの○を数式テキストボックスとして作成（例：<code>/text x^2+1</code>）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all kigou</span><span class="cmd-desc">数学記号一覧から選んで数式エディタに挿入</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/ofset text ○</span><span class="cmd-desc">○を手書き風の書体で作成</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all command</span><span class="cmd-desc">このコマンド一覧を表示</span></div>
+      <div class="note-box">v3.6以降、数式はタップ式のボタンと数字・変数キーパッドだけで組み立てられるようになりました（ツールバーの「∑数式」ボタン）。コマンド入力はLaTeXを直接書ける方向けの方法です。</div>
+    </div>
+
+    <div class="mode-panel" id="m2">
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @1</span><span class="cmd-desc">通常のシステム（全機能）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @2</span><span class="cmd-desc">ペン・消しゴム機能なし</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @3</span><span class="cmd-desc">画像・動画・URL・グラフ挿入なし</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @4</span><span class="cmd-desc">ペン・消しゴムに加え画像・動画・URL・グラフ挿入もなし</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @5</span><span class="cmd-desc">部分OCRの精度を優先（画像・動画・URL・グラフ挿入は使用不可）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/tool up</span><span class="cmd-desc">ツールバーを上端表示に切り替える（ページ一覧が見やすくなる）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/tool side</span><span class="cmd-desc">ツールバーを左（通常）表示に戻す</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/test mode on</span><span class="cmd-desc">テストモードON（v4.5で追加：数式パレットの「よく使う公式」、ノート内のリンク・動画をブロック。学校のテスト時などに）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/test mode off</span><span class="cmd-desc">テストモードOFF（v4.5で追加）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/import dlc</span><span class="cmd-desc">追加DLC（.jsファイル）を選んで取り込む（複数取り込み可）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc on [番号]</span><span class="cmd-desc">DLCを有効にする（番号省略ですべて）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc off [番号]</span><span class="cmd-desc">DLCを無効にする（番号省略ですべて）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc remove 番号</span><span class="cmd-desc">指定した番号のDLCを削除する</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc list</span><span class="cmd-desc">取り込み済みDLCの一覧と番号を表示する</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all command</span><span class="cmd-desc">このコマンド一覧を表示</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>③ コマンド検索</h2>
+    <p class="lead">気になるコマンドのキーワードを入力すると、①②の一覧から一致する行だけを表示します。</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <input type="text" id="cmdSearchInput" placeholder="例：ocr／test mode／delete" style="flex:1;min-width:180px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:var(--paper);color:var(--ink);">
+      <button type="button" class="cta-btn" id="cmdSearchClearBtn" style="background:var(--paper);color:var(--ink-soft);border:1px solid var(--line);">クリア</button>
+    </div>
+    <div id="cmdSearchCount" class="note-box hidden" style="margin-top:10px;"></div>
+    <div id="cmdSearchPassArea" class="hidden" style="margin-top:12px;">
+      <input type="password" id="cmdSearchPassInput" placeholder="pass" style="padding:9px 12px;border:1px solid var(--accent);border-radius:8px;font-size:13px;width:180px;">
+    </div>
+    <div class="card hidden" id="newCmdCard" style="margin-top:16px;background:var(--paper);"></div>
+  </div>
+
+  <div class="card">
+    <h2>④ 困ったときは</h2>
+    <ul style="font-size:13px;color:var(--ink-soft);padding-left:20px;margin:0;">
+      <li>コマンドが実行できない → 先頭に <code>/</code> を付け忘れていないか確認してください。</li>
+      <li>思ったモードのコマンドが出てこない → 今どのモード（@0/@1/@2）か、入力欄の左のプロンプト表示（@0 / @1 / @2）で確認できます。</li>
+      <li>その他のご質問・不具合報告 → <a href="https://github.com/suzaki-ao/yomi-note" target="_blank" rel="noopener noreferrer">GitHubリポジトリ</a>からご連絡ください。</li>
+    </ul>
+    <div class="warn-box">このページはアプリ本体（読みノート）のコマンド実装から内容を書き出しています。アプリのバージョンアップに伴いコマンドが追加・変更された場合、このページも合わせて更新されます。</div>
+  </div>
+
+  <footer>
+    読みノート (Yomi-Note) コマンド一覧 v19 ／ © <span id="footerYear">2026</span> Yomi-Note Project. All rights reserved.
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+  document.querySelectorAll('.mode-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.mode-tab').forEach(function(t){ t.classList.remove('active'); });
+      document.querySelectorAll('.mode-panel').forEach(function(p){ p.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.mode).classList.add('active');
+    });
+  });
+  (function(){
+    var queue = [], playing = false, idx = 0, rate = 1.0;
+    var RATE_MIN=0.5, RATE_MAX=3.0, RATE_STEP=0.1;
+    function clampRate(r){ r=Math.round(r*10)/10; return Math.max(RATE_MIN,Math.min(RATE_MAX,r)); }
+    function updateRateLabel(){
+      var el = document.getElementById('readRateLabel');
+      if (el) el.textContent = '速度 ' + rate.toFixed(1) + '倍（＋/－キーで変更）';
+    }
+    function pushText(list, el){ if(!el) return; var t=el.textContent.trim().replace(/\s+/g,' '); if(t) list.push(t); }
+    function buildQueue(){
+      var list = [];
+      pushText(list, document.querySelector('.hero h1'));
+      pushText(list, document.querySelector('.hero p.tagline'));
+      document.querySelectorAll('.card').forEach(function(card){
+        if (card.classList.contains('hidden')) return; /* 解除前の@newカードなどは読み上げない */
+        pushText(list, card.querySelector('h2'));
+        pushText(list, card.querySelector('.lead'));
+        card.querySelectorAll('.cmd-row').forEach(function(row){
+          if (row.closest('.hidden')) return; /* 解除前の@newカード内の行は読み上げない */
+          var syn = row.querySelector('.cmd-syntax'), desc = row.querySelector('.cmd-desc');
+          list.push((syn?syn.textContent.trim():'') + '。' + (desc?desc.textContent.trim():''));
+        });
+        card.querySelectorAll('li').forEach(function(li){ pushText(list, li); });
+      });
+      return list;
+    }
+    function updateBtn(){
+      document.getElementById('readAloudBtn').textContent = playing ? '⏹ 読み上げを停止' : '🔊 このページを読み上げる';
+    }
+    function speak(i){
+      if (!playing || i >= queue.length){ playing=false; updateBtn(); return; }
+      idx = i;
+      var u = new SpeechSynthesisUtterance(queue[i]);
+      u.lang='ja-JP'; u.rate=rate;
+      u.onend=function(){ speak(i+1); };
+      u.onerror=function(){ playing=false; updateBtn(); };
+      window.speechSynthesis.speak(u);
+    }
+    document.getElementById('readAloudBtn').addEventListener('click', function(){
+      if (!('speechSynthesis' in window)){ alert('このブラウザは読み上げに対応していません'); return; }
+      if (playing){ playing=false; window.speechSynthesis.cancel(); updateBtn(); return; }
+      queue = buildQueue();
+      if (!queue.length) return;
+      playing=true; updateBtn();
+      window.speechSynthesis.cancel();
+      speak(0);
+    });
+    document.addEventListener('keydown', function(e){
+      var tag=(e.target&&e.target.tagName)||'';
+      if (tag==='INPUT'||tag==='TEXTAREA'||e.metaKey||e.ctrlKey||e.altKey) return;
+      var changed=false;
+      if (e.key==='+'||e.key==='='||e.key==='ArrowUp'||e.key==='PageUp'){ rate=clampRate(rate+RATE_STEP); changed=true; }
+      else if (e.key==='-'||e.key==='_'||e.key==='ArrowDown'||e.key==='PageDown'){ rate=clampRate(rate-RATE_STEP); changed=true; }
+      else if (e.key==='0'){ rate=1.0; changed=true; }
+      if (changed){ e.preventDefault(); updateRateLabel(); if(playing){ window.speechSynthesis.cancel(); speak(idx); } }
+    });
+    updateRateLabel();
+  })();
+  (function(){
+    var KEY = 'yomiDlcUdFontEnabled';
+    var btn = document.getElementById('udFontToggleBtn');
+    function apply(){
+      var on = false;
+      try { on = localStorage.getItem(KEY) === 'true'; } catch(e){}
+      document.documentElement.classList.toggle('dlc-ud-font', on);
+      if (btn) btn.style.background = on ? 'var(--accent,#B5432E)' : '';
+      if (btn) btn.style.color = on ? '#fff' : '';
+    }
+    if (btn) btn.addEventListener('click', function(){
+      var on = document.documentElement.classList.contains('dlc-ud-font');
+      try { localStorage.setItem(KEY, on ? 'false' : 'true'); } catch(e){}
+      apply();
+    });
+    apply();
+  })();
+  /* 【v15で新規追加・v19で変更】コマンド検索エンジン。
+     通常は①②の一覧（.cmd-row）をキーワードで絞り込むだけの機能。
+     【v19での変更】v15〜v18では、解除コードを入力すると解除状態がlocalStorageに
+     永続保存され、一度解除した端末ではこのページを開くたびに@new研究開発
+     コマンドが最初から見えていた（管理者専用のはずなのに「初期状態で出てしまう」
+     状態）。v19では次のように改めた。
+       ①@new一覧の中身はページの初期HTMLに書かない（解除したときだけ組み立てて表示）
+       ②解除状態はタブを閉じると消える（sessionStorage）。古い版が残した
+         永続的な解除状態も、このページを開いた時点で消去する
+       ③解除コードの判定は、文字そのものではなくハッシュ値で行う
+       ④解除後は「🔒 ロックする」ボタンですぐ元に戻せる
+     ※これは「うっかり見えてしまう」ことを防ぐための目隠しであり、ページのソースを
+       読めば分かる程度の簡易なもの。強い秘匿が必要な情報は載せないこと。 */
+  (function(){
+    var UNLOCK_KEY = 'yomiNewCmdUnlockedSession';
+    try { localStorage.removeItem('yomiNewCmdUnlocked'); } catch(e){}
+    var NEW_CARD_B64 = "CiAgICAgIDxoMj7wn5STIEBuZXcg56CU56m26ZaL55m644Kz44Oe44Oz44OJ5LiA6KanIDxidXR0b24gdHlwZT0iYnV0dG9uIiBpZD0ibmV3Q21kTG9ja0J0biIgY2xhc3M9ImN0YS1idG4iIHN0eWxlPSJiYWNrZ3JvdW5kOnZhcigtLXBhcGVyLWRlZXApO2NvbG9yOnZhcigtLWluay1zb2Z0KTtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWxpbmUpO3BhZGRpbmc6NHB4IDEycHg7Zm9udC1zaXplOjExLjVweDttYXJnaW4tbGVmdDo4cHg7Ij7wn5SSIOODreODg+OCr+OBmeOCizwvYnV0dG9uPjwvaDI+CiAgICAgIDxwIGNsYXNzPSJsZWFkIj7jgqLjg5fjg6rmnKzkvZPjga7nibnliKXjg6Ljg7zjg4nvvIhAbmV377yJ44Gn44Gu44G/5L2/44GG44CB566h55CG6ICF55So44Gu5a6f6aiT55qE44Gq5qSc6Ki844Kz44Oe44Oz44OJ44Gn44GZ44CC6YCa5bi444Gu5Yip55So44Gn44Gv5LiN6KaB44Gn44GZ44CC44GT44Gu44Oa44O844K444KS6ZaJ44GY44KL77yI44K/44OW44KS6ZaJ44GY44KL77yJ44Go44CB6KGo56S644Gv6Ieq5YuV44Gn5YWD44Gr5oi744KK44G+44GZ44CCPC9wPgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBoZWxwPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+44GT44Gu5LiA6Kan44KS44Ki44OX44Oq44Gu44Kz44Oe44Oz44OJ44Ot44Kw44Gr6KGo56S6PC9zcGFuPjwvZGl2PgogICAgICA8cCBzdHlsZT0iZm9udC1zaXplOjEycHg7Zm9udC13ZWlnaHQ6Ym9sZDttYXJnaW46MTRweCAwIDRweDsiPuKXhiDjg4bjgq3jgrnjg4jjg5zjg4Pjgq/jgrnoh6rli5XphY3nva48L3A+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGJsYW5rIGNvbXBhcmU8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7jgIzlvpPmnaXmlrnlvI/jgI3jgajjgIzooYzplpPjg7vmnKvlsL7jga7kvZnnmb3jgoLmpJzlh7rjgZnjgovlvLfljJbniYjjgI3jga7oh6rli5XphY3nva7lgJnoo5zmlbDjgpLmr5TovIM8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGJyYWNrZXQgY29tcGFyZTwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuaLrOW8p+ODu+KWoeOBruWAmeijnOS7tuaVsOOCkuW+k+adpeaWueW8j+OBqFYy77yI5Y2Y6Kqe44Gu5bqn5qiZ77yJ44Gn5q+U6LyDPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBib3ggdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuKWoeOCkuOAjOaWh+Wtl+OBqOOBl+OBpuiqjeitmOOBleOCjOOBn+OCguOBruOAjeOBqOOAjOeUu+WDj+OBruWbm+inkuOBhOi8qumDreOAjeOBruS4oeaWueOBi+OCieaknOefpeOBl+OBpueiuuiqjTwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgcGFyZW4gdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPu+8iO+8ieOCkuepuuashO+8j+ODqeODmeODq++8iOOCouODu+KRoOOBquOBqe+8ie+8j+aWh+eroOOBq+WIhumhnuOBl+OBpjHku7bjgZrjgaTnorroqo08L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGZyYW1lIHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7mnqDvvIjilqHjgaflm7Ljgb7jgozjgZ/poJjln5/vvInjgajjgIHjgZ3jga7kuK3jga7nqbrmrITjg7vlhaXjgozlrZDjgpLnorroqo08L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGJyYWNrZXQgb3ZlcmxhcCB0ZXN0PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+5qSc55+l44GX44Gf56m65qyE44GM5pei5a2Y44Gu56m655m95qSc5Ye644KE44OG44Kt44K544OI44Oc44OD44Kv44K544Go6YeN44Gq44Gj44Gm44GE44Gq44GE44GL56K66KqNPC9zcGFuPjwvZGl2PgogICAgICA8cCBzdHlsZT0iZm9udC1zaXplOjEycHg7Zm9udC13ZWlnaHQ6Ym9sZDttYXJnaW46MTRweCAwIDRweDsiPuKXhiBPQ1LpmaTlpJbvvIjlm7PooajmpJzlh7rvvIk8L3A+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGdyYXBoaWMgdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuW+k+adpeOBrjPkv6Hlj7fmlrnlvI/jgajmp4vpgKDmlrnlvI/vvIjnvavnt5rjg7vnt5rnlLvvvInjga7mpJzlh7rntZDmnpzjgpLmr5TovIM8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGdyYXBoaWMgYWxsIHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7jg47jg7zjg4jlhajjg5rjg7zjgrjjgaflvpPmnaXmlrnlvI/jgajmp4vpgKDmlrnlvI/jgpLmr5TjgbnjgovjgrXjg7zjg5njgqQ8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGJveCBjb250ZW50IHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7mnqDjga7kuK3ouqvjgpLjgIzmloflrZfjgaDjgZHvvI/lm7PjgaDjgZHvvI/mt7flnKjvvI/nqbrjgI3jgavmjK/jgorliIbjgZE8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGZpZ3VyZSB0ZXh0IHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7lm7Pjga7kuK3jgavjgYLjgovmloflrZfjg6njg5njg6vjga7mlbDvvIjlm7PjgZTjgajpmaTlpJbjgZfjgZ/jgajjgY3jgavmtojjgYjjgovmloflrZfvvInjgpLnorroqo08L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGdyYXBoaWMgc2Vuc2l0aXZpdHkgdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuaknOWHuuOBruW8t+OBleWIpeOBq+OAgeOCueOCs+OCouOBqOOBl+OBjeOBhOWApOOBruW3ruOBvuOBp+WQq+OCgeOBpueiuuiqjTwvc3Bhbj48L2Rpdj4KICAgICAgPHAgc3R5bGU9ImZvbnQtc2l6ZToxMnB4O2ZvbnQtd2VpZ2h0OmJvbGQ7bWFyZ2luOjE0cHggMCA0cHg7Ij7il4YgT0NS6KqN6K2Y44Gd44Gu44KC44GuPC9wPgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBvY3IgY29tcGFyZTwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuOAjOW+k+adpeaWueW8j+OAjeOBqOOAjOWxgOaJgOmBqeW/nOS6jOWApOWMlu+8iOWun+mok+eahO+8ieOAjeOBrk9DUue1kOaenOOCkuavlOi8gzwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgb2NyIHBzbSB0ZXN0PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+44Oa44O844K45YiG5Ymy44Oi44O844OJ44KS5aSJ44GI44Gf44Go44GN44GuT0NS57WQ5p6c44KS5q+U6LyDPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBvY3Igc2NhbGUgdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuaLoeWkp+ebruaomeOBruino+WDj+W6puOCkuWkieOBiOOBn+OBqOOBjeOBrk9DUue1kOaenOOCkuavlOi8gzwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgb2NyIHdvcmRzIHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7kvY7kv6HpoLzluqbjga7ljZjoqp7jga7mlbDjgajlrp/kvovvvIjoqqToqq3jga7loLTmiYDvvInjgpLnorroqo08L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IG9jciBhZ3JlZSB0ZXN0PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+NOaWueW8j+OBruaWh+eroOOBruS4gOiHtOeOh+OBqOS9juS/oemgvOW6puWNmOiqnuaVsOOCkuavlOi8gzwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgb2NyIGRlZ3JhZGUgdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPue4ruWwj+ODu+OBvOOBi+OBl+ODu+ODjuOCpOOCuuOBruWKo+WMlueUu+WDj+OBp+OBqeOBruaWueW8j+OBjOeymOOCi+OBi+eiuuiqjTwvc3Bhbj48L2Rpdj4KICAgICAgPHAgc3R5bGU9ImZvbnQtc2l6ZToxMnB4O2ZvbnQtd2VpZ2h0OmJvbGQ7bWFyZ2luOjE0cHggMCA0cHg7Ij7il4Yg5pWw5byP44O75YyW5a2m5byPPC9wPgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBmb3JtdWxhIGRldGVjdCB0ZXN0PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+6KaL44Gf55uu44GM5pWw5byP44O75YyW5a2m5byP44KJ44GX44GE44OW44Ot44OD44Kv44KE44CB5YiG5pWw44KJ44GX44GN5LiK5LiLMuauteOBrue1hOOBv+WQiOOCj+OBm+OCkuaknOefpTwvc3Bhbj48L2Rpdj4KICAgICAgPHAgc3R5bGU9ImZvbnQtc2l6ZToxMnB4O2ZvbnQtd2VpZ2h0OmJvbGQ7bWFyZ2luOjE0cHggMCA0cHg7Ij7il4Yg5LiA5ous5a6f6KGM77yI56CU56m26ZaL55m644Gu5Yq5546H5YyW77yJPC9wPgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L3J1biBhbGwgY29tbWFuZDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuS4iuOBruOBmeOBueOBpuOBruaknOiovOOCkuOAgeS7iuOBhOOCi+ODmuODvOOCuOOBp+mghueVquOBq+Wun+ihjOOAgue1kOaenOOBr+ODnOOCv+ODs+OBvuOBn+OBryAvcnVuIGNvcHkg44Gn44Kz44OU44O844Gn44GN44KLPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L3J1biBhbGwgY29tbWFuZCBAYWxsIHBhZ2VzPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+44GZ44G544Gm44Gu5qSc6Ki844KS5YWo44Oa44O844K444Gn6aCG55Wq44Gr5a6f6KGM77yI44OO44O844OI5YWo5L2T44Gu6Kq/5p+744Gv5pyA5Yid44GrMeWbnuOBoOOBkeOAguWFqOS9k+OBpzMw5YiG5Lul5LiK44GL44GL44KL44GT44Go44GM44GC44KL77yJPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L3J1biBzdG9wPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+5LiA5ous5a6f6KGM44KS5Lit5q2i77yI5a6f6KGM5Lit44Gu44Kz44Oe44Oz44OJ44GM57WC44KP44KK5qyh56ys5q2i44G+44KL77yJPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L3J1biBjb3B5PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+55u05YmN44Gu5LiA5ous5a6f6KGM44Gu57WQ5p6c44KS44KC44GG5LiA5bqm44Kz44OU44O877yI5a6f6KGM5Lit44Gv6YCU5Lit57WM6YGO44KS44Kz44OU44O877yJPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJ3YXJuLWJveCI+44Ki44OX44Oq5YG044GnIDxjb2RlPi9jb21tYW5kIG1vZGUgQG5ldzwvY29kZT4g44Gr5YiH44KK5pu/44GI44Gm44GL44KJ5L2/55So44GX44Gm44GP44Gg44GV44GE44CC5Lu75oSP44Gu44Kz44O844OJ5a6f6KGM44Gr44Gv5a++5b+c44GX44Gm44GE44G+44Gb44KT44CCPC9kaXY+Cg==";
+    var PASS_HASH = 3367865245700036;
+    function h53(str){var h1=0xdeadbeef,h2=0x41c6ce57;for(var i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0);}
+    function decodeB64Utf8(b64){
+      var bin = atob(b64), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    }
+    var input = document.getElementById('cmdSearchInput');
+    var clearBtn = document.getElementById('cmdSearchClearBtn');
+    var countBox = document.getElementById('cmdSearchCount');
+    var passArea = document.getElementById('cmdSearchPassArea');
+    var passInput = document.getElementById('cmdSearchPassInput');
+    var newCard = document.getElementById('newCmdCard');
+    function isUnlocked(){
+      try { return sessionStorage.getItem(UNLOCK_KEY) === 'true'; } catch(e){ return false; }
+    }
+    function revealNewCard(){
+      newCard.innerHTML = decodeB64Utf8(NEW_CARD_B64);
+      newCard.classList.remove('hidden');
+      var lockBtn = document.getElementById('newCmdLockBtn');
+      if (lockBtn) lockBtn.addEventListener('click', lockNewCard);
+    }
+    function lockNewCard(){
+      try { sessionStorage.removeItem(UNLOCK_KEY); } catch(e){}
+      newCard.classList.add('hidden');
+      newCard.innerHTML = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function runSearch(keyword){
+      var kw = keyword.trim().toLowerCase();
+      var rows = document.querySelectorAll('#m0 .cmd-row, #m1 .cmd-row, #m2 .cmd-row');
+      if (!kw){
+        rows.forEach(function(r){ r.classList.remove('hidden'); });
+        countBox.classList.add('hidden');
+        return;
+      }
+      var hit = 0;
+      rows.forEach(function(r){
+        var text = r.textContent.toLowerCase();
+        var match = text.indexOf(kw) !== -1;
+        r.classList.toggle('hidden', !match);
+        if (match) hit++;
+      });
+      countBox.textContent = kw + '：' + hit + '件ヒットしました（該当しない行は隠しています）';
+      countBox.classList.remove('hidden');
+    }
+    input.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter') return;
+      if (input.value.trim() === '>_'){
+        passArea.classList.remove('hidden');
+        passInput.value = '';
+        passInput.placeholder = 'pass';
+        passInput.focus();
+        return;
+      }
+      runSearch(input.value);
+    });
+    input.addEventListener('input', function(){
+      if (!input.value.trim()) runSearch('');
+    });
+    clearBtn.addEventListener('click', function(){
+      input.value = '';
+      runSearch('');
+      passArea.classList.add('hidden');
+    });
+    passInput.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter') return;
+      if (h53(passInput.value.trim()) === PASS_HASH){
+        try { sessionStorage.setItem(UNLOCK_KEY, 'true'); } catch(err){}
+        revealNewCard();
+        passArea.classList.add('hidden');
+        input.value = '';
+        newCard.scrollIntoView({ behavior:'smooth', block:'start' });
+      } else {
+        passInput.value = '';
+        passInput.placeholder = '違います。もう一度';
+      }
+    });
+    if (isUnlocked()) revealNewCard();
+  })();
+</script>
+</body>
+</html>
