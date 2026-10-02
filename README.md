@@ -1,19 +1,22 @@
 # 読みノート（Yomi Note）
 ****
 👉 **公式ページはこちら**
-https://suzaki-ao.github.io/yomi-note/Yomi_note_home_v32.html
+https://suzaki-ao.github.io/yomi-note/Yomi_note_home_v34.html
 ****
 👉 **使い方ガイドはこちら**
-https://suzaki-ao.github.io/yomi-note/%E4%BD%BF%E3%81%84%E6%96%B9v25.html
+https://suzaki-ao.github.io/yomi-note/%E4%BD%BF%E3%81%84%E6%96%B9v27.html
 ****
 👉 **機能紹介はこちら**
-https://suzaki-ao.github.io/yomi-note/%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv8.html
+https://suzaki-ao.github.io/yomi-note/%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv10.html
 ****
 👉 **利用規約はこちら**
-https://suzaki-ao.github.io/yomi-note/%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v23.html
+https://suzaki-ao.github.io/yomi-note/%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v25.html
 ****
 👉 **コマンド一覧はこちら**
-https://suzaki-ao.github.io/yomi-note/command-list-v18.html
+https://suzaki-ao.github.io/yomi-note/command-list-v20.html
+****
+👉 **研究開発の状況はこちら**
+https://suzaki-ao.github.io/yomi-note/%E7%A0%94%E7%A9%B6v0_2.html
 ****
 👉 **アプリはこちら**
 https://github.com/suzaki-ao/yomi-note/releases/tag/%E8%AA%AD%E3%81%BF%E3%83%8E%E3%83%BC%E3%83%88%E3%82%A2%E3%83%97%E3%83%AAver
