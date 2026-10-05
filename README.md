@@ -35,3 +35,11 @@ https://github.com/suzaki-ao/yomi-note/issues/1
 > - v5.5以下のアプリについて
 > 現在v5.5以下のバージョンのアプリは配信しておりません。
 ****
+# 読みノート以外のao作のおすすめアプリなどはこちら
+- midi-player
+> https://github.com/suzaki-ao/midi-player
+- tenten-editor
+> https://github.com/suzaki-ao/tenten-editor
+- gamen-yomi
+> https://github.com/suzaki-ao/gamen-yomi
+****
