@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<script>
+/* 【v6.1で追加】起動直後からのエラー記録（@newの /debug errors で確認できる）。
+   ブラウザ側で起きたエラー・読み込み失敗・コンソールのエラーを、最大100件まで覚えておく。 */
+(function(){
+  var buf = window.yomiDebugErrors = [];
+  function add(kind, msg, extra){
+    try { buf.push({ t: Date.now(), kind: kind, msg: String(msg).slice(0, 400), extra: extra ? String(extra).slice(0, 600) : '' }); if (buf.length > 100) buf.shift(); } catch(e){}
+  }
+  window.addEventListener('error', function(e){
+    add('error', e.message || (e.target && (e.target.src || e.target.href) ? 'リソース読み込み失敗: ' + (e.target.src || e.target.href) : 'error'), (e.filename || '') + ':' + (e.lineno || '') + ':' + (e.colno || ''));
+  }, true);
+  window.addEventListener('unhandledrejection', function(e){ var r = e.reason; add('promise', r && r.message ? r.message : r, r && r.stack); });
+  var oe = console.error;
+  console.error = function(){
+    try { add('console.error', Array.prototype.map.call(arguments, function(a){ if (a && a.message) return a.message; if (typeof a === 'object'){ try { return JSON.stringify(a); } catch(x){} } return String(a); }).join(' ')); } catch(x){}
+    return oe.apply(console, arguments);
+  };
+})();
+</script>
   <link rel="icon" type="image/png" href="アイコン.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
@@ -8,7 +27,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#22262E">
-<title>読みノート v6.0</title>
+<title>読みノート v6.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Klee+One:wght@400;600&family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -449,7 +468,7 @@
     align-items:center;justify-content:center;z-index:200;
   }
   .modal-overlay.hidden{display:none;}
-  .modal-box{background:#fff;border-radius:12px;padding:20px;width:360px;max-width:90vw;box-shadow:var(--shadow);}
+  .modal-box{background:#fff;border-radius:12px;padding:20px;width:360px;max-width:90vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow);}
   .modal-box h3{font-size:15px;margin-bottom:14px;}
   .modal-row{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;font-size:12px;}
   .modal-row label{color:var(--ink-soft);font-weight:700;}
@@ -458,6 +477,14 @@
   }
   .modal-row textarea{resize:vertical;}
   .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:4px;}
+  /* 【v6.1で修正】テストモード詳細設定のチェック行。.modal-row は縦並び（flex-direction:column）が
+     基本なのに、チェック行は style で display:flex;align-items:center だけを上書きしていたため、
+     縦並びのまま中央寄せになり、チェックボックスとラベルが上下に積み重なって崩れていた。
+     専用のクラスで、はっきり「横並び・左寄せ」にする。あわせて、項目が多くて画面に収まらないとき
+     にモーダルがスクロールできず、上下が隠れてしまう問題も直した（.modal-box に max-height と overflow-y）。 */
+  .modal-row.chk-row{flex-direction:row;align-items:flex-start;gap:8px;margin-bottom:8px;}
+  .modal-row.chk-row input[type=checkbox]{flex:0 0 auto;width:16px;height:16px;margin:2px 0 0;padding:0;}
+  .modal-row.chk-row label{flex:1 1 auto;margin:0;color:var(--ink);font-weight:600;line-height:1.5;cursor:pointer;}
 
   /* ---------- コマンドパレット ---------- */
   .cmd-panel{
@@ -624,7 +651,7 @@
   <header id="topbar">
     <div class="brand">
       <div class="hanko">読</div>
-      <div class="brand-text"><h1>読みノート <span class="ver-badge">v6.0</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
+      <div class="brand-text"><h1>読みノート <span class="ver-badge">v6.1</span></h1><p>手書き・PDF/画像OCR読み上げノート</p></div>
       <span class="offline-badge hidden" id="offlineBadge" title="インターネットに接続されていません。音声入力は端末によっては引き続き使える場合がありますが、多くの環境では通信が必要です。">🔌 オフライン</span>
       <span class="test-mode-badge hidden" id="testModeBadge" title="テストモード中は、自動で公式が出てくる機能やリンク・動画がブロックされています">🧪 テストモード中</span>
       <span class="test-mode-badge hidden" id="testModeTimerBadge" style="background:#3A6EA5;" title="テストモードの残り時間">⏳ --:--</span>
@@ -650,11 +677,11 @@
     <button class="btn primary" id="saveBtn" title="このブラウザに保存">💾 保存</button>
     <button class="btn accent" id="exportPdfBtn" title="PDFとして書き出す">📄 PDF書き出し</button>
     <button class="btn accent" id="exportZipBtn" title="各ページの画像とノートデータをZIPでまとめて書き出す">🗜️ ZIP書き出し</button>
-    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v36.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
-    <a class="icon-btn" id="featureLinkBtn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv12.html" target="_blank" rel="noopener" title="機能紹介 / Features" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">✨</a>
-    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v29.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
-    <a class="icon-btn" id="researchLinkBtn" href="./%E7%A0%94%E7%A9%B6v0_4.html" target="_blank" rel="noopener" title="研究ページ / Research" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🔬</a>
-    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v27.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
+    <a class="icon-btn" id="homeLinkBtn" href="./Yomi_note_home_v37.html" target="_blank" rel="noopener" title="ホーム（更新情報まとめ）/ Home" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🏠</a>
+    <a class="icon-btn" id="featureLinkBtn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv13.html" target="_blank" rel="noopener" title="機能紹介 / Features" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">✨</a>
+    <a class="icon-btn" id="usageLinkBtn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v30.html" target="_blank" rel="noopener" title="使い方ガイド / How to use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📖</a>
+    <a class="icon-btn" id="researchLinkBtn" href="./%E7%A0%94%E7%A9%B6v0_5.html" target="_blank" rel="noopener" title="研究ページ / Research" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">🔬</a>
+    <a class="icon-btn" id="termsLinkBtn" href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v28.html" target="_blank" rel="noopener" title="利用規約 / Terms of Use" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">📜</a>
     <button class="icon-btn" id="dlcManageBtn" title="追加DLC（拡張機能）の管理">🧩</button>
     <button class="icon-btn" id="fullscreenBtn" title="全画面表示に切り替え">⛶</button>
     <button class="icon-btn" id="ocrLangBtn" title="OCRで認識する言語を選ぶ（日本語＋外国語など）">🌐</button>
@@ -803,7 +830,7 @@
             <input type="color" id="tbFillColor" value="#fff59d" title="背景色">
             <button id="tbVertical" title="縦書き切替">縦</button>
             <button id="tbDuplicate" title="このテキストボックスを複製">📋</button>
-            <button id="tbMic" title="音声入力（通常は通信が必要ですが、端末によってはオフラインでも動作する場合があります）">🎤</button>
+            <button id="tbMic" title="音声入力（デスクトップアプリ版は内蔵エンジンで通信不要／ブラウザ版はブラウザの音声認識サービスを使うため通信が必要です）">🎤</button>
             <button id="tbSpeak" title="このテキストボックスを読み上げる">🔊</button>
             <button id="tbDelete" title="このテキストボックスを削除">🗑</button>
           </div>
@@ -951,17 +978,17 @@
           ここでの設定は<b>テストモードを始める前</b>に行ってください。テストモード中はこの設定自体を開けません。<br>
           ※ディスレクシア支援パックは、テストモード中もそのまま使えます。使う場合は<b>テストモードをONにする前</b>に有効化しておいてください（テストモード中はDLC管理パネルからの操作ができません）。
         </p>
-        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockImage"><label for="tsBlockImage" style="margin:0;">画像の挿入をブロックする</label></div>
-        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockCamera"><label for="tsBlockCamera" style="margin:0;">カメラ機能をブロックする</label></div>
-        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockRuler"><label for="tsBlockRuler" style="margin:0;">定規ツールをブロックする</label></div>
-        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockLasso"><label for="tsBlockLasso" style="margin:0;">輪投げツールをブロックする</label></div>
-        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockGrade"><label for="tsBlockGrade" style="margin:0;">学年モードの変更をブロックする</label></div>
-        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockChemHints"><label for="tsBlockChemHints" style="margin:0;">⚗️ 化学記法のヒントになる（）（「↑（気体）」「↓（沈殿）」「(固)(液)」など）を隠す</label></div>
-        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockExclPreview"><label for="tsBlockExclPreview" style="margin:0;">🔬 除外プレビュー（図表の場所を確認する機能）をブロックする</label></div>
+        <div class="modal-row chk-row"><input type="checkbox" id="tsBlockImage"><label for="tsBlockImage">画像の挿入をブロックする</label></div>
+        <div class="modal-row chk-row"><input type="checkbox" id="tsBlockCamera"><label for="tsBlockCamera">カメラ機能をブロックする</label></div>
+        <div class="modal-row chk-row"><input type="checkbox" id="tsBlockRuler"><label for="tsBlockRuler">定規ツールをブロックする</label></div>
+        <div class="modal-row chk-row"><input type="checkbox" id="tsBlockLasso"><label for="tsBlockLasso">輪投げツールをブロックする</label></div>
+        <div class="modal-row chk-row"><input type="checkbox" id="tsBlockGrade"><label for="tsBlockGrade">学年モードの変更をブロックする</label></div>
+        <div class="modal-row chk-row"><input type="checkbox" id="tsBlockChemHints"><label for="tsBlockChemHints">⚗️ 化学記法のヒントになる（）（「↑（気体）」「↓（沈殿）」「(固)(液)」など）を隠す</label></div>
+        <div class="modal-row chk-row"><input type="checkbox" id="tsBlockExclPreview"><label for="tsBlockExclPreview">🔬 除外プレビュー（図表の場所を確認する機能）をブロックする</label></div>
         <div class="modal-row" style="margin:10px 0 2px;font-size:12px;font-weight:700;color:var(--ink-soft);">数式パレットの「タップすると答え（公式・化学式）が出てくる一覧」</div>
-        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockFormulaBook"><label for="tsBlockFormulaBook" style="margin:0;">「よく使う公式」の一覧をブロックする</label></div>
-        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockChemIons"><label for="tsBlockChemIons" style="margin:0;">化学「よく使うイオン」の一覧をブロックする</label></div>
-        <div class="modal-row" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tsBlockPhysics"><label for="tsBlockPhysics" style="margin:0;">物理「よく使う公式」の一覧をブロックする</label></div>
+        <div class="modal-row chk-row"><input type="checkbox" id="tsBlockFormulaBook"><label for="tsBlockFormulaBook">「よく使う公式」の一覧をブロックする</label></div>
+        <div class="modal-row chk-row"><input type="checkbox" id="tsBlockChemIons"><label for="tsBlockChemIons">化学「よく使うイオン」の一覧をブロックする</label></div>
+        <div class="modal-row chk-row"><input type="checkbox" id="tsBlockPhysics"><label for="tsBlockPhysics">物理「よく使う公式」の一覧をブロックする</label></div>
         <p class="empty-hint" style="margin:2px 0 10px;">電荷の上付き文字・反応の矢印・分数・行列などの「書き方の道具」は答えそのものではないため、ここをチェックしてもテスト中に使えます。</p>
         <div class="modal-row">
           <label>制限時間（分・任意）</label>
@@ -997,7 +1024,7 @@
     <div class="cmd-panel" id="cmdPanel">
       <div class="cmd-panel-header">
         <span class="cmd-mode-label">コマンド <span id="cmdModeLabel">@0</span></span>
-        <a class="cmd-help-link" href="./command-list-v22.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
+        <a class="cmd-help-link" href="./command-list-v23.html" target="_blank" rel="noopener" title="コマンド一覧を別ページで見る">？</a>
         <button class="cmd-close-btn" id="cmdCloseBtn" title="閉じる">✕</button>
       </div>
       <div class="cmd-log" id="cmdLog"></div>
@@ -1083,8 +1110,8 @@
         </p>
         <div id="savedList"></div>
         <div style="margin-top:auto;padding-top:14px;text-align:center;">
-          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v27.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
-          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v29.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
+          <a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v28.html" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">利用規約 / Terms of Use</a>
+          <span id="savedTabUsageLinkSep">｜ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v30.html" id="savedTabUsageLink" target="_blank" rel="noopener" style="font-size:11px;color:var(--ink-soft);text-decoration:underline;">使い方 / How to use</a></span>
         </div>
       </div>
     </aside>
@@ -2208,10 +2235,8 @@ function hideFloatingToolbar(){
   /* 別のテキストボックスに切り替わる／選択解除される際は、音声入力が動いたままに
      ならないよう安全に停止する。voiceRecognitionManualStopを立てておかないと、
      v4.8で追加した「無音タイムアウトからの自動再開」が誤って働いてしまうため注意。 */
-  if (voiceRecognition){
-    voiceRecognitionManualStop = true;
-    try { voiceRecognition.stop(); } catch(e){}
-  }
+  /* 【v6.1】音声入力は新しい仕組み（voiceSession）で止める */
+  if (typeof voiceSession !== 'undefined' && voiceSession){ stopVoiceInput('toolbar-hidden'); }
 }
 function updateTextBoxDom(tb){
   const el = document.querySelector('.textbox[data-id="'+tb.id+'"]');
@@ -2666,7 +2691,7 @@ document.getElementById('tbDelete').addEventListener('click', deleteSelectedText
 /* ============================================================
    テキストボックスの音声入力・読み上げ
 ============================================================ */
-let voiceRecognition = null;
+/* 【v6.1】音声入力の状態は、下の音声入力ブロックの voiceSession で管理する */
 function getSpeechRecognitionCtor(){
   return window.SpeechRecognition || window.webkitSpeechRecognition || null;
 }
@@ -2758,144 +2783,285 @@ function showFirstTimeIntro(){
   }
   document.getElementById('introCloseBtn').addEventListener('click', dismiss);
   document.getElementById('introUsageBtn').addEventListener('click', () => {
-    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v29.html', '_blank', 'noopener');
+    window.open('./%E4%BD%BF%E3%81%84%E6%96%B9v30.html', '_blank', 'noopener');
     dismiss();
   });
 }
 
-/* 【v4.0で改善】音声入力の「真のオフライン対応」について：
-   ブラウザ標準の Web Speech API（SpeechRecognition）は、多くの環境では音声を
-   サーバーに送って文字にする方式のため、根本的にはオフラインで動かせない。
-   一方で、最近のChrome／Android端末の一部では、言語パックを端末にダウンロード
-   済みであれば同じAPIのままオンデバイス（＝通信なし）で動く場合がある。
-   これまでは navigator.onLine が false の時点で問答無用にボタンを止めていたため、
-   このような「実は端末内だけで動く」ケースまで一律に塞いでしまっていた。
-   v4.0では事前ブロックをやめ、まず実際に起動を試みて、本当に通信エラーが
-   返ってきた場合にだけオフライン扱いのメッセージを出すようにした。 */
-document.getElementById('tbMic').addEventListener('click', () => {
-  const Ctor = getSpeechRecognitionCtor();
-  const micBtn = document.getElementById('tbMic');
-  if (!Ctor){ flashToast('この端末・アプリでは音声入力を利用できません'); return; }
-  if (voiceRecognition){
-    const recToStop = voiceRecognition;
-    voiceRecognition = null;
-    voiceRecognitionManualStop = true;
-    micBtn.classList.remove('mic-active');
-    /* 【v4.8で追加】止めた瞬間にまだ確定していない（未確定＝interim）音声が
-       残っている場合、それを消してしまわず確定テキストとして残す */
-    if (voiceInterimText){
-      const tbNow = getTextBox(selectedTextBoxId);
-      if (tbNow){
-        tbNow.text = (tbNow.text || '') + voiceInterimText;
-        const el = document.querySelector('.textbox[data-id="'+tbNow.id+'"]');
-        if (el) el.textContent = tbNow.text;
-      }
-      voiceInterimText = '';
-    }
-    recToStop.onresult = null; recToStop.onerror = null; recToStop.onend = null;
-    try { recToStop.stop(); } catch(e){}
-    try { recToStop.abort(); } catch(e){}
-    return;
-  }
-  const tb = getTextBox(selectedTextBoxId);
-  if (!tb){ flashToast('テキストボックスを選択してください'); return; }
-  voiceRecognitionManualStop = false;
-  voiceInterimText = '';
-  startVoiceRecognition(Ctor, micBtn);
-});
-/* 【v4.8で音声入力を強化】
-   ①話している途中の内容（未確定＝interim）もリアルタイムで画面に反映する
-     ようにした（これまでは一区切り確定するまで何も表示されず、反応が
-     鈍く感じられた）。
-   ②ブラウザ（特にChrome）は無音が続くと、こちらが止めていなくても
-     数十秒程度でSpeechRecognitionを自動的に終了させてしまう仕様があり、
-     知らないうちにマイクが切れて「入力されなくなった」ように見える
-     不具合があった。ユーザー自身が止めた場合（voiceRecognitionManualStop）
-     以外でrecognitionが終了した場合は、自動的に再起動して録音を継続する。 */
+/* ============================================================
+   【v6.1で全面刷新】音声入力
+   ------------------------------------------------------------
+   v6.0まで「音声入力が根本的にできない」不具合があった。確認できた原因：
+   ①ブラウザ標準の音声認識（Web Speech API）は、ブラウザが音声をクラウドの認識サービスに
+     送って文字にする仕組み。Electron製のデスクトップアプリ（.exe／.app）には、その
+     認識サービスの利用権限（APIキー）が付いていないため、起動しても必ず
+     「network」エラーで失敗する。本体側の工夫では直せない、根本的な原因。
+   ②ブラウザ版でも、(a)最初の数秒しゃべらないと「no-speech」で黙って停止する、
+     (b)マイクの許可が拒否・未接続でも原因が表示されない、(c)失敗の理由を後から
+     確認する手段がない、という問題があった。
+   対策：
+   ・デスクトップアプリ版には、通信なしで動く日本語の音声認識エンジン（SenseVoice＋
+     Silero VAD。sherpa-onnx）を内蔵し、これを優先して使う（話し終わり＝無音で一区切り
+     ごとに文字になる）。ブラウザ版は従来どおりWeb Speech APIを使う。
+   ・マイクの許可を先に確認して、拒否・未接続ならその原因を表示する。
+   ・無音（no-speech）やブラウザ側のタイムアウトでは止めず、自動で再開する。
+   ・どうしても使えないときは、原因と、OS標準の音声入力（Win+Hなど）の案内を出す。
+   ・すべての経過を記録し、/debug voice ／ /debug voice live（@new）で確認できる。
+============================================================ */
+var voiceSession = null;
+var voiceDebugLog = [];
+function voiceDbg(ev, detail){
+  voiceDebugLog.push({ t: Date.now(), ev: ev, detail: detail === undefined ? '' : String(detail) });
+  if (voiceDebugLog.length > 200) voiceDebugLog.shift();
+}
 let voiceInterimText = '';
-let voiceRecognitionManualStop = true;
-function startVoiceRecognition(Ctor, micBtn){
-  const rec = new Ctor();
-  rec.lang = 'ja-JP';
-  rec.interimResults = true;
-  rec.continuous = true;
-  voiceRecognition = rec;
-  micBtn.classList.add('mic-active');
-  flashToast(navigator.onLine
-    ? '音声入力を開始しました。話してください（もう一度🎤で停止）'
-    : '音声入力を試みています（オフラインのため、端末によっては使えない場合があります）');
-  let sawAnyActivity = false;
-  rec.onstart = () => { sawAnyActivity = true; };
-  const stuckTimer = setTimeout(() => {
-    if (!sawAnyActivity && voiceRecognition === rec){
-      micBtn.classList.remove('mic-active');
-      flashToast('音声入力を開始できませんでした（この環境では音声認識が利用できない可能性があります）');
-      try { rec.abort(); } catch(e){}
-      voiceRecognition = null;
-    }
-  }, 6000);
-  rec.onresult = e => {
-    sawAnyActivity = true;
-    let finalText = '', interim = '';
-    for (let i = e.resultIndex; i < e.results.length; i++){
-      if (e.results[i].isFinal) finalText += e.results[i][0].transcript;
-      else interim += e.results[i][0].transcript;
-    }
-    const tbNow = getTextBox(selectedTextBoxId);
-    if (!tbNow) return;
-    if (finalText){
-      tbNow.text = (tbNow.text || '') + finalText;
-      voiceInterimText = '';
-    } else {
-      voiceInterimText = interim;
-    }
-    const el = document.querySelector('.textbox[data-id="'+tbNow.id+'"]');
-    if (el) el.textContent = tbNow.text + voiceInterimText;
-  };
-  rec.onerror = e => {
-    sawAnyActivity = true;
-    clearTimeout(stuckTimer);
+let voiceStarting = false;
+function isDesktopApp(){ return !!(window.yomiNative && window.yomiNative.isDesktop); }
+function voiceMicBtn(){ return document.getElementById('tbMic'); }
+function voiceSetActive(on){ const b = voiceMicBtn(); if (b) b.classList.toggle('mic-active', !!on); }
+function voiceFindBox(id){
+  try {
+    const page = notestate.pages[currentPageIndex];
+    return page && page.textBoxes ? page.textBoxes.find(t => t.id === id) : null;
+  } catch(e){ return null; }
+}
+function voiceBoxEl(id){ return document.querySelector('.textbox[data-id="' + id + '"]'); }
+function voiceCommit(text, id){
+  const tb = voiceFindBox(id);
+  if (!tb || !text) return;
+  tb.text = (tb.text || '') + text;
+  voiceInterimText = '';
+  const el = voiceBoxEl(id);
+  if (el) el.textContent = tb.text;
+}
+function voiceShowInterim(text, id){
+  voiceInterimText = text || '';
+  const tb = voiceFindBox(id);
+  if (!tb) return;
+  const el = voiceBoxEl(id);
+  if (el) el.textContent = (tb.text || '') + voiceInterimText;
+}
+function voiceFlushInterim(id){
+  const t = voiceInterimText;
+  voiceInterimText = '';
+  /* 「…」「（認識中…）」は表示用の仮の文字なので、確定した文字としては残さない */
+  if (t && t !== '…' && t.indexOf('（認識中') !== 0) voiceCommit(t, id);
+  else voiceShowInterim('', id);
+}
+function voiceGiveUpGuidance(reasonText, id){
+  const el = id ? voiceBoxEl(id) : null;
+  if (el){ try { el.focus(); } catch(e){} }
+  flashToast(reasonText + '　代わりにOSの音声入力が使えます（Windows：Windowsキー＋H／Mac：fnキーを2回押す／スマホ：キーボードの🎤）。', 10000);
+}
+function stopVoiceInput(reason){
+  const s = voiceSession;
+  if (!s) return;
+  voiceDbg('stop', reason || '');
+  voiceSession = null;
+  voiceSetActive(false);
+  try { s.stop(); } catch(e){ voiceDbg('stop-error', e && e.message); }
+  voiceFlushInterim(s.targetId);
+}
+document.getElementById('tbMic').addEventListener('click', async () => {
+  if (voiceStarting) return;
+  if (voiceSession){ stopVoiceInput('button'); flashToast('音声入力を停止しました', 1500); return; }
+  let tb = null;
+  try { tb = getTextBox(selectedTextBoxId); } catch(e){}
+  if (!tb){ flashToast('テキストボックスを選択してください'); return; }
+  voiceStarting = true;
+  try { await startVoiceInput(tb.id); }
+  catch(e){
+    voiceDbg('start-exception', e && e.message);
     console.error(e);
-    if (e.error === 'network'){
-      flashToast('音声入力を利用できませんでした（通信状況、またはこのアプリでは音声認識が使えない可能性があります）');
-      forcedOfflineHint = true;
-      applyOnlineOfflineState();
-      setTimeout(() => { forcedOfflineHint = false; applyOnlineOfflineState(); }, 15000);
-    } else if (e.error === 'not-allowed' || e.error === 'service-not-allowed'){
-      flashToast('マイクの使用が許可されていません。設定をご確認ください');
-    } else if (e.error === 'no-speech'){
-      /* 無音のまま何も聞き取れなかっただけなので、エラー扱いのトーストは出さない */
-    } else {
-      flashToast('音声入力でエラーが発生しました: ' + e.error);
-    }
-    /* エラーが起きた場合は自動再起動せず、ユーザーが止めたのと同じ扱いにする
-       （無限に再起動を繰り返すのを防ぐため） */
-    voiceRecognitionManualStop = true;
-    if (voiceRecognition === rec){ voiceRecognition = null; }
-    micBtn.classList.remove('mic-active');
-  };
-  rec.onend = () => {
-    clearTimeout(stuckTimer);
-    if (voiceRecognition !== rec) return; /* 既に別セッションに切り替わっている */
-    if (!voiceRecognitionManualStop){
-      /* ユーザーが止めたわけではないのに終了した＝ブラウザ側の無音タイムアウト等。
-         そのまま自動的に再開して、ユーザーには途切れたことが分からないようにする。 */
-      try { startVoiceRecognition(Ctor, micBtn); } catch(e){
-        voiceRecognition = null;
-        micBtn.classList.remove('mic-active');
-      }
+    voiceSession = null; voiceSetActive(false);
+    flashToast('音声入力を開始できませんでした：' + (e && e.message ? e.message : e), 6000);
+  }
+  finally { voiceStarting = false; }
+});
+async function startVoiceInput(targetId){
+  voiceInterimText = '';
+  voiceDbg('click', 'desktop=' + isDesktopApp());
+  if (isDesktopApp()){
+    const r = await startNativeVoice(targetId);
+    if (r.ok) return;
+    voiceDbg('native-unavailable', r.reason);
+    if (!getSpeechRecognitionCtor()){
+      voiceGiveUpGuidance('このアプリの音声認識エンジンを起動できませんでした（' + r.reason + '）。', targetId);
       return;
     }
-    voiceRecognition = null;
-    micBtn.classList.remove('mic-active');
-  };
-  try { rec.start(); } catch(e){
-    console.error(e);
-    clearTimeout(stuckTimer);
-    flashToast('音声入力を開始できませんでした');
-    micBtn.classList.remove('mic-active');
-    voiceRecognition = null;
+    flashToast('内蔵の音声認識エンジンが使えないため、ブラウザ標準の音声認識を試します（' + r.reason + '）', 3500);
   }
+  const Ctor = getSpeechRecognitionCtor();
+  if (!Ctor){
+    voiceGiveUpGuidance('このブラウザは音声認識に対応していません（Chrome・Edge・Safariをお使いください）。', targetId);
+    return;
+  }
+  await startWebVoice(Ctor, targetId);
+}
+/* ---------- ブラウザ版：Web Speech API ---------- */
+async function startWebVoice(Ctor, targetId){
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+    try {
+      const st = await navigator.mediaDevices.getUserMedia({ audio: true });
+      st.getTracks().forEach(t => t.stop());
+      voiceDbg('web:mic-permission-ok');
+    } catch(e){
+      voiceDbg('web:mic-permission-ng', e && e.name);
+      if (e && (e.name === 'NotAllowedError' || e.name === 'SecurityError')){
+        flashToast('マイクの使用が許可されていません。ブラウザのアドレスバー左の鍵アイコン →「マイク」→「許可」に変更してください。', 8000);
+        return;
+      }
+      if (e && (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError')){
+        flashToast('マイクが見つかりません。マイクの接続と、他のアプリが使っていないかを確認してください。', 8000);
+        return;
+      }
+      /* それ以外は、音声認識そのものを試してみる */
+    }
+  }
+  const s = { engine: 'web', targetId: targetId, manualStop: false, fatal: false, ended: false, rec: null, fastFails: 0, lastStart: 0, timer: null };
+  s.stop = function(){
+    s.manualStop = true; s.ended = true; clearTimeout(s.timer);
+    const r = s.rec;
+    if (r){ try { r.stop(); } catch(e){} setTimeout(() => { try { r.abort(); } catch(e){} }, 800); }
+  };
+  voiceSession = s; voiceSetActive(true);
+  flashToast('音声入力を開始しました。話してください（もう一度🎤で停止）', 2500);
+  function finishFatal(msg){
+    if (s.ended && voiceSession !== s) return;
+    s.ended = true; clearTimeout(s.timer);
+    if (voiceSession === s) voiceSession = null;
+    voiceSetActive(false);
+    try { if (s.rec) s.rec.abort(); } catch(e){}
+    voiceFlushInterim(s.targetId);
+    voiceGiveUpGuidance(msg, s.targetId);
+  }
+  function launch(){
+    if (s.ended || voiceSession !== s) return;
+    const rec = new Ctor();
+    rec.lang = 'ja-JP'; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
+    s.rec = rec; s.lastStart = Date.now();
+    let started = false;
+    clearTimeout(s.timer);
+    s.timer = setTimeout(() => {
+      if (!started && voiceSession === s){ voiceDbg('web:stuck'); s.fatal = true; finishFatal('音声入力が6秒たっても始まりません。この環境では音声認識が使えない可能性があります。'); }
+    }, 6000);
+    rec.onstart = () => { started = true; clearTimeout(s.timer); voiceDbg('web:start'); };
+    rec.onaudiostart = () => voiceDbg('web:audiostart');
+    rec.onsoundstart = () => voiceDbg('web:soundstart');
+    rec.onspeechstart = () => voiceDbg('web:speechstart');
+    rec.onspeechend = () => voiceDbg('web:speechend');
+    rec.onnomatch = () => voiceDbg('web:nomatch');
+    rec.onresult = e => {
+      started = true; clearTimeout(s.timer);
+      let fin = '', interim = '';
+      for (let i = e.resultIndex; i < e.results.length; i++){
+        if (e.results[i].isFinal) fin += e.results[i][0].transcript;
+        else interim += e.results[i][0].transcript;
+      }
+      voiceDbg('web:result', (fin ? '確定:' + fin : '') + (interim ? ' 途中:' + interim : ''));
+      if (fin) voiceCommit(fin, s.targetId);
+      voiceShowInterim(interim, s.targetId);
+    };
+    rec.onerror = e => {
+      voiceDbg('web:error', e.error);
+      if (e.error === 'no-speech' || e.error === 'aborted') return;   /* 無音のまま／中断。onendで必要なら再開する */
+      s.fatal = true;
+      let msg;
+      if (e.error === 'network') msg = '音声認識サービスに接続できませんでした（ブラウザ版はインターネット接続が必要です）。';
+      else if (e.error === 'not-allowed' || e.error === 'service-not-allowed') msg = 'マイクまたは音声認識の使用が許可されていません。ブラウザの設定をご確認ください。';
+      else if (e.error === 'audio-capture') msg = 'マイクが見つからない、または使えません。';
+      else if (e.error === 'language-not-supported') msg = '日本語の音声認識に対応していない環境です。';
+      else msg = '音声入力でエラーが発生しました（' + e.error + '）。';
+      finishFatal(msg);
+    };
+    rec.onend = () => {
+      voiceDbg('web:end');
+      clearTimeout(s.timer);
+      if (s.ended || voiceSession !== s || s.fatal) return;
+      /* ユーザーが止めていないのに終わった＝無音やブラウザ側のタイムアウト。自動で再開する。 */
+      s.fastFails = (Date.now() - s.lastStart < 1000) ? s.fastFails + 1 : 0;
+      if (s.fastFails >= 4){ finishFatal('音声入力がすぐに終了してしまいます。この環境では音声認識が使えない可能性があります。'); return; }
+      setTimeout(launch, 200);
+    };
+    try { rec.start(); }
+    catch(err){ voiceDbg('web:start-exception', err && err.message); finishFatal('音声入力を開始できませんでした。'); }
+  }
+  launch();
+}
+/* ---------- デスクトップアプリ版：内蔵エンジン（通信不要） ---------- */
+async function startNativeVoice(targetId){
+  const nat = window.yomiNative;
+  let st;
+  try { st = await nat.asrStatus(); }
+  catch(e){ return { ok: false, reason: '状態の確認に失敗しました' }; }
+  voiceDbg('native:status', JSON.stringify(st));
+  if (!st || !st.available) return { ok: false, reason: (st && st.reason) || 'エンジンが見つかりません' };
+  flashToast('音声認識エンジンを準備しています…（初回は数秒かかります）', 4000);
+  voiceSetActive(true);
+  let r;
+  try { r = await nat.asrStart(); } catch(e){ r = { ok: false, error: e && e.message }; }
+  if (!r || !r.ok){ voiceSetActive(false); return { ok: false, reason: (r && r.error) || '起動に失敗しました' }; }
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+  } catch(e){
+    voiceDbg('native:mic-ng', e && e.name);
+    try { await nat.asrStop(); } catch(x){}
+    voiceSetActive(false);
+    let msg = 'マイクを開けませんでした。';
+    if (e && e.name === 'NotAllowedError') msg = 'マイクの使用が許可されていません。Windowsは「設定→プライバシーとセキュリティ→マイク」、Macは「システム設定→プライバシーとセキュリティ→マイク」で、このアプリを許可してください。';
+    else if (e && e.name === 'NotFoundError') msg = 'マイクが見つかりません。接続を確認してください。';
+    voiceGiveUpGuidance(msg, targetId);
+    return { ok: true };   /* 案内済みなので、ブラウザ標準の認識には進まない */
+  }
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const ctx = new AC();
+  if (ctx.state === 'suspended'){ try { await ctx.resume(); } catch(e){} }
+  const src = ctx.createMediaStreamSource(stream);
+  const proc = ctx.createScriptProcessor(4096, 1, 1);
+  const mute = ctx.createGain(); mute.gain.value = 0;
+  src.connect(proc); proc.connect(mute); mute.connect(ctx.destination);
+  const s = { engine: 'native', targetId: targetId, ended: false, unsub: null };
+  let carry = new Float32Array(0);
+  const ratio = ctx.sampleRate / 16000;
+  proc.onaudioprocess = ev => {
+    if (s.ended) return;
+    const inp = ev.inputBuffer.getChannelData(0);
+    const merged = new Float32Array(carry.length + inp.length);
+    merged.set(carry, 0); merged.set(inp, carry.length);
+    const outLen = Math.floor(merged.length / ratio);
+    if (!outLen){ carry = merged; return; }
+    const out = new Float32Array(outLen);
+    for (let i = 0; i < outLen; i++){
+      const a = Math.floor(i * ratio), b = Math.min(merged.length, Math.floor((i + 1) * ratio));
+      let sum = 0, n = 0;
+      for (let j = a; j < b; j++){ sum += merged[j]; n++; }
+      out[i] = n ? sum / n : 0;
+    }
+    carry = merged.slice(Math.floor(outLen * ratio));
+    nat.asrPush(out);
+  };
+  s.unsub = nat.onAsrEvent(ev => {
+    if (!ev) return;
+    voiceDbg('native:' + ev.type, ev.text || ev.message || '');
+    if (ev.type === 'text' && ev.text) voiceCommit(ev.text, s.targetId);
+    else if (ev.type === 'speaking') voiceShowInterim('…', s.targetId);
+    else if (ev.type === 'decoding') voiceShowInterim('（認識中…）', s.targetId);
+    else if (ev.type === 'idle') voiceShowInterim('', s.targetId);
+    else if (ev.type === 'error') flashToast('音声認識でエラー：' + ev.message, 5000);
+  });
+  s.stop = function(){
+    s.ended = true;
+    try { proc.onaudioprocess = null; src.disconnect(); proc.disconnect(); mute.disconnect(); } catch(e){}
+    try { stream.getTracks().forEach(t => t.stop()); } catch(e){}
+    try { ctx.close(); } catch(e){}
+    Promise.resolve(nat.asrStop()).catch(() => {}).then(() => {
+      setTimeout(() => { try { if (s.unsub) s.unsub(); } catch(e){} voiceShowInterim('', s.targetId); }, 300);
+    });
+  };
+  voiceSession = s; voiceSetActive(true);
+  flashToast('音声入力を開始しました。話してください（話し終えて少し間をあけると文字になります。もう一度🎤で停止）', 3500);
+  return { ok: true };
 }
 document.getElementById('tbSpeak').addEventListener('click', () => {
   const tb = getTextBox(selectedTextBoxId);
@@ -7654,6 +7820,7 @@ async function executeCommand(raw){
   } catch(err){
     console.error(err);
     cmdLog('エラー: ' + (err && err.message ? err.message : String(err)), 'cmd-error');
+    if (typeof debugVerbose !== 'undefined' && debugVerbose && err && err.stack) cmdLog('     ' + String(err.stack).split('\n').slice(0, 4).join(' ／ '), 'cmd-error');
   }
 }
 function listAllCommands(){
@@ -7886,6 +8053,12 @@ function listNewCommands(){
   cmdLog('  /run all command @with ocr ／ /run all command @all pages @with ocr ―― OCR結果のないページを、先にOCRしてから検証（ノートにOCR結果が追加されます）', 'cmd-ok');
   cmdLog('  /run stop ―― 一括実行を中止（実行中のコマンドが終わり次第止まります）', 'cmd-ok');
   cmdLog('  /run copy ―― 直前の一括実行の結果をもう一度コピー（実行中は途中経過をコピー）', 'cmd-ok');
+  cmdLog('  /run all command … @debug ―― 一括実行を、各コマンドの所要時間・ノートの変化・エラーつきで実行', 'cmd-ok');
+  cmdLog('◆ デバッグ（v6.1で追加。ノートの内容は変更しません）', 'cmd-ok');
+  cmdLog('  /debug all ―― アプリ全体の点検（バージョン表記・モーダル・音声入力・保存領域・ノートの整合性など）を一括実行。結果はコピー可能', 'cmd-ok');
+  cmdLog('  /debug help ―― 個別のデバッグコマンド一覧（/debug version ／ /debug modal ／ /debug voice ／ /debug voice live など）', 'cmd-ok');
+  cmdLog('  /debug on ／ /debug off ―― 詳細表示の切り替え', 'cmd-ok');
+  cmdLog('  /new 〇〇 @debug ―― 検証コマンドを詳細表示つきで1つ実行（例：/new ocr compare @debug）', 'cmd-ok');
 }
 async function handleCommandNew(input){
   /* @new は「追加コンテンツ用の試験的な入口」に加え、v5.2からは
@@ -7901,9 +8074,15 @@ async function handleCommandNew(input){
     listNewCommands();
     return;
   }
+  /* 【v6.1で追加】デバッグ機能。/debug …（個別・一括）と、/new 〇〇 @debug（詳細表示つきで1つ実行） */
+  if (/^\/debug(\s|$)/i.test(input)){ await handleDebugCommand(input); return; }
   {
-    const runMatch = input.match(/^\/run\s+all\s+command(\s+@all\s+pages?)?(\s+@with\s+ocr)?\s*$/i);
-    if (runMatch){ await runAllNewCommands(!!runMatch[1], !!runMatch[2]); return; }
+    const dm = input.match(/^(\/new\s+.*\S)\s+@debug\s*$/i);
+    if (dm){ await runNewWithDebug(dm[1]); return; }
+  }
+  {
+    const runMatch = input.match(/^\/run\s+all\s+command(\s+@all\s+pages?)?(\s+@with\s+ocr)?(\s+@debug)?\s*$/i);
+    if (runMatch){ await runAllNewCommands(!!runMatch[1], !!runMatch[2], !!runMatch[3]); return; }
   }
   if (/^\/new\s+ocr\s+compare\s*$/i.test(input)){
     await cmdNewOcrCompare();
@@ -8235,19 +8414,21 @@ async function newRunEnsureOcr(i){
   cmdLog('  OCR完了：' + n + 'ブロック（' + ((performance.now() - t) / 1000).toFixed(1) + '秒）', n ? 'cmd-ok' : 'cmd-error');
   return n > 0;
 }
-async function runAllNewCommands(allPages, withOcr){
+async function runAllNewCommands(allPages, withOcr, withDebug){
   if (newRunBusy){ cmdLog('[@new] すでに一括実行中です。', 'cmd-error', true); return; }
   const pages = notestate.pages;
   const startIndex = currentPageIndex;
   const sens0 = (typeof autoSettings !== 'undefined') ? autoSettings.sensitivity : undefined;
   const t0 = performance.now();
+  const prevVerbose = debugVerbose;   /* 【v6.1】@debug 付きのときは詳細表示（所要時間・ノートの変化・エラー）にする */
+  if (withDebug) debugVerbose = true;
   let ran = 0, skipped = 0, errLines = 0, donePages = 0;
   newRunBusy = true; newRunAbort = false; newRunCapture = [];
   newRunMeta = [
     /* 【v5.8】アプリの機能変更はなし（v5.9で研究用コマンドを拡充）。結果の見出しのバージョン表記のみ更新（研究記録に貼ったとき、どの版で測ったかが分かるように） */
-    '読みノート v6.0 研究開発コマンド 一括実行結果',
+    '読みノート v6.1 研究開発コマンド 一括実行結果' + (withDebug ? '（デバッグ付き）' : ''),
     '実行日時：' + new Date().toLocaleString('ja-JP'),
-    '対象：' + (allPages ? '全ページ（' + pages.length + 'ページ）' : '今いるページ（' + (startIndex + 1) + '／' + pages.length + 'ページ目）') + (withOcr ? '／OCR未実施のページは先にOCRを実行' : '')
+    '対象：' + (allPages ? '全ページ（' + pages.length + 'ページ）' : '今いるページ（' + (startIndex + 1) + '／' + pages.length + 'ページ目）') + (withOcr ? '／OCR未実施のページは先にOCRを実行' : '') + (withDebug ? '／デバッグ詳細表示あり' : '')
   ];
   cmdLogButton('⏹ 中止する（実行中のコマンドが終わり次第止まります）', btn => {
     newRunAbort = true; btn.disabled = true; btn.textContent = '⏹ 中止を受け付けました…';
@@ -8256,8 +8437,13 @@ async function runAllNewCommands(allPages, withOcr){
   const runOne = async (item) => {
     cmdLog(cmdPromptPrefix() + ' ' + item.cmd, 'cmd-echo');
     const before = newRunCapture.length;
+    const dbgSig0 = debugVerbose ? noteSignature() : null, dbgT0 = performance.now(), dbgErr0 = (window.yomiDebugErrors || []).length;
     try { await item.fn(); }
-    catch(err){ cmdLog('[@new] 実行中にエラー：' + (err && err.message ? err.message : String(err)), 'cmd-error'); }
+    catch(err){
+      cmdLog('[@new] 実行中にエラー：' + (err && err.message ? err.message : String(err)), 'cmd-error');
+      if (debugVerbose && err && err.stack) cmdLog('     ' + String(err.stack).split('\n').slice(0, 3).join(' ／ '), 'cmd-error');
+    }
+    if (debugVerbose) debugAfterCommand(dbgSig0, dbgT0, dbgErr0);
     if (sens0 !== undefined) autoSettings.sensitivity = sens0;   /* 強さ別の検証が途中で失敗しても設定を元に戻す */
     newRunCapture.slice(before).forEach(l => { if (l.cls === 'cmd-error') errLines++; });
     ran++;
@@ -8315,6 +8501,7 @@ async function runAllNewCommands(allPages, withOcr){
   } finally {
     if (allPages && startIndex < pages.length){ try { loadPage(startIndex); } catch(e){} }
     if (sens0 !== undefined) autoSettings.sensitivity = sens0;
+    debugVerbose = prevVerbose;
   }
   const elapsed = newRunFormatTime(performance.now() - t0);
   cmdLog('[@new] 一括実行を' + (aborted ? '中止しました' : '完了しました') + '（実行 ' + ran + '件／省略 ' + skipped + '件／エラー表示 ' + errLines + '行' + (allPages ? '／処理ページ ' + donePages + '／' + pages.length : '') + '／所要 ' + elapsed + '）', aborted ? 'cmd-error' : 'cmd-ok');
@@ -8324,6 +8511,499 @@ async function runAllNewCommands(allPages, withOcr){
   cmdLogButton('📋 結果をコピー', btn => copyNewRunResult(btn));
   cmdLog('下のボタン、または /run copy で、ここまでの結果をまとめてコピーできます。', 'cmd-ok', true);
   flashToast('検証コマンドの一括実行が' + (aborted ? '中止されました' : '完了しました') + '（結果はコピーできます）', 4000);
+}
+/* ============================================================
+   【v6.1で新規追加】デバッグ機能（@new専用）
+   ------------------------------------------------------------
+   長い改修のたびにバグが入りやすいため、アプリ自身が「いま正しい状態か」を
+   点検するコマンドを用意した。どれもノートの内容は変更しない（非破壊）。
+   ・/debug 〇〇        個別のチェック（/debug help で一覧）
+   ・/debug all         すべてのチェックを順番に一括実行（結果はコピー可能）
+   ・/debug voice live  音声入力の実機テスト（マイクを使う。一括実行には含めない）
+   ・/debug on / off    詳細表示。@newの各コマンドが、所要時間・ノートの変化・
+                        記録されたエラーを1行ずつ報告するようになる
+   ・/new 〇〇 @debug    1つの検証コマンドを詳細表示つきで実行
+   ・/run all command … @debug   検証コマンドの一括実行を詳細表示つきで実行
+   ・/debug errors      起動時から記録しているエラー（コンソールのエラー含む）を表示
+   結果は /run copy でも、表示されるボタンでも、そのままコピーできる。
+============================================================ */
+const YOMI_APP_VERSION = 'v6.1';
+const YOMI_EXPECTED_DOCS = [
+  { key: '使い方', re: /使い方v(\d+)/g, ver: '30' },
+  { key: '利用規約', re: /利用規約v(\d+)/g, ver: '28' },
+  { key: '機能紹介', re: /機能紹介v(\d+)/g, ver: '13' },
+  { key: '研究', re: /研究v(\d+_\d+)/g, ver: '0_5' },
+  { key: 'コマンド一覧', re: /command-list-v(\d+)/g, ver: '23' },
+  { key: 'ホーム', re: /Yomi_note_home_v(\d+)/g, ver: '37' }
+];
+const YOMI_LINK_IDS = [
+  ['homeLinkBtn', 'ホーム', 'Yomi_note_home_v37.html'],
+  ['featureLinkBtn', '機能紹介', '機能紹介v13.html'],
+  ['usageLinkBtn', '使い方', '使い方v30.html'],
+  ['researchLinkBtn', '研究', '研究v0_5.html'],
+  ['termsLinkBtn', '利用規約', '利用規約v28.html'],
+  ['savedTabUsageLink', '使い方（保存タブ内）', '使い方v30.html']
+];
+let debugVerbose = false;
+let dbgCount = { ok: 0, warn: 0, ng: 0 };
+function dbgOk(m){ dbgCount.ok++; cmdLog('  ✅ ' + m, 'cmd-ok'); }
+function dbgWarn(m){ dbgCount.warn++; cmdLog('  ⚠ ' + m, 'cmd-ok'); }
+function dbgNg(m){ dbgCount.ng++; cmdLog('  ❌ ' + m, 'cmd-error'); }
+function dbgInfo(m){ cmdLog('     ' + m, 'cmd-ok'); }
+function dbgSleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+function dbgInlineScriptText(){
+  return Array.prototype.filter.call(document.scripts, s => !s.src).map(s => s.textContent || '').join('\n');
+}
+function noteSignature(){
+  try {
+    return notestate.pages.map(p => [
+      (p.textBoxes || []).length, (p.textBoxes || []).reduce((a, t) => a + String(t.text || '').length, 0),
+      (p.ocrBlocks || []).length, (p.excludeZones || []).length, p.bgImage ? p.bgImage.length : 0
+    ].join(':')).join('|') + '#' + currentPageIndex;
+  } catch(e){ return 'err'; }
+}
+function debugAfterCommand(sig0, t0, err0){
+  const ms = Math.round(performance.now() - t0);
+  const changed = sig0 !== null && noteSignature() !== sig0;
+  cmdLog('  [debug] 所要 ' + ms + 'ms／ノートの内容：' + (changed ? '❌ 変化しました（検証コマンドは非破壊のはずです）' : '変化なし'), changed ? 'cmd-error' : 'cmd-ok');
+  (window.yomiDebugErrors || []).slice(err0).forEach(e => {
+    cmdLog('  [debug] ❌ 実行中にエラーが記録されました：' + e.kind + '：' + e.msg + (e.extra ? '（' + String(e.extra).split('\n')[0] + '）' : ''), 'cmd-error');
+  });
+}
+/* ---------- 個別のチェック ---------- */
+function debugEnv(){
+  cmdLog('[debug] 実行環境', 'cmd-ok');
+  dbgInfo('ブラウザ／アプリ：' + navigator.userAgent);
+  dbgInfo('開いている場所：' + location.protocol + '//' + (location.host || '(ファイルから直接)'));
+  dbgInfo('画面：' + window.innerWidth + '×' + window.innerHeight + '（倍率 ' + (window.devicePixelRatio || 1) + '）／言語：' + (navigator.language || '?'));
+  dbgInfo('通信：' + (navigator.onLine ? 'オンライン' : 'オフライン'));
+  window.isSecureContext ? dbgOk('セキュアコンテキスト（マイク・クリップボード等が使える環境）') : dbgWarn('セキュアコンテキストではありません（マイクが使えない可能性）');
+  if (isDesktopApp()) dbgOk('デスクトップアプリ版（内蔵エンジン用の連携あり）');
+  else if (/Electron/i.test(navigator.userAgent)) dbgNg('Electron上で動いていますが、内蔵エンジンとの連携（preload）がありません');
+  else dbgInfo('ブラウザ版として動作中');
+}
+function debugVersion(){
+  cmdLog('[debug] バージョン表記・リンクの一致チェック（期待：本体 ' + YOMI_APP_VERSION + '）', 'cmd-ok');
+  document.title.indexOf(YOMI_APP_VERSION) !== -1 ? dbgOk('ページタイトル：' + document.title) : dbgNg('ページタイトルの版が違う：' + document.title);
+  const badge = document.querySelector('.brand-text .ver-badge');
+  (badge && badge.textContent.trim() === YOMI_APP_VERSION) ? dbgOk('画面左上のバッジ：' + badge.textContent.trim()) : dbgNg('画面左上のバッジの版が違う：' + (badge ? badge.textContent.trim() : '見つからない'));
+  YOMI_LINK_IDS.forEach(l => {
+    const a = document.getElementById(l[0]);
+    if (!a){ dbgWarn(l[1] + 'のリンクが見つかりません（' + l[0] + '）'); return; }
+    let h = a.getAttribute('href') || '';
+    try { h = decodeURIComponent(h); } catch(e){}
+    h.indexOf(l[2]) !== -1 ? dbgOk(l[1] + '：' + l[2]) : dbgNg(l[1] + 'のリンクが ' + l[2] + ' ではありません：' + h);
+  });
+  /* 画面内のすべてのリンクと、プログラム内に書かれたリンクを、期待する版と突き合わせる */
+  let text = dbgInlineScriptText();
+  const dec = { '%E4%BD%BF%E3%81%84%E6%96%B9': '使い方', '%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84': '利用規約', '%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8B': '機能紹介', '%E7%A0%94%E7%A9%B6': '研究' };
+  Object.keys(dec).forEach(k => { text = text.split(k).join(dec[k]); });
+  let anchors = '';
+  document.querySelectorAll('a[href]').forEach(a => { let h = a.getAttribute('href') || ''; try { h = decodeURIComponent(h); } catch(e){} anchors += h + '\n'; });
+  const bad = [];
+  YOMI_EXPECTED_DOCS.forEach(d => {
+    const seen = {};
+    [text, anchors].forEach(src => { let m; const re = new RegExp(d.re.source, 'g'); while ((m = re.exec(src))) seen[m[1]] = true; });
+    Object.keys(seen).forEach(v => { if (v !== d.ver) bad.push(d.key + ' v' + v.replace('_', '.') + '（期待は v' + d.ver.replace('_', '.') + '）'); });
+  });
+  bad.length ? bad.forEach(b => dbgNg('古い版へのリンクが残っています：' + b)) : dbgOk('リンク先の版はすべて最新（使い方v30／利用規約v28／機能紹介v13／研究v0.5／コマンド一覧v23／ホームv37）');
+  try {
+    const rows = dlcVersionReport();
+    if (!rows.length) dbgInfo('取り込み済みのDLCはありません');
+    rows.forEach(r => {
+      const line = 'DLC「' + r.name + '」［' + (r.enabled ? 'オン' : 'オフ') + '］ 選択=' + (r.chosen ? 'v' + r.chosen : '外部') + '／冒頭=' + (r.header ? 'v' + r.header : '不明') + '／読込=' + (r.loaded ? 'v' + r.loaded : '未申告');
+      r.problems.length ? dbgNg(line + '：' + r.problems.join('、')) : dbgOk(line);
+    });
+    document.querySelectorAll('.dlc-badge').forEach(el => dbgInfo('画面上のDLCバッジ：' + (el.textContent || '').trim()));
+  } catch(e){ dbgWarn('DLCの照合に失敗：' + (e && e.message)); }
+}
+function debugDom(){
+  cmdLog('[debug] 画面部品（ID）のチェック', 'cmd-ok');
+  const ids = {};
+  document.querySelectorAll('[id]').forEach(el => { ids[el.id] = (ids[el.id] || 0) + 1; });
+  const dups = Object.keys(ids).filter(k => ids[k] > 1);
+  dups.length ? dbgNg('IDが重複しています：' + dups.slice(0, 12).join('、')) : dbgOk('IDの重複なし（' + Object.keys(ids).length + '個）');
+  const src = dbgInlineScriptText();
+  const used = {}; let m; const re = /getElementById\(\s*['"]([^'"]+)['"]\s*\)/g;
+  while ((m = re.exec(src))) used[m[1]] = true;
+  const missing = Object.keys(used).filter(k => !document.getElementById(k));
+  missing.length ? dbgWarn('プログラムが参照しているのに画面にないID（あとから作られるものは正常）：' + missing.slice(0, 15).join('、') + (missing.length > 15 ? ' ほか' + (missing.length - 15) + '個' : '')) : dbgOk('プログラムが参照するID ' + Object.keys(used).length + '個は、すべて画面にあります');
+  const empties = [];
+  document.querySelectorAll('button').forEach(b => { if (!b.textContent.trim() && !b.querySelector('img,svg,canvas') && !b.getAttribute('title') && !b.getAttribute('aria-label')) empties.push(b.id || '(idなし)'); });
+  empties.length ? dbgWarn('文字も説明もないボタン：' + empties.slice(0, 8).join('、')) : dbgOk('文字や説明のないボタンはありません');
+}
+function debugModal(){
+  cmdLog('[debug] テストモード詳細設定モーダルの表示チェック（v6.1で直した崩れの再発防止）', 'cmd-ok');
+  const ov = document.getElementById('testSettingsModal');
+  const box = ov && ov.querySelector('.modal-box');
+  if (!ov || !box){ dbgNg('モーダルが見つかりません'); return; }
+  const wasHidden = ov.classList.contains('hidden');
+  const prevVis = ov.style.visibility;
+  ov.style.visibility = 'hidden'; ov.classList.remove('hidden');
+  try {
+    const cbs = box.querySelectorAll('input[type=checkbox]');
+    const rows = box.querySelectorAll('.chk-row');
+    cbs.length === rows.length ? dbgOk('チェック項目 ' + cbs.length + '個すべてが、横並び用の行（chk-row）になっています') : dbgNg('チェック項目 ' + cbs.length + '個のうち、横並び用の行になっているのは ' + rows.length + '個だけです');
+    let stacked = 0;
+    rows.forEach(row => {
+      const cb = row.querySelector('input[type=checkbox]'), lb = row.querySelector('label');
+      if (!cb || !lb) return;
+      const a = cb.getBoundingClientRect(), b = lb.getBoundingClientRect();
+      const side = b.left >= a.right - 1 && a.top < b.bottom && a.bottom > b.top;
+      if (!side) stacked++;
+    });
+    stacked ? dbgNg('チェックボックスとラベルが縦に積み重なっている行が ' + stacked + '個あります（画像のような崩れ）') : dbgOk('すべての行で、チェックボックスの右にラベルが並んでいます');
+    const cs = getComputedStyle(box);
+    const h = box.getBoundingClientRect().height;
+    if (h > window.innerHeight + 1) dbgNg('モーダルの高さ（' + Math.round(h) + 'px）が画面（' + window.innerHeight + 'px）より大きいです');
+    else dbgOk('モーダルの高さ ' + Math.round(h) + 'px は画面（' + window.innerHeight + 'px）に収まっています');
+    (cs.overflowY === 'auto' || cs.overflowY === 'scroll') ? dbgOk('内容が多いときは、モーダル内でスクロールできます（overflow-y:' + cs.overflowY + '）') : dbgNg('モーダルがスクロールできない設定です（overflow-y:' + cs.overflowY + '）');
+    box.scrollWidth > box.clientWidth + 1 ? dbgNg('横にはみ出している内容があります') : dbgOk('横方向のはみ出しはありません');
+    const br = box.getBoundingClientRect();
+    (br.top >= -1 && br.bottom <= window.innerHeight + 1) ? dbgOk('モーダルの上端・下端とも画面内です（見出しとボタンが隠れません）') : dbgNg('モーダルの上端または下端が画面の外にあります（top=' + Math.round(br.top) + ' bottom=' + Math.round(br.bottom) + '）');
+  } finally {
+    ov.style.visibility = prevVis;
+    if (wasHidden) ov.classList.add('hidden');
+  }
+}
+function debugTestmode(){
+  cmdLog('[debug] テストモード設定のチェック', 'cmd-ok');
+  const MAP = { tsBlockImage: 'blockImage', tsBlockCamera: 'blockCamera', tsBlockRuler: 'blockRuler', tsBlockLasso: 'blockLasso', tsBlockGrade: 'blockGradeChange', tsBlockChemHints: 'blockChemHints', tsBlockExclPreview: 'blockExclusionPreview', tsBlockFormulaBook: 'blockFormulaBook', tsBlockChemIons: 'blockChemIons', tsBlockPhysics: 'blockPhysicsFormulas' };
+  let okAll = true;
+  Object.keys(MAP).forEach(id => {
+    const cb = document.getElementById(id);
+    if (!cb){ dbgNg('チェックボックス ' + id + ' が画面にありません'); okAll = false; return; }
+    if (typeof testModeSettings[MAP[id]] !== 'boolean'){ dbgNg('設定 ' + MAP[id] + ' が真偽値ではありません：' + String(testModeSettings[MAP[id]])); okAll = false; }
+  });
+  if (okAll) dbgOk('詳細設定の ' + Object.keys(MAP).length + '項目は、画面と設定値が対応しています');
+  const extra = [];
+  document.querySelectorAll('#testSettingsModal input[type=checkbox]').forEach(cb => { if (!MAP[cb.id]) extra.push(cb.id); });
+  extra.length ? dbgWarn('このチェックの対応表がありません：' + extra.join('、')) : dbgOk('詳細設定のチェックボックスはすべて対応表にあります');
+  let ss = null; try { ss = sessionStorage.getItem(TEST_MODE_KEY); } catch(e){}
+  ((ss === '1') === !!testModeOn) ? dbgOk('テストモードの状態：' + (testModeOn ? 'ON' : 'OFF') + '（保存されている状態と一致）') : dbgNg('テストモードの状態（' + testModeOn + '）と、保存されている状態（' + ss + '）が違います');
+  const sb = document.getElementById('testSettingsBtn');
+  if (testModeOn && sb && !sb.classList.contains('hidden')) dbgNg('テストモード中なのに「詳細設定」ボタンが見えています');
+  else dbgOk('「詳細設定」ボタンの表示はテストモードの状態に合っています');
+  const tl = testModeSettings.timeLimitMinutes;
+  (tl === null || (typeof tl === 'number' && tl >= 1 && tl <= 600)) ? dbgOk('制限時間：' + (tl === null ? 'なし' : tl + '分')) : dbgNg('制限時間の値が不正です：' + String(tl));
+}
+async function voiceDiagnose(){
+  const d = {};
+  d.desktop = isDesktopApp();
+  d.ctor = !!getSpeechRecognitionCtor();
+  d.secure = !!window.isSecureContext;
+  d.online = navigator.onLine;
+  d.electronUA = /Electron/i.test(navigator.userAgent);
+  d.mediaDevices = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  d.permission = '不明';
+  try { if (navigator.permissions && navigator.permissions.query){ const p = await navigator.permissions.query({ name: 'microphone' }); d.permission = p.state; } } catch(e){ d.permission = '取得不可'; }
+  d.inputs = null;
+  try { if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices){ const dv = await navigator.mediaDevices.enumerateDevices(); d.inputs = dv.filter(x => x.kind === 'audioinput').length; } } catch(e){}
+  d.native = null;
+  if (d.desktop){ try { d.native = await window.yomiNative.asrStatus(); } catch(e){ d.native = { available: false, reason: '状態の取得に失敗：' + (e && e.message) }; } }
+  return d;
+}
+async function debugVoice(){
+  cmdLog('[debug] 音声入力の診断', 'cmd-ok');
+  const d = await voiceDiagnose();
+  let usable = 'なし';
+  if (d.desktop){
+    if (d.native && d.native.available){ dbgOk('内蔵の音声認識エンジン：使えます（' + (d.native.engine || '') + (d.native.loadMs ? '／読み込み ' + d.native.loadMs + 'ms' : '') + '）'); usable = '内蔵エンジン（通信不要）'; }
+    else dbgNg('内蔵の音声認識エンジンが使えません：' + ((d.native && d.native.reason) || '不明'));
+  } else if (d.electronUA){
+    dbgNg('Electron上ですが内蔵エンジンとの連携がありません（この状態ではWeb Speech APIは必ず失敗します）');
+  } else dbgInfo('ブラウザ版：内蔵エンジンはありません（Web Speech APIを使います）');
+  if (d.ctor){
+    if (d.desktop || d.electronUA) dbgWarn('Web Speech API：定義はありますが、デスクトップアプリでは認識サービスに接続できないため使えません');
+    else { dbgOk('Web Speech API：使えます（ブラウザ標準の音声認識）'); if (usable === 'なし') usable = 'Web Speech API（通信が必要）'; }
+  } else dbgInfo('Web Speech API：このブラウザにはありません');
+  d.secure ? dbgOk('セキュアコンテキスト：はい') : dbgNg('セキュアコンテキスト：いいえ（マイクが使えません）');
+  d.mediaDevices ? dbgOk('マイク取得API：あり') : dbgNg('マイク取得API（getUserMedia）がありません');
+  const permLine = 'マイクの許可状態：' + d.permission;
+  d.permission === 'denied' ? dbgNg(permLine + '（ブラウザ／OSの設定で許可してください）') : (d.permission === 'granted' ? dbgOk(permLine) : dbgInfo(permLine + '（初回の使用時に許可を求められます）'));
+  if (d.inputs === null) dbgInfo('マイクの数：取得できません');
+  else d.inputs === 0 ? dbgNg('マイク（音声入力デバイス）が1つも見つかりません') : dbgOk('マイクの数：' + d.inputs);
+  dbgInfo('通信：' + (d.online ? 'オンライン' : 'オフライン') + (d.online ? '' : '（ブラウザ版の音声入力は通信が必要です）'));
+  usable === 'なし' ? dbgNg('結論：この環境で使える音声入力がありません（OS標準の音声入力を使ってください）') : dbgOk('結論：使える音声入力 → ' + usable);
+  const logs = voiceDebugLog.slice(-15);
+  if (logs.length){ dbgInfo('直近の音声入力のログ（新しい順に最大15件）：'); logs.slice().reverse().forEach(l => dbgInfo('  ' + new Date(l.t).toLocaleTimeString('ja-JP') + '  ' + l.ev + (l.detail ? '  ' + l.detail : ''))); }
+  else dbgInfo('まだ音声入力を使っていないため、ログはありません（🎤を使うか /debug voice live を実行してください）');
+}
+async function dbgMeasureMic(ms){
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const ctx = new AC();
+  const src = ctx.createMediaStreamSource(stream);
+  const an = ctx.createAnalyser(); an.fftSize = 1024; src.connect(an);
+  const buf = new Float32Array(an.fftSize);
+  let peak = 0; const t0 = performance.now();
+  while (performance.now() - t0 < ms){
+    an.getFloatTimeDomainData(buf);
+    for (let i = 0; i < buf.length; i++){ const v = Math.abs(buf[i]); if (v > peak) peak = v; }
+    await dbgSleep(50);
+  }
+  stream.getTracks().forEach(t => t.stop()); try { ctx.close(); } catch(e){}
+  return peak;
+}
+async function debugVoiceLive(){
+  cmdLog('[debug] 音声入力の実機テスト（マイクを使います。許可を求められたら「許可」し、約8秒間、マイクに向かって話してください）', 'cmd-ok');
+  voiceDebugLog.length = 0;
+  if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)){ dbgNg('マイク取得APIがありません'); return; }
+  try {
+    const peak = await dbgMeasureMic(3000);
+    peak < 0.01 ? dbgWarn('マイクの入力レベルがほぼ0です（最大 ' + peak.toFixed(3) + '）。ミュート・入力デバイスの選択・音量を確認してください') : dbgOk('マイクから音が入っています（最大レベル ' + peak.toFixed(2) + '）');
+  } catch(e){
+    dbgNg('マイクを開けませんでした：' + (e && e.name) + ' ' + (e && e.message ? e.message : ''));
+    return;
+  }
+  if (isDesktopApp()){
+    const nat = window.yomiNative;
+    const t0 = performance.now();
+    let st; try { st = await nat.asrStatus(); } catch(e){ st = { available: false, reason: String(e && e.message) }; }
+    if (!st.available){ dbgNg('内蔵エンジンが使えません：' + st.reason); return; }
+    const r = await nat.asrStart();
+    r.ok ? dbgOk('内蔵エンジンの起動：' + Math.round(performance.now() - t0) + 'ms') : dbgNg('内蔵エンジンの起動に失敗：' + r.error);
+    if (!r.ok) return;
+    const texts = [];
+    const unsub = nat.onAsrEvent(ev => { if (ev && ev.type === 'text') texts.push(ev.text); if (ev) voiceDbg('native:' + ev.type, ev.text || ev.message || ''); });
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true } });
+    const AC = window.AudioContext || window.webkitAudioContext; const ctx = new AC();
+    const src = ctx.createMediaStreamSource(stream); const proc = ctx.createScriptProcessor(4096, 1, 1); const mute = ctx.createGain(); mute.gain.value = 0;
+    src.connect(proc); proc.connect(mute); mute.connect(ctx.destination);
+    const ratio = ctx.sampleRate / 16000; let carry = new Float32Array(0); let pushed = 0;
+    proc.onaudioprocess = ev => {
+      const inp = ev.inputBuffer.getChannelData(0); const merged = new Float32Array(carry.length + inp.length); merged.set(carry, 0); merged.set(inp, carry.length);
+      const n = Math.floor(merged.length / ratio); if (!n){ carry = merged; return; }
+      const out = new Float32Array(n);
+      for (let i = 0; i < n; i++){ const a = Math.floor(i * ratio), b = Math.min(merged.length, Math.floor((i + 1) * ratio)); let s = 0, c = 0; for (let j = a; j < b; j++){ s += merged[j]; c++; } out[i] = c ? s / c : 0; }
+      carry = merged.slice(Math.floor(n * ratio)); pushed += n; nat.asrPush(out);
+    };
+    await dbgSleep(8000);
+    try { proc.onaudioprocess = null; src.disconnect(); proc.disconnect(); mute.disconnect(); stream.getTracks().forEach(t => t.stop()); ctx.close(); } catch(e){}
+    await nat.asrStop(); await dbgSleep(300); try { unsub(); } catch(e){}
+    pushed > 16000 * 5 ? dbgOk('音声データをエンジンへ送れました（約' + (pushed / 16000).toFixed(1) + '秒分）') : dbgNg('音声データがほとんど送れていません（' + (pushed / 16000).toFixed(1) + '秒分）');
+    texts.length ? dbgOk('認識結果：「' + texts.join(' ／ ') + '」') : dbgWarn('認識結果が空でした（話さなかった、または声が小さかった可能性があります）');
+    return;
+  }
+  const Ctor = getSpeechRecognitionCtor();
+  if (!Ctor){ dbgNg('このブラウザにはWeb Speech APIがありません'); return; }
+  const events = []; const results = []; let errCode = '';
+  await new Promise(resolve => {
+    const rec = new Ctor(); rec.lang = 'ja-JP'; rec.interimResults = true; rec.continuous = true;
+    const t0 = performance.now();
+    const log = n => events.push(n + '(' + Math.round(performance.now() - t0) + 'ms)');
+    ['start', 'audiostart', 'soundstart', 'speechstart', 'speechend', 'soundend', 'audioend', 'nomatch'].forEach(n => { rec['on' + n] = () => { log(n); voiceDbg('web:' + n); }; });
+    rec.onresult = e => { for (let i = e.resultIndex; i < e.results.length; i++){ if (e.results[i].isFinal) results.push(e.results[i][0].transcript); } log('result'); };
+    rec.onerror = e => { errCode = e.error; log('error:' + e.error); voiceDbg('web:error', e.error); };
+    const to = setTimeout(() => { try { rec.stop(); } catch(e){} setTimeout(resolve, 1500); }, 8000);
+    rec.onend = () => { log('end'); clearTimeout(to); resolve(); };
+    try { rec.start(); } catch(e){ errCode = 'start-exception:' + (e && e.message); resolve(); }
+  });
+  dbgInfo('発生したイベント：' + (events.join(' → ') || 'なし'));
+  if (errCode === 'network') dbgNg('音声認識サービスに接続できません（network）。インターネット接続、または認識サービスがブロックされていないか確認してください');
+  else if (errCode === 'not-allowed' || errCode === 'service-not-allowed') dbgNg('音声認識が許可されていません（' + errCode + '）');
+  else if (errCode && errCode !== 'no-speech' && errCode !== 'aborted') dbgNg('エラー：' + errCode);
+  else if (errCode === 'no-speech') dbgWarn('何も聞き取れませんでした（no-speech）。話しかけたのに出る場合は、マイクの入力レベルを確認してください');
+  results.length ? dbgOk('認識結果：「' + results.join(' ／ ') + '」') : (errCode ? 0 : dbgWarn('認識結果が空でした'));
+}
+async function debugTts(){
+  cmdLog('[debug] 読み上げ（音声合成）のチェック', 'cmd-ok');
+  if (!('speechSynthesis' in window)){ dbgNg('このブラウザには読み上げ機能（speechSynthesis）がありません'); return; }
+  let voices = speechSynthesis.getVoices();
+  if (!voices.length){ await dbgSleep(1200); voices = speechSynthesis.getVoices(); }
+  if (!voices.length){ dbgWarn('読み上げ用の音声が1つも取得できません（読み込み待ちの可能性。もう一度実行してください）'); return; }
+  const ja = voices.filter(v => /^ja/i.test(v.lang));
+  dbgOk('音声 ' + voices.length + '個（うち日本語 ' + ja.length + '個）');
+  ja.length ? dbgInfo('日本語の音声：' + ja.slice(0, 6).map(v => v.name).join('、') + (ja.length > 6 ? ' ほか' : '')) : dbgNg('日本語の音声がありません（日本語の読み上げができません）');
+  speechSynthesis.speaking ? dbgInfo('現在、読み上げ中です') : dbgInfo('現在、読み上げは止まっています');
+}
+async function debugStorage(){
+  cmdLog('[debug] 保存領域のチェック', 'cmd-ok');
+  try { const k = '__yomi_dbg__'; localStorage.setItem(k, '1'); const v = localStorage.getItem(k); localStorage.removeItem(k); v === '1' ? dbgOk('localStorage：読み書きできます') : dbgNg('localStorage：書いた値が読めません'); } catch(e){ dbgNg('localStorage：使えません（' + (e && e.name) + '）'); }
+  try { const k = '__yomi_dbg__'; sessionStorage.setItem(k, '1'); const v = sessionStorage.getItem(k); sessionStorage.removeItem(k); v === '1' ? dbgOk('sessionStorage：読み書きできます') : dbgNg('sessionStorage：書いた値が読めません'); } catch(e){ dbgNg('sessionStorage：使えません（' + (e && e.name) + '）'); }
+  try {
+    await new Promise((resolve, reject) => {
+      if (!window.indexedDB){ reject(new Error('indexedDBがありません')); return; }
+      const req = indexedDB.open('__yomi_dbg__', 1);
+      const to = setTimeout(() => reject(new Error('3秒たっても開けません')), 3000);
+      req.onsuccess = () => { clearTimeout(to); try { req.result.close(); indexedDB.deleteDatabase('__yomi_dbg__'); } catch(e){} resolve(); };
+      req.onerror = () => { clearTimeout(to); reject(req.error || new Error('open失敗')); };
+    });
+    dbgOk('IndexedDB：開けます');
+  } catch(e){ dbgNg('IndexedDB：' + (e && e.message ? e.message : e)); }
+  try {
+    if (navigator.storage && navigator.storage.estimate){
+      const e = await navigator.storage.estimate();
+      const mb = x => (x / 1048576).toFixed(1) + 'MB';
+      dbgInfo('保存領域の使用量：' + mb(e.usage || 0) + ' ／ 上限の目安：' + mb(e.quota || 0));
+      (e.quota && e.usage / e.quota > 0.8) ? dbgWarn('保存領域の使用量が上限の80%を超えています') : dbgOk('保存領域には十分な空きがあります');
+    } else dbgInfo('保存領域の使用量は取得できません');
+  } catch(e){ dbgInfo('保存領域の使用量は取得できません'); }
+}
+function debugNote(){
+  cmdLog('[debug] ノートの整合性チェック', 'cmd-ok');
+  const pages = notestate && notestate.pages;
+  if (!Array.isArray(pages) || !pages.length){ dbgNg('ページがありません'); return; }
+  dbgOk('ページ数：' + pages.length + '／いまのページ：' + (currentPageIndex + 1));
+  (currentPageIndex >= 0 && currentPageIndex < pages.length) ? dbgOk('現在のページ番号は範囲内') : dbgNg('現在のページ番号が範囲外です：' + currentPageIndex);
+  let problems = 0, imgBytes = 0, boxes = 0, blocks = 0;
+  pages.forEach((p, i) => {
+    const tag = (i + 1) + 'ページ：';
+    if (!(p.width > 0 && p.height > 0)){ dbgNg(tag + '幅・高さが不正です（' + p.width + '×' + p.height + '）'); problems++; }
+    ['textBoxes', 'ocrBlocks'].forEach(k => { if (!Array.isArray(p[k])){ dbgNg(tag + k + ' が配列ではありません'); problems++; } });
+    const ids = {};
+    (p.textBoxes || []).forEach(t => {
+      boxes++;
+      if (ids[t.id]){ dbgNg(tag + 'テキストボックスのIDが重複：' + t.id); problems++; }
+      ids[t.id] = true;
+      if (typeof t.x !== 'number' || typeof t.y !== 'number' || isNaN(t.x) || isNaN(t.y)){ dbgNg(tag + 'テキストボックスの位置が数値ではありません：' + t.id); problems++; }
+      if (t.text !== undefined && typeof t.text !== 'string'){ dbgNg(tag + 'テキストボックスの文字が文字列ではありません：' + t.id); problems++; }
+    });
+    blocks += (p.ocrBlocks || []).length;
+    if (p.bgImage) imgBytes += p.bgImage.length;
+  });
+  if (!problems) dbgOk('全ページの構造に問題はありません（テキストボックス ' + boxes + '個／OCRブロック ' + blocks + '個）');
+  const mb = imgBytes / 1048576;
+  dbgInfo('背景画像のデータ量：約 ' + mb.toFixed(1) + 'MB');
+  mb > 150 ? dbgWarn('背景画像のデータ量が大きく、保存や動作が重くなる可能性があります') : dbgOk('背景画像のデータ量は問題ない範囲です');
+}
+function debugLibs(){
+  cmdLog('[debug] ライブラリの読み込みチェック', 'cmd-ok');
+  const need = [
+    ['Tesseract（OCR）', typeof Tesseract !== 'undefined'], ['jsPDF（PDF書き出し）', !!(window.jspdf && window.jspdf.jsPDF)],
+    ['JSZip（ZIP書き出し）', typeof JSZip !== 'undefined'], ['Chart.js（グラフ）', typeof Chart !== 'undefined'],
+    ['MathJax（数式）', !!(window.MathJax && (window.MathJax.typesetPromise || window.MathJax.tex2svg))]
+  ];
+  need.forEach(n => n[1] ? dbgOk(n[0] + '：読み込み済み') : dbgNg(n[0] + '：読み込めていません（オフライン、または通信がブロックされている可能性）'));
+  typeof pdfjsLib !== 'undefined' ? dbgOk('pdf.js（PDF読み込み）：読み込み済み') : dbgInfo('pdf.js：まだ読み込まれていません（PDFを開くときに読み込む場合があります）');
+  (window.yomiDebugErrors || []).filter(e => /リソース読み込み失敗/.test(e.msg)).forEach(e => dbgWarn('読み込みに失敗したファイル：' + e.msg.replace('リソース読み込み失敗: ', '')));
+}
+function debugCommands(){
+  cmdLog('[debug] コマンド定義のチェック', 'cmd-ok');
+  const listSrc = listNewCommands.toString();
+  let bad = 0;
+  NEW_RUN_LIST.forEach(it => {
+    if (typeof it.fn !== 'function'){ dbgNg(it.cmd + '：実行する関数がありません'); bad++; }
+    if (listSrc.indexOf(it.cmd) === -1){ dbgNg(it.cmd + '：/new help の一覧に載っていません'); bad++; }
+  });
+  if (!bad) dbgOk('一括実行の ' + NEW_RUN_LIST.length + 'コマンドは、すべて関数があり、一覧にも載っています');
+  DEBUG_LIST.forEach(it => { if (typeof it.fn !== 'function'){ dbgNg(it.cmd + '：実行する関数がありません'); } });
+  const dlistSrc = listDebugCommands.toString();
+  const unl = DEBUG_LIST.filter(it => dlistSrc.indexOf(it.cmd) === -1);
+  unl.length ? dbgNg('/debug help の一覧に載っていません：' + unl.map(i => i.cmd).join('、')) : dbgOk('デバッグの ' + DEBUG_LIST.length + 'コマンドは、すべて一覧に載っています');
+}
+function debugErrors(){
+  cmdLog('[debug] 起動時から記録しているエラー', 'cmd-ok');
+  const errs = window.yomiDebugErrors || [];
+  if (!errs.length){ dbgOk('記録されたエラーはありません'); return; }
+  errs.slice(-30).forEach(e => dbgNg(new Date(e.t).toLocaleTimeString('ja-JP') + ' ' + e.kind + '：' + e.msg + (e.extra ? '（' + String(e.extra).split('\n')[0] + '）' : '')));
+  if (errs.length > 30) dbgInfo('古い ' + (errs.length - 30) + '件は省略しました');
+  dbgInfo('記録を消すには /debug errors clear');
+}
+const DEBUG_LIST = [
+  { cmd: '/debug env', short: '実行環境', fn: debugEnv },
+  { cmd: '/debug version', short: 'バージョン表記・リンク', fn: debugVersion },
+  { cmd: '/debug dom', short: '画面部品（ID）', fn: debugDom },
+  { cmd: '/debug modal', short: '詳細設定モーダルの表示', fn: debugModal },
+  { cmd: '/debug testmode', short: 'テストモード設定', fn: debugTestmode },
+  { cmd: '/debug voice', short: '音声入力の診断', fn: debugVoice },
+  { cmd: '/debug tts', short: '読み上げ', fn: debugTts },
+  { cmd: '/debug storage', short: '保存領域', fn: debugStorage },
+  { cmd: '/debug note', short: 'ノートの整合性', fn: debugNote },
+  { cmd: '/debug libs', short: 'ライブラリ', fn: debugLibs },
+  { cmd: '/debug commands', short: 'コマンド定義', fn: debugCommands },
+  { cmd: '/debug errors', short: '記録されたエラー', fn: debugErrors }
+];
+function listDebugCommands(){
+  cmdLog('[debug] デバッグコマンド一覧（どれもノートの内容は変更しません）：', 'cmd-ok');
+  cmdLog('  /debug all ―― 下のすべてのチェックを順番に実行（結果はコピー可能。音声入力の実機テストは含みません）', 'cmd-ok');
+  cmdLog('  /debug env ―― 実行環境（ブラウザ／アプリ、画面、通信、デスクトップ版かどうか）', 'cmd-ok');
+  cmdLog('  /debug version ―― 本体・リンク先・DLCのバージョン表記が一致しているか', 'cmd-ok');
+  cmdLog('  /debug dom ―― 画面部品のID重複・参照切れ・説明のないボタン', 'cmd-ok');
+  cmdLog('  /debug modal ―― テストモード詳細設定モーダルの崩れ・はみ出し・スクロール', 'cmd-ok');
+  cmdLog('  /debug testmode ―― テストモード詳細設定の項目と設定値の対応・状態', 'cmd-ok');
+  cmdLog('  /debug voice ―― 音声入力が使える環境か（エンジン・マイク許可・マイクの数・直近のログ）', 'cmd-ok');
+  cmdLog('  /debug voice live ―― 音声入力の実機テスト（約8秒、マイクを使用）', 'cmd-ok');
+  cmdLog('  /debug tts ―― 読み上げ（音声合成）と日本語の音声の有無', 'cmd-ok');
+  cmdLog('  /debug storage ―― localStorage・sessionStorage・IndexedDBと空き容量', 'cmd-ok');
+  cmdLog('  /debug note ―― ノートのページ・テキストボックス・OCRブロックの整合性', 'cmd-ok');
+  cmdLog('  /debug libs ―― OCR・PDF・ZIP・グラフ・数式ライブラリの読み込み', 'cmd-ok');
+  cmdLog('  /debug commands ―― コマンドの定義と一覧の抜け', 'cmd-ok');
+  cmdLog('  /debug errors ―― 起動時から記録したエラー（/debug errors clear で消去）', 'cmd-ok');
+  cmdLog('  /debug on ／ /debug off ―― 詳細表示（各コマンドの所要時間・ノートの変化・エラーを報告）', 'cmd-ok');
+  cmdLog('  /new 〇〇 @debug ―― 検証コマンドを1つ、詳細表示つきで実行（例：/new ocr compare @debug）', 'cmd-ok');
+  cmdLog('  /run all command … @debug ―― 検証コマンドの一括実行を詳細表示つきで実行', 'cmd-ok');
+  cmdLog('  /run copy ―― 直前のデバッグ・一括実行の結果をコピー', 'cmd-ok');
+}
+async function runDebugItems(items, title, isAll){
+  if (newRunBusy){ cmdLog('[debug] 実行中です。完了を待つか、/run stop で中止してください。', 'cmd-error', true); return; }
+  newRunBusy = true; newRunAbort = false; newRunCapture = [];
+  dbgCount = { ok: 0, warn: 0, ng: 0 };
+  const t0 = performance.now();
+  newRunMeta = [
+    '読みノート ' + YOMI_APP_VERSION + ' デバッグ結果（' + title + '）',
+    '実行日時：' + new Date().toLocaleString('ja-JP'),
+    '実行環境：' + navigator.userAgent + (isDesktopApp() ? '（デスクトップアプリ版）' : '')
+  ];
+  if (isAll) cmdLogButton('⏹ 中止する（実行中のチェックが終わり次第止まります）', btn => { newRunAbort = true; btn.disabled = true; btn.textContent = '⏹ 中止を受け付けました…'; });
+  let aborted = false;
+  try {
+    for (const item of items){
+      if (newRunAbort){ aborted = true; break; }
+      if (isAll) cmdLog('=== ' + item.short + '（' + item.cmd + '） ===', 'cmd-title');
+      const t1 = performance.now();
+      try { await item.fn(); }
+      catch(err){
+        dbgNg('チェック自体が失敗しました：' + (err && err.message ? err.message : String(err)));
+        if (err && err.stack) cmdLog('     ' + String(err.stack).split('\n').slice(0, 3).join(' ／ '), 'cmd-error');
+      }
+      if (debugVerbose) cmdLog('  [debug] 所要 ' + Math.round(performance.now() - t1) + 'ms', 'cmd-ok');
+      await dbgSleep(0);
+    }
+  } finally {
+    const elapsed = newRunFormatTime(performance.now() - t0);
+    const summary = '結果：✅ ' + dbgCount.ok + '／⚠ ' + dbgCount.warn + '／❌ ' + dbgCount.ng + '（' + (aborted ? '中止／' : '') + '所要 ' + elapsed + '）';
+    if (isAll){
+      const ngLines = newRunCapture.filter(l => l.cls === 'cmd-error' && l.text.indexOf('❌') !== -1).map(l => l.text.trim());
+      if (ngLines.length){ cmdLog('--- 要対応（❌）の一覧 ---', 'cmd-title'); ngLines.forEach(t => cmdLog('  ' + t, 'cmd-error')); }
+    }
+    cmdLog('[debug] ' + summary, dbgCount.ng ? 'cmd-error' : 'cmd-ok');
+    newRunMeta.push(summary);
+    newLastRunText = buildNewRunText(newRunCapture, newRunMeta);
+    newRunCapture = null; newRunBusy = false; newRunAbort = false;
+    cmdLogButton('📋 結果をコピー', btn => copyNewRunResult(btn));
+    cmdLog('下のボタン、または /run copy で、この結果をそのままコピーできます。', 'cmd-ok', true);
+  }
+}
+async function handleDebugCommand(input){
+  const arg = input.replace(/^\/debug\s*/i, '').trim().replace(/\s+/g, ' ').toLowerCase();
+  if (!arg || arg === 'help' || arg === 'list'){ listDebugCommands(); return; }
+  if (arg === 'on'){ debugVerbose = true; cmdLog('[debug] 詳細表示をONにしました。@newの各コマンドが、所要時間・ノートの変化・エラーを報告します（OFFは /debug off）。', 'cmd-ok'); return; }
+  if (arg === 'off'){ debugVerbose = false; cmdLog('[debug] 詳細表示をOFFにしました。', 'cmd-ok'); return; }
+  if (arg === 'errors clear'){ if (window.yomiDebugErrors) window.yomiDebugErrors.length = 0; cmdLog('[debug] 記録したエラーを消去しました。', 'cmd-ok'); return; }
+  if (arg === 'all'){ await runDebugItems(DEBUG_LIST, '一括', true); return; }
+  if (arg === 'voice live'){ await runDebugItems([{ cmd: '/debug voice live', short: '音声入力の実機テスト', fn: debugVoiceLive }], '音声入力の実機テスト', false); return; }
+  const item = DEBUG_LIST.find(i => i.cmd.toLowerCase() === '/debug ' + arg);
+  if (item){ await runDebugItems([item], item.short, false); return; }
+  cmdLog('[debug] 不明なデバッグコマンドです：' + input, 'cmd-error');
+  listDebugCommands();
+}
+/* /new 〇〇 @debug ：1つの検証コマンドを、詳細表示つきで実行する */
+async function runNewWithDebug(inner){
+  if (newRunBusy){ cmdLog('[debug] 実行中です。完了を待つか、/run stop で中止してください。', 'cmd-error', true); return; }
+  const prev = debugVerbose; debugVerbose = true;
+  newRunCapture = [];
+  newRunMeta = ['読みノート ' + YOMI_APP_VERSION + ' 検証コマンド（デバッグ付き）：' + inner, '実行日時：' + new Date().toLocaleString('ja-JP'), '実行環境：' + navigator.userAgent];
+  const sig0 = noteSignature(), t0 = performance.now(), err0 = (window.yomiDebugErrors || []).length;
+  try { await handleCommandNew(inner); }
+  catch(err){
+    cmdLog('[debug] ❌ 例外：' + (err && err.message ? err.message : String(err)), 'cmd-error');
+    if (err && err.stack) cmdLog('     ' + String(err.stack).split('\n').slice(0, 4).join(' ／ '), 'cmd-error');
+  }
+  debugAfterCommand(sig0, t0, err0);
+  newLastRunText = buildNewRunText(newRunCapture, newRunMeta);
+  newRunCapture = null; debugVerbose = prev;
+  cmdLogButton('📋 結果をコピー', btn => copyNewRunResult(btn));
 }
 /* 【v5.2で新規追加】OCR品質研究開発 ――― @newでの実証実験。
    現在のページ画像に対して、①これまでの方式（パーセンタイル・コントラスト伸長）
@@ -9279,7 +9959,7 @@ function dlcVersionReport(){
 function dlcCheckVersions(){
   const rows = dlcVersionReport();
   if (!rows.length){ cmdLog('取り込み済みのDLCはありません。', 'cmd-ok'); return; }
-  cmdLog('DLCのバージョン照合（本体 v6.0）', 'cmd-ok');
+  cmdLog('DLCのバージョン照合（本体 ' + YOMI_APP_VERSION + '）', 'cmd-ok');
   rows.forEach(r => {
     cmdLog(r.no + '. ' + r.name + '［' + (r.enabled ? 'オン' : 'オフ') + '］ 冒頭の版=' + (r.header ? 'v' + r.header : '不明') +
       (r.builtin ? '／選択した版=v' + r.chosen : '／外部ファイル') +
