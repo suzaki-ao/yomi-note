@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>読みノート 利用状況の集計ページ chartv0 v0.1</title>
+<style>
+  :root{--bg:#f5f3ee;--card:#fff;--ink:#22262e;--soft:#6b7280;--line:#dcd8cf;--acc:#2f5fa8;--ok:#3e6e63;--ng:#b5432e;--warn:#b7791f;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;font-size:14px;line-height:1.6;}
+  header{background:var(--ink);color:#fff;padding:12px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  header h1{font-size:17px;margin:0;}
+  .badge{background:#ffffff26;border-radius:10px;padding:1px 9px;font-size:12px;}
+  .adm{font-size:12px;opacity:.85;}
+  nav{display:flex;gap:4px;padding:10px 14px 0;flex-wrap:wrap;}
+  nav button{border:1px solid var(--line);border-bottom:none;background:#e9e5db;padding:7px 14px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;}
+  nav button.on{background:var(--card);font-weight:700;}
+  main{background:var(--card);margin:0 14px 24px;border:1px solid var(--line);border-radius:0 8px 8px 8px;padding:16px;min-height:60vh;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:16px;}
+  .kpi{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fbfaf7;}
+  .kpi b{display:block;font-size:24px;line-height:1.2;}
+  .kpi span{font-size:12px;color:var(--soft);}
+  h2{font-size:15px;margin:18px 0 8px;border-left:4px solid var(--acc);padding-left:8px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:860px){.grid2{grid-template-columns:1fr;}}
+  .bar{display:grid;grid-template-columns:minmax(90px,38%) 1fr 70px;gap:8px;align-items:center;margin:3px 0;font-size:12.5px;}
+  .bar .lb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .bar .tr{background:#ece8de;border-radius:4px;height:14px;overflow:hidden;}
+  .bar .fl{height:100%;background:var(--acc);}
+  .bar .fl.ng{background:var(--ng);}
+  .bar .vl{text-align:right;color:var(--soft);}
+  table{border-collapse:collapse;width:100%;font-size:12.5px;}
+  th,td{border-bottom:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top;}
+  th{background:#f0ede5;cursor:pointer;white-space:nowrap;}
+  td.n,th.n{text-align:right;}
+  .muted{color:var(--soft);font-size:12px;}
+  .ng{color:var(--ng);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  input[type=text],input[type=password],input[type=search],select,textarea{border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:13px;font-family:inherit;max-width:100%;}
+  button.act{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:6px;padding:7px 14px;font-size:13px;cursor:pointer;}
+  button.act.sub{background:#fff;color:var(--acc);}
+  button.act:disabled{opacity:.45;cursor:not-allowed;}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0;}
+  .cmt{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:6px 0;background:#fbfaf7;}
+  .cmt .meta{font-size:11.5px;color:var(--soft);}
+  .tag{display:inline-block;background:#e8eef8;color:var(--acc);border-radius:10px;padding:0 8px;font-size:11.5px;margin:1px 3px 1px 0;}
+  svg text{font-size:10px;fill:#6b7280;}
+  .msg{padding:8px 10px;border-radius:6px;background:#f0ede5;margin:8px 0;font-size:13px;}
+  details{margin:8px 0;}
+</style>
+</head>
+<body>
+<header>
+  <h1>📊 読みノート 利用状況の集計ページ</h1><span class="badge">chartv0 v<span id="ver"></span></span>
+  <span class="adm">自分の使い方（コマンド・エラー・意見）を、自分で確認できます。データはこの端末の中だけにあります。</span>
+</header>
+<nav id="tabs"></nav>
+<main id="main"></main>
+
+<script>
+'use strict';
+const CHARTV0_VERSION = '0.1';
+const DB_NAME = 'chartv0', STORE = 'reports';
+const LS_LOCAL = 'yomiStats_v1';   /* 読みノート本体が、この端末に溜めている記録 */
+let reports = [];            /* installId ごとの最新の yomi-report */
+let tab = 'overview';
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const num = n => Number(n || 0).toLocaleString('ja-JP');
+$('#ver').textContent = CHARTV0_VERSION;
+
+/* ---------- 保存（IndexedDB） ---------- */
+function openDb(){
+  return new Promise((res, rej) => {
+    const q = indexedDB.open(DB_NAME, 1);
+    q.onupgradeneeded = () => q.result.createObjectStore(STORE, { keyPath: 'installId' });
+    q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
+  });
+}
+async function dbAll(){ const db = await openDb(); return new Promise((res, rej) => { const q = db.transaction(STORE).objectStore(STORE).getAll(); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+async function dbPut(list){ const db = await openDb(); return new Promise((res, rej) => { const tx = db.transaction(STORE, 'readwrite'); list.forEach(r => tx.objectStore(STORE).put(r)); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
+async function dbClear(){ const db = await openDb(); return new Promise((res, rej) => { const tx = db.transaction(STORE, 'readwrite'); tx.objectStore(STORE).clear(); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
+
+/* ---------- この端末の記録（読みノート本体が溜めたもの） ---------- */
+function envInfo(){
+  const ua = navigator.userAgent || ''; let br = 'その他', os = 'その他';
+  if (/Edg\//.test(ua)) br = 'Edge'; else if (/OPR\//.test(ua)) br = 'Opera'; else if (/Firefox\//.test(ua)) br = 'Firefox'; else if (/Chrome\//.test(ua)) br = 'Chrome'; else if (/Safari\//.test(ua)) br = 'Safari';
+  if (/Windows/.test(ua)) os = 'Windows'; else if (/Android/.test(ua)) os = 'Android'; else if (/iPhone|iPod/.test(ua)) os = 'iOS'; else if (/iPad/.test(ua)) os = 'iPadOS'; else if (/Macintosh|Mac OS X/.test(ua)) os = 'macOS'; else if (/Linux/.test(ua)) os = 'Linux';
+  const w = window.innerWidth || 0;
+  return { browser: br, os: os, device: w < 700 ? 'スマホ' : (w < 1100 ? 'タブレット' : 'パソコン'), lang: navigator.language || '', form: 'ブラウザ版' };
+}
+function localReport(){
+  try {
+    const o = JSON.parse(localStorage.getItem(LS_LOCAL) || 'null');
+    if (!o || o.schema !== 'yomi-stats' || !o.id) return null;
+    return { schema: 'yomi-report', schemaV: 1, reportId: 'local', createdAt: new Date().toISOString(), appVersion: '（この端末）', installId: o.id, firstSeen: o.firstSeen,
+             sessions: o.sessions || 0, days: o.days || {}, cmds: o.cmds || {}, features: o.features || {}, errors: o.errors || {}, surveys: o.surveys || [], env: envInfo(), local: true };
+  } catch(e){ return null; }
+}
+function mergeLocal(){
+  const l = localReport(); if (!l) return false;
+  reports = reports.filter(r => r.installId !== l.installId); reports.push(l); return true;
+}
+
+/* ---------- 取り込み ---------- */
+function validReport(r){ return r && r.schema === 'yomi-report' && /^u_[0-9a-f]{16}$/.test(r.installId || '') && typeof r.days === 'object'; }
+async function ingest(list){
+  const map = new Map(reports.map(r => [r.installId, r]));
+  let add = 0, upd = 0, skip = 0;
+  list.forEach(r => {
+    if (!validReport(r)){ skip++; return; }
+    if (r.local){ skip++; return; }
+    const old = map.get(r.installId);
+    if (!old){ map.set(r.installId, r); add++; }
+    else if (String(r.createdAt) > String(old.createdAt)){ map.set(r.installId, r); upd++; }
+    else skip++;
+  });
+  reports = Array.from(map.values());
+  mergeLocal();
+  await dbPut(reports.filter(r => !r.local));
+  return { add, upd, skip };
+}
+function extractReports(obj){
+  if (Array.isArray(obj)) return obj.flatMap(extractReports);
+  if (obj && obj.schema === 'yomi-report') return [obj];
+  if (obj && Array.isArray(obj.reports)) return obj.reports;
+  return [];
+}
+
+/* ---------- 集計 ---------- */
+function aggregate(){
+  const A = { users: reports.length, sessions: 0, cmds: 0, cmdErr: 0, errs: 0, surveys: [], daily: {}, cmdMap: {}, featMap: {}, errMap: {},
+              ver: {}, browser: {}, os: {}, device: {}, form: {}, newByDay: {}, rating: [0, 0, 0, 0, 0, 0], catMap: {}, useMap: {} };
+  const bump = (o, k, n) => { o[k] = (o[k] || 0) + (n == null ? 1 : n); };
+  reports.forEach(r => {
+    A.sessions += r.sessions || 0;
+    bump(A.ver, r.appVersion || '不明'); const e = r.env || {};
+    bump(A.browser, e.browser || '不明'); bump(A.os, e.os || '不明'); bump(A.device, e.device || '不明'); bump(A.form, e.form || '不明');
+    if (r.firstSeen) bump(A.newByDay, r.firstSeen);
+    Object.keys(r.days || {}).forEach(d => {
+      const x = r.days[d]; const D = A.daily[d] || (A.daily[d] = { users: 0, s: 0, c: 0, e: 0 });
+      D.users++; D.s += x.s || 0; D.c += x.c || 0; D.e += x.e || 0;
+    });
+    Object.keys(r.cmds || {}).forEach(k => {
+      const c = r.cmds[k]; const M = A.cmdMap[k] || (A.cmdMap[k] = { n: 0, e: 0, users: 0 });
+      M.n += c.n || 0; M.e += c.e || 0; M.users++; A.cmds += c.n || 0; A.cmdErr += c.e || 0;
+    });
+    Object.keys(r.features || {}).forEach(k => { const F = A.featMap[k] || (A.featMap[k] = { n: 0, users: 0 }); F.n += r.features[k]; F.users++; });
+    Object.keys(r.errors || {}).forEach(k => {
+      const x = r.errors[k]; const E = A.errMap[k] || (A.errMap[k] = { n: 0, users: 0, kind: x.kind, last: '', vers: {} });
+      E.n += x.n || 0; E.users++; A.errs += x.n || 0; if ((x.last || '') > E.last) E.last = x.last; bump(E.vers, x.ver || '不明');
+    });
+    (r.surveys || []).forEach(s => {
+      const t = Object.assign({ installId: r.installId }, s); A.surveys.push(t);
+      A.rating[Math.min(5, Math.max(0, s.rating || 0))]++;
+      (s.cats || []).forEach(c => bump(A.catMap, c)); if (s.use) bump(A.useMap, s.use);
+    });
+  });
+  return A;
+}
+const todayStr = (off) => { const d = new Date(); d.setDate(d.getDate() - (off || 0)); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+function usedDays(days){
+  const set = new Set(); const from = todayStr(days - 1);
+  reports.forEach(r => Object.keys(r.days || {}).forEach(d => { if (d >= from) set.add(d); }));
+  return set.size;
+}
+function activeUsers(days){
+  const set = new Set(); const from = todayStr(days - 1);
+  reports.forEach(r => Object.keys(r.days || {}).forEach(d => { if (d >= from) set.add(r.installId); }));
+  return set.size;
+}
+
+/* ---------- 描画部品 ---------- */
+function bars(items, opt){
+  opt = opt || {}; const max = Math.max(1, ...items.map(i => i.v));
+  if (!items.length) return '<div class="muted">データがありません</div>';
+  return items.map(i => '<div class="bar"><div class="lb" title="' + esc(i.l) + '">' + esc(i.l) + '</div><div class="tr"><div class="fl' + (i.ng ? ' ng' : '') + '" style="width:' + (i.v / max * 100).toFixed(1) + '%"></div></div><div class="vl">' + num(i.v) + (i.sub ? '<br>' + esc(i.sub) : '') + '</div></div>').join('');
+}
+function lineChart(series, days){
+  const W = 640, H = 190, L = 34, B = 22, T = 8, R = 8; const n = days.length;
+  const max = Math.max(1, ...series.flatMap(s => s.data));
+  const x = i => L + (n <= 1 ? 0 : i * (W - L - R) / (n - 1)); const y = v => T + (H - T - B) * (1 - v / max);
+  let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img">';
+  for (let g = 0; g <= 4; g++){ const v = max * g / 4; svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '" stroke="#e5e1d6"/><text x="2" y="' + (y(v) + 3) + '">' + Math.round(v) + '</text>'; }
+  [0, Math.floor((n - 1) / 2), n - 1].forEach(i => { if (days[i]) svg += '<text x="' + x(i) + '" y="' + (H - 6) + '" text-anchor="middle">' + esc(days[i].slice(5)) + '</text>'; });
+  series.forEach(s => { svg += '<polyline fill="none" stroke="' + s.color + '" stroke-width="2" points="' + s.data.map((v, i) => x(i) + ',' + y(v)).join(' ') + '"/>'; });
+  svg += '</svg><div class="muted">' + series.map(s => '<span style="color:' + s.color + '">■</span> ' + esc(s.name)).join('　') + '</div>';
+  return svg;
+}
+function sortedItems(map, valFn, limit){ return Object.keys(map).map(k => ({ l: k, v: valFn(map[k], k) })).sort((a, b) => b.v - a.v).slice(0, limit || 30); }
+function rangeDays(n){ const a = []; for (let i = n - 1; i >= 0; i--) a.push(todayStr(i)); return a; }
+
+/* ---------- 各タブ ---------- */
+const TABS = [['overview', '概要'], ['commands', 'コマンド'], ['errors', 'エラー'], ['opinions', '意見・アンケート'], ['users', '環境'], ['data', 'データ']];
+function render(){
+  $('#tabs').innerHTML = TABS.map(t => '<button data-t="' + t[0] + '" class="' + (t[0] === tab ? 'on' : '') + '">' + t[1] + '</button>').join('');
+  $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => { tab = b.dataset.t; render(); });
+  const A = aggregate(); const fn = { overview, commands, errors, opinions, users, data }[tab];
+  $('#main').innerHTML = fn(A); const after = { overview: null, commands: bindCommands, errors: null, opinions: bindOpinions, users: null, data: bindData }[tab]; if (after) after(A);
+}
+function overview(A){
+  const avg = A.surveys.filter(s => s.rating).length ? (A.surveys.filter(s => s.rating).reduce((a, s) => a + s.rating, 0) / A.surveys.filter(s => s.rating).length).toFixed(2) : '―';
+  const days = rangeDays(30);
+  const k = (v, l, cls) => '<div class="kpi"><b class="' + (cls || '') + '">' + v + '</b><span>' + l + '</span></div>';
+  if (!A.users) return '<div class="msg">まだデータがありません。読みノートを使うと記録が溜まります。このページを読みノートと同じ場所で開くと自動で読み込まれ、別の場所で開いたときは、「データ」タブからファイルを取り込んでください。</div>';
+  return '<div class="kpis">' + k(num(A.users), '記録のある端末の数') + k(num(usedDays(9999)), '使った日数（合計）') + k(num(usedDays(7)), '直近7日で使った日数') + k(num(usedDays(30)), '直近30日で使った日数') +
+    k(num(A.sessions), '起動回数（合計）') + k(num(A.cmds), 'コマンド実行（合計）') + k(A.cmds ? (A.cmdErr / A.cmds * 100).toFixed(1) + '%' : '―', 'コマンド失敗率', A.cmdErr ? 'warn' : '') +
+    k(num(A.errs), 'エラー件数（合計）', A.errs ? 'ng' : 'ok') + k(num(A.surveys.length), '意見・回答') + k(avg, '使いやすさ平均（1〜5）') + '</div>' +
+    '<h2>日ごとの推移（直近30日）</h2>' + lineChart([
+      { name: '使った端末', color: '#2f5fa8', data: days.map(d => (A.daily[d] || {}).users || 0) },
+      { name: 'コマンド', color: '#3e6e63', data: days.map(d => (A.daily[d] || {}).c || 0) },
+      { name: 'エラー', color: '#b5432e', data: days.map(d => (A.daily[d] || {}).e || 0) }], days) +
+    '<div class="grid2"><div><h2>よく使われるコマンド（上位10）</h2>' + bars(sortedItems(A.cmdMap, m => m.n, 10)) + '</div>' +
+    '<div><h2>よく起きるエラー（上位10）</h2>' + bars(sortedItems(A.errMap, m => m.n, 10).map(i => Object.assign(i, { ng: true }))) + '</div></div>';
+}
+function commands(A){
+  return '<div class="row"><input type="search" id="cq" placeholder="コマンドを検索"><span class="muted">見出しをクリックで並び替え。失敗率が高いコマンドは「どこが不便か」の手がかりです。</span></div>' +
+    '<h2>機能ボタンの使用回数</h2>' + bars(sortedItems(A.featMap, m => m.n, 40).map(i => Object.assign(i, { sub: A.featMap[i.l].users + '人' }))) +
+    '<h2>コマンド別の使用状況</h2><div id="ctab"></div>';
+}
+let cSort = { k: 'n', dir: -1 };
+function bindCommands(A){
+  const draw = () => {
+    const q = ($('#cq').value || '').toLowerCase();
+    const rows = Object.keys(A.cmdMap).map(k => Object.assign({ k }, A.cmdMap[k], { rate: A.cmdMap[k].n ? A.cmdMap[k].e / A.cmdMap[k].n : 0 })).filter(r => r.k.toLowerCase().includes(q));
+    rows.sort((a, b) => cSort.k === 'k' ? a.k.localeCompare(b.k) * cSort.dir : (a[cSort.k] - b[cSort.k]) * cSort.dir);
+    $('#ctab').innerHTML = '<table><tr><th data-k="k">コマンド</th><th class="n" data-k="n">回数</th><th class="n" data-k="users">使った人</th><th class="n" data-k="e">失敗</th><th class="n" data-k="rate">失敗率</th></tr>' +
+      rows.map(r => '<tr><td>' + esc(r.k) + '</td><td class="n">' + num(r.n) + '</td><td class="n">' + num(r.users) + '</td><td class="n ' + (r.e ? 'ng' : '') + '">' + num(r.e) + '</td><td class="n ' + (r.rate > .3 ? 'ng' : '') + '">' + (r.rate * 100).toFixed(0) + '%</td></tr>').join('') + '</table>';
+    $('#ctab').querySelectorAll('th').forEach(th => th.onclick = () => { cSort = { k: th.dataset.k, dir: cSort.k === th.dataset.k ? -cSort.dir : (th.dataset.k === 'k' ? 1 : -1) }; draw(); });
+  };
+  $('#cq').oninput = draw; draw();
+}
+function errors(A){
+  const rows = Object.keys(A.errMap).map(k => Object.assign({ k }, A.errMap[k])).sort((a, b) => b.n - a.n);
+  if (!rows.length) return '<div class="msg ok">エラーの記録はありません。</div>';
+  return '<table><tr><th>エラー内容</th><th class="n">件数</th><th class="n">起きた人</th><th>最後に起きた日</th><th>バージョン</th></tr>' +
+    rows.map(r => '<tr><td>' + esc(r.k) + '</td><td class="n">' + num(r.n) + '</td><td class="n">' + num(r.users) + '</td><td>' + esc(r.last) + '</td><td>' + esc(Object.keys(r.vers).join(', ')) + '</td></tr>').join('') + '</table>' +
+    '<div class="muted">同じエラーが何度も起きているものから、原因を調べる手がかりになります。</div>';
+}
+function opinions(A){
+  const cats = sortedItems(A.catMap, v => v, 20), uses = sortedItems(A.useMap, v => v, 10);
+  const rating = [1, 2, 3, 4, 5].map(i => ({ l: '★' + i, v: A.rating[i] }));
+  return '<div class="grid2"><div><h2>使いやすさの分布</h2>' + bars(rating) + '</div><div><h2>主な使い道</h2>' + bars(uses) + '</div></div>' +
+    '<h2>困っていること（選択された回数）</h2>' + bars(cats) +
+    '<h2>自由記述</h2><div class="row"><input type="search" id="oq" placeholder="文字で検索"><select id="orate"><option value="">評価：すべて</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>' +
+    '<select id="ocat"><option value="">困りごと：すべて</option>' + Object.keys(A.catMap).map(c => '<option>' + esc(c) + '</option>').join('') + '</select></div><div id="olist"></div>';
+}
+function bindOpinions(A){
+  const draw = () => {
+    const q = ($('#oq').value || '').toLowerCase(), rt = $('#orate').value, ct = $('#ocat').value;
+    const list = A.surveys.filter(s => (!rt || String(s.rating) === rt) && (!ct || (s.cats || []).includes(ct)) && (!q || (s.text || '').toLowerCase().includes(q))).sort((a, b) => String(b.at).localeCompare(String(a.at)));
+    $('#olist').innerHTML = (list.length ? '' : '<div class="muted">該当する回答はありません</div>') + list.map(s => '<div class="cmt"><div class="meta">' + esc((s.at || '').slice(0, 16).replace('T', ' ')) + '　' + esc(s.ver || '') + '　評価 ' + (s.rating || '―') + '　' + esc(s.use || '') + '　' + esc((s.installId || '').slice(0, 8)) + '</div>' +
+      (s.cats || []).map(c => '<span class="tag">' + esc(c) + '</span>').join('') + '<div>' + esc(s.text || '') + '</div></div>').join('');
+  };
+  ['#oq', '#orate', '#ocat'].forEach(i => $(i).oninput = draw); draw();
+}
+function users(A){
+  const g = (m) => bars(sortedItems(m, v => v, 12));
+  const days = rangeDays(30);
+  return '<h2>初めて記録された日（直近30日）</h2>' + lineChart([{ name: '端末', color: '#2f5fa8', data: days.map(d => A.newByDay[d] || 0) }], days) +
+    '<div class="grid2"><div><h2>アプリのバージョン</h2>' + g(A.ver) + '</div><div><h2>ブラウザ版／デスクトップ版</h2>' + g(A.form) + '</div>' +
+    '<div><h2>ブラウザ</h2>' + g(A.browser) + '</div><div><h2>OS</h2>' + g(A.os) + '</div><div><h2>端末の大きさ</h2>' + g(A.device) + '</div></div>';
+}
+function data(A){
+  const l = localReport();
+  return '<h2>① この端末の記録</h2><div class="msg">' + (l ? '<span class="ok">✔ 読みノートが溜めた、この端末の記録を読み込んでいます</span>（使った日数 ' + Object.keys(l.days).length + '日／起動 ' + num(l.sessions) + '回）。' :
+      '<span class="warn">この場所では、読みノートの記録が見つかりません。</span>このページを読みノートと同じURLに置いて開くと、自動で読み込まれます。ダウンロードして別の場所で開いたときは、読みノートの💬画面で「ファイルに書き出す」を押して、②で取り込んでください。') + '</div>' +
+    '<h2>② ファイルから取り込む</h2><div class="row"><input type="file" id="dfile" multiple accept=".json,application/json"><span class="muted">読みノートの💬画面で書き出した yomi-report-*.json（複数可）。別の端末の記録も合わせて見られます。</span></div>' +
+    '<details><summary>貼り付けで取り込む</summary><textarea id="dpaste" rows="5" style="width:100%" placeholder="JSONを貼り付け"></textarea><button class="act sub" id="dpbtn">取り込む</button></details>' +
+    '<div id="dmsg"></div>' +
+    '<h2>③ JSONで書き出す</h2><div class="row"><button class="act" id="dexp" ' + (A.users ? '' : 'disabled') + '>全データ</button><button class="act sub" id="dexs" ' + (A.users ? '' : 'disabled') + '>集計だけ</button><button class="act sub" id="dexq" ' + (A.users ? '' : 'disabled') + '>意見だけ</button></div>' +
+    '<h2>④ 記録の消去</h2><div class="muted">取り込んだデータ：' + Math.max(0, A.users - (l ? 1 : 0)) + '件（このブラウザのIndexedDBにだけ保存）</div><div class="row"><button class="act sub" id="dclear">取り込んだデータを消す</button><button class="act sub" id="dclearlocal" ' + (l ? '' : 'disabled') + '>この端末の記録を消す</button></div>';
+}
+function exportJson(A, kind){
+  const surveys = []; reports.forEach(r => (r.surveys || []).forEach(s => surveys.push(Object.assign({ installId: r.installId }, s))));
+  const slim = Object.assign({}, A, { surveys: A.surveys.length });
+  const meta = { exportedAt: new Date().toISOString(), chartVersion: CHARTV0_VERSION };
+  const out = kind === 'summary' ? Object.assign({ schema: 'yomi-summary' }, meta, { aggregate: slim })
+            : kind === 'surveys' ? Object.assign({ schema: 'yomi-surveys' }, meta, { count: surveys.length, surveys })
+            : Object.assign({ schema: 'yomi-export' }, meta, { aggregate: slim, surveys, reports: reports.map(r => { const c = Object.assign({}, r); delete c.local; return c; }) });
+  const d = new Date(), p2 = n => String(n).padStart(2, '0');
+  const name = 'yomi-' + kind + '-' + d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) + '.json';
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' })); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  return name;
+}
+function bindData(){
+  const msg = (x, c) => { $('#dmsg').innerHTML = '<div class="msg ' + (c || '') + '">' + esc(x) + '</div>'; };
+  const done = (r, from) => { msg(from + '：新規 ' + r.add + '件／更新 ' + r.upd + '件／スキップ ' + r.skip + '件', 'ok'); setTimeout(render, 900); };
+  $('#dfile').onchange = async e => {
+    let all = [];
+    for (const f of e.target.files){ try { all = all.concat(extractReports(JSON.parse(await f.text()))); } catch(x){ msg(f.name + ' はJSONとして読めませんでした', 'ng'); return; } }
+    done(await ingest(all), 'ファイル取り込み');
+  };
+  $('#dpbtn').onclick = async () => { try { done(await ingest(extractReports(JSON.parse($('#dpaste').value))), '貼り付け取り込み'); } catch(x){ msg('JSONとして読めませんでした', 'ng'); } };
+  $('#dclear').onclick = async () => { if (confirm('取り込んだデータを消します（この端末の記録は消えません）。よろしいですか？')){ reports = []; await dbClear(); mergeLocal(); render(); } };
+  $('#dclearlocal').onclick = async () => { if (confirm('読みノートがこの端末に溜めた利用状況の記録と、アンケートの回答を、すべて消します。よろしいですか？')){ try { localStorage.removeItem(LS_LOCAL); } catch(e){} reports = reports.filter(r => !r.local); render(); } };
+  const exp = kind => { try { msg('書き出しました：' + exportJson(aggregate(), kind), 'ok'); } catch(e){ msg('書き出せませんでした：' + e.message, 'ng'); } };
+  $('#dexp').onclick = () => exp('full'); $('#dexs').onclick = () => exp('summary'); $('#dexq').onclick = () => exp('surveys');
+}
+
+(async function init(){
+  try { reports = await dbAll(); } catch(e){ reports = []; }
+  mergeLocal();
+  render();
+})();
+</script>
+</body>
+</html>
