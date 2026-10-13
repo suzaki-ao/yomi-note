@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>コマンド一覧 ― 読みノート (Yomi-Note)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F2; --paper-deep:#F3EEE3; --ink:#22262E; --ink-soft:#5B6270;
+    --line:#DAD3C4; --accent:#B5432E; --accent-soft:#EFD9CF; --teal:#3E6E63; --white:#FFFFFF;
+    --shadow:0 6px 22px rgba(34,38,46,0.14);
+  }
+  *{box-sizing:border-box;}
+  html.dlc-ud-font, html.dlc-ud-font body, html.dlc-ud-font button, html.dlc-ud-font h1,
+  html.dlc-ud-font h2, html.dlc-ud-font h3, html.dlc-ud-font p, html.dlc-ud-font li, html.dlc-ud-font a,
+  html.dlc-ud-font code{
+    font-family:'BIZ UDGothic','BIZ UDPGothic','Yu Gothic UI',sans-serif !important;
+  }
+  html,body{margin:0;padding:0;background:var(--paper-deep);color:var(--ink);font-family:"Noto Sans JP",sans-serif;line-height:1.75;}
+  h1,h2,h3{font-family:"Shippori Mincho",serif;}
+  a{color:var(--teal);}
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px 80px;}
+
+  .hero{
+    background:linear-gradient(160deg, var(--ink) 0%, #2E3440 100%);
+    color:#fff;padding:44px 24px 54px;margin-bottom:-40px;
+  }
+  .hero-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .hanko{
+    width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:"Shippori Mincho",serif;
+    font-weight:700;font-size:26px;flex-shrink:0;box-shadow:inset 0 0 0 3px rgba(255,255,255,0.35),0 6px 18px rgba(0,0,0,0.35);
+  }
+  .hero h1{font-size:26px;margin:0 0 4px;color:#fff;}
+  .hero p.tagline{margin:0;font-size:13.5px;color:#C9D0D8;}
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .cta-btn{
+    display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:24px;
+    font-size:13px;text-decoration:none;font-weight:700;background:rgba(255,255,255,0.1);color:#fff;
+    border:1px solid rgba(255,255,255,0.3);cursor:pointer;
+  }
+  .cta-btn.primary{background:var(--accent);border-color:var(--accent);}
+  .cta-btn:hover{filter:brightness(1.08);}
+
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 28px;
+    box-shadow:var(--shadow);margin-bottom:22px;
+  }
+  .card h2{font-size:18px;margin:0 0 6px;display:flex;align-items:center;gap:8px;}
+  .card .lead{font-size:12.5px;color:var(--ink-soft);margin:0 0 16px;}
+
+  .mode-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .mode-tab{
+    padding:7px 14px;border-radius:16px;font-size:12.5px;font-weight:700;cursor:pointer;
+    border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);
+  }
+  .mode-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .mode-panel{display:none;}
+  .mode-panel.active{display:block;}
+  .cmd-row{
+    display:flex;gap:14px;padding:10px 0;border-bottom:1px dashed var(--line);align-items:flex-start;
+  }
+  .cmd-row:last-child{border-bottom:none;}
+  .cmd-syntax{
+    font-family:"Courier New",monospace;font-size:13px;background:var(--accent-soft);color:var(--accent);
+    padding:3px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;min-width:150px;text-align:center;
+  }
+  .cmd-desc{font-size:13px;color:var(--ink);padding-top:3px;}
+  .note-box{
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+    font-size:12.5px;color:var(--ink-soft);margin-top:14px;
+  }
+  .warn-box{background:#FFF6E9;border:1px solid #E7C77C;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#7A5B12;margin-top:10px;}
+
+  footer{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:10px;padding:24px 0 0;}
+  @media (max-width:600px){
+    .hero{padding:36px 18px 46px;} .card{padding:20px 18px;}
+    .cmd-row{flex-direction:column;gap:4px;}
+    .cmd-syntax{min-width:0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hanko">読</div>
+    <div>
+      <h1>コマンド一覧 <span style="font-size:14px;color:#C9D0D8;font-weight:500;">Command Reference</span></h1>
+      <p class="tagline">コマンドパレット（@0・@1・@2 各モード）で使えるコマンドの一覧です</p>
+      <div class="cta-row" style="margin-top:10px;margin-bottom:2px;">
+        <span class="cta-btn" style="cursor:default;background:var(--accent,#B5432E);border-color:transparent;">コマンド一覧 v8</span>
+      </div>
+      <div class="cta-row">
+        <a class="cta-btn primary" href="./index.html">📓 アプリを開く</a>
+        <a class="cta-btn" href="./Yomi_note_home_v18.html">🏠 ホームに戻る</a>
+        <a class="cta-btn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v11.html">📖 使い方</a>
+        <button class="cta-btn" id="readAloudBtn" type="button">🔊 このページを読み上げる</button>
+        <button class="cta-btn" id="udFontToggleBtn" type="button">Aa UDフォント</button>
+        <span class="cta-btn" id="readRateLabel" style="cursor:default;user-select:none;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>① コマンドパレットの使い方</h2>
+    <p class="lead">キーボード操作に慣れている方向けの、テキスト入力によるコマンド実行方法です。</p>
+    <ol style="font-size:13px;color:var(--ink-soft);padding-left:20px;margin:0;">
+      <li style="margin-bottom:8px;">画面下部のコマンド入力欄に、<code>/</code>から始まるコマンドを入力してEnterキーを押します。</li>
+      <li style="margin-bottom:8px;">コマンドには3つのモードがあります。<b>@0</b>＝通常（ページ・OCR操作）、<b>@1</b>＝数式、<b>@2</b>＝システム（表示・DLC管理）。<code>/command mode @0</code> のように入力すると切り替えられます。</li>
+      <li>どのモードからでも <code>/all command</code> と入力すると、今のモードで使えるコマンドの一覧がその場に表示されます（このページの内容と同じです）。</li>
+    </ol>
+    <div class="note-box">💡 数式や図形の挿入は、コマンド入力よりも、ツールバーの「∑数式」ボタンからタップ操作で組み立てる方法の方が直感的です（詳しくは使い方ガイドをご覧ください）。コマンドは主に、キーボード操作に慣れている方向けの早道として用意しています。</div>
+  </div>
+
+  <div class="card">
+    <h2>② コマンド一覧</h2>
+    <div class="mode-tabs">
+      <div class="mode-tab active" data-mode="m0">@0：通常モード</div>
+      <div class="mode-tab" data-mode="m1">@1：数式モード</div>
+      <div class="mode-tab" data-mode="m2">@2：システムモード</div>
+    </div>
+
+    <div class="mode-panel active" id="m0">
+      <div class="cmd-row"><span class="cmd-syntax">/text</span><span class="cmd-desc">ページ中央にテキストボックスを作成</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/input</span><span class="cmd-desc">PDF/画像を追加読み込み（縦横選択→自動でその範囲をOCR）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/camera</span><span class="cmd-desc">カメラで撮影して画像挿入・OCR</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/output [pdf|image]</span><span class="cmd-desc">作成した全ページを書き出す（省略時はPDF）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/delete{N}</span><span class="cmd-desc">Nページ目を削除</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/ocr {N}</span><span class="cmd-desc">Nページ目を再OCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/slide ocr {N}</span><span class="cmd-desc">Nページ目を再スライドOCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/out of ocr{N}</span><span class="cmd-desc">Nページ目のOCR除外範囲（図・写真など）を自動検知</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all ocr</span><span class="cmd-desc">全ページを再OCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all slide ocr</span><span class="cmd-desc">全ページを再スライドOCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all out of ocr</span><span class="cmd-desc">全ページのOCR除外範囲を自動検知</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/command mode @0|@1|@2</span><span class="cmd-desc">コマンドモードを切り替える</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all command</span><span class="cmd-desc">このコマンド一覧を表示</span></div>
+    </div>
+
+    <div class="mode-panel" id="m1">
+      <div class="cmd-row"><span class="cmd-syntax">/text ○</span><span class="cmd-desc">LaTeXの○を数式テキストボックスとして作成（例：<code>/text x^2+1</code>）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all kigou</span><span class="cmd-desc">数学記号一覧から選んで数式エディタに挿入</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/ofset text ○</span><span class="cmd-desc">○を手書き風の書体で作成</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all command</span><span class="cmd-desc">このコマンド一覧を表示</span></div>
+      <div class="note-box">v3.6以降、数式はタップ式のボタンと数字・変数キーパッドだけで組み立てられるようになりました（ツールバーの「∑数式」ボタン）。コマンド入力はLaTeXを直接書ける方向けの方法です。</div>
+    </div>
+
+    <div class="mode-panel" id="m2">
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @1</span><span class="cmd-desc">通常のシステム（全機能）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @2</span><span class="cmd-desc">ペン・消しゴム機能なし</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @3</span><span class="cmd-desc">画像・動画・URL・グラフ挿入なし</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @4</span><span class="cmd-desc">ペン・消しゴムに加え画像・動画・URL・グラフ挿入もなし</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @5</span><span class="cmd-desc">部分OCRの精度を優先（画像・動画・URL・グラフ挿入は使用不可）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/tool up</span><span class="cmd-desc">ツールバーを上端表示に切り替える（ページ一覧が見やすくなる）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/tool side</span><span class="cmd-desc">ツールバーを左（通常）表示に戻す</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/import dlc</span><span class="cmd-desc">追加DLC（.jsファイル）を選んで取り込む（複数取り込み可）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc on [番号]</span><span class="cmd-desc">DLCを有効にする（番号省略ですべて）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc off [番号]</span><span class="cmd-desc">DLCを無効にする（番号省略ですべて）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc remove 番号</span><span class="cmd-desc">指定した番号のDLCを削除する</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc list</span><span class="cmd-desc">取り込み済みDLCの一覧と番号を表示する</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all command</span><span class="cmd-desc">このコマンド一覧を表示</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>③ 困ったときは</h2>
+    <ul style="font-size:13px;color:var(--ink-soft);padding-left:20px;margin:0;">
+      <li>コマンドが実行できない → 先頭に <code>/</code> を付け忘れていないか確認してください。</li>
+      <li>思ったモードのコマンドが出てこない → 今どのモード（@0/@1/@2）か、入力欄の左のプロンプト表示（@0 / @1 / @2）で確認できます。</li>
+      <li>その他のご質問・不具合報告 → <a href="https://github.com/suzaki-ao/yomi-note" target="_blank" rel="noopener noreferrer">GitHubリポジトリ</a>からご連絡ください。</li>
+    </ul>
+    <div class="warn-box">このページはアプリ本体（読みノート）のコマンド実装から内容を書き出しています。アプリのバージョンアップに伴いコマンドが追加・変更された場合、このページも合わせて更新されます。</div>
+  </div>
+
+  <footer>
+    読みノート (Yomi-Note) コマンド一覧 v8 ／ © <span id="footerYear">2026</span> Yomi-Note Project. All rights reserved.
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+  document.querySelectorAll('.mode-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.mode-tab').forEach(function(t){ t.classList.remove('active'); });
+      document.querySelectorAll('.mode-panel').forEach(function(p){ p.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.mode).classList.add('active');
+    });
+  });
+  (function(){
+    var queue = [], playing = false, idx = 0, rate = 1.0;
+    var RATE_MIN=0.5, RATE_MAX=3.0, RATE_STEP=0.1;
+    function clampRate(r){ r=Math.round(r*10)/10; return Math.max(RATE_MIN,Math.min(RATE_MAX,r)); }
+    function updateRateLabel(){
+      var el = document.getElementById('readRateLabel');
+      if (el) el.textContent = '速度 ' + rate.toFixed(1) + '倍（＋/－キーで変更）';
+    }
+    function pushText(list, el){ if(!el) return; var t=el.textContent.trim().replace(/\s+/g,' '); if(t) list.push(t); }
+    function buildQueue(){
+      var list = [];
+      pushText(list, document.querySelector('.hero h1'));
+      pushText(list, document.querySelector('.hero p.tagline'));
+      document.querySelectorAll('.card').forEach(function(card){
+        pushText(list, card.querySelector('h2'));
+        pushText(list, card.querySelector('.lead'));
+        card.querySelectorAll('.cmd-row').forEach(function(row){
+          var syn = row.querySelector('.cmd-syntax'), desc = row.querySelector('.cmd-desc');
+          list.push((syn?syn.textContent.trim():'') + '。' + (desc?desc.textContent.trim():''));
+        });
+        card.querySelectorAll('li').forEach(function(li){ pushText(list, li); });
+      });
+      return list;
+    }
+    function updateBtn(){
+      document.getElementById('readAloudBtn').textContent = playing ? '⏹ 読み上げを停止' : '🔊 このページを読み上げる';
+    }
+    function speak(i){
+      if (!playing || i >= queue.length){ playing=false; updateBtn(); return; }
+      idx = i;
+      var u = new SpeechSynthesisUtterance(queue[i]);
+      u.lang='ja-JP'; u.rate=rate;
+      u.onend=function(){ speak(i+1); };
+      u.onerror=function(){ playing=false; updateBtn(); };
+      window.speechSynthesis.speak(u);
+    }
+    document.getElementById('readAloudBtn').addEventListener('click', function(){
+      if (!('speechSynthesis' in window)){ alert('このブラウザは読み上げに対応していません'); return; }
+      if (playing){ playing=false; window.speechSynthesis.cancel(); updateBtn(); return; }
+      queue = buildQueue();
+      if (!queue.length) return;
+      playing=true; updateBtn();
+      window.speechSynthesis.cancel();
+      speak(0);
+    });
+    document.addEventListener('keydown', function(e){
+      var tag=(e.target&&e.target.tagName)||'';
+      if (tag==='INPUT'||tag==='TEXTAREA'||e.metaKey||e.ctrlKey||e.altKey) return;
+      var changed=false;
+      if (e.key==='+'||e.key==='='||e.key==='ArrowUp'||e.key==='PageUp'){ rate=clampRate(rate+RATE_STEP); changed=true; }
+      else if (e.key==='-'||e.key==='_'||e.key==='ArrowDown'||e.key==='PageDown'){ rate=clampRate(rate-RATE_STEP); changed=true; }
+      else if (e.key==='0'){ rate=1.0; changed=true; }
+      if (changed){ e.preventDefault(); updateRateLabel(); if(playing){ window.speechSynthesis.cancel(); speak(idx); } }
+    });
+    updateRateLabel();
+  })();
+  (function(){
+    var KEY = 'yomiDlcUdFontEnabled';
+    var btn = document.getElementById('udFontToggleBtn');
+    function apply(){
+      var on = false;
+      try { on = localStorage.getItem(KEY) === 'true'; } catch(e){}
+      document.documentElement.classList.toggle('dlc-ud-font', on);
+      if (btn) btn.style.background = on ? 'var(--accent,#B5432E)' : '';
+      if (btn) btn.style.color = on ? '#fff' : '';
+    }
+    if (btn) btn.addEventListener('click', function(){
+      var on = document.documentElement.classList.contains('dlc-ud-font');
+      try { localStorage.setItem(KEY, on ? 'false' : 'true'); } catch(e){}
+      apply();
+    });
+    apply();
+  })();
+</script>
+</body>
+</html>
