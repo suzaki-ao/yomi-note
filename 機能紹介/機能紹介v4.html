@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>読みノート (Yomi-Note) ― 機能紹介</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F2; --paper-deep:#F3EEE3; --ink:#22262E; --ink-soft:#5B6270;
+    --line:#DAD3C4; --accent:#B5432E; --accent-soft:#EFD9CF; --teal:#3E6E63; --white:#FFFFFF;
+    --shadow:0 6px 22px rgba(34,38,46,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper-deep);color:var(--ink);font-family:"Noto Sans JP",sans-serif;line-height:1.75;}
+  h1,h2,h3{font-family:"Shippori Mincho",serif;}
+  a{color:var(--teal);}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px 80px;}
+
+  .hero{
+    background:linear-gradient(160deg, var(--ink) 0%, #2E3440 100%);
+    color:#fff;padding:48px 20px 30px;margin-bottom:0;
+  }
+  .hero-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  .hanko{
+    width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:"Shippori Mincho",serif;
+    font-weight:700;font-size:26px;flex-shrink:0;box-shadow:inset 0 0 0 3px rgba(255,255,255,0.35);
+  }
+  .hero h1{font-size:26px;margin:0 0 3px;color:#fff;}
+  .hero p.tagline{margin:0;font-size:13.5px;color:#C9D0D8;}
+  .hero-back{margin-top:14px;}
+  .hero-back a{color:#EFE6D8;font-size:12.5px;text-decoration:underline;}
+
+  /* ---------- クイックナビ ---------- */
+  .quicknav{
+    position:sticky;top:0;z-index:30;background:rgba(251,248,242,0.95);backdrop-filter:blur(4px);
+    border-bottom:1px solid var(--line);padding:10px 20px;overflow-x:auto;white-space:nowrap;
+  }
+  .quicknav-inner{max-width:1040px;margin:0 auto;display:flex;gap:8px;}
+  .quicknav a{
+    display:inline-block;flex-shrink:0;font-size:12px;font-weight:600;color:var(--ink);
+    background:var(--white);border:1px solid var(--line);border-radius:16px;padding:6px 12px;text-decoration:none;
+  }
+  .quicknav a:hover{background:var(--accent-soft);border-color:var(--accent);}
+
+  section.cat{padding:34px 0 6px;border-bottom:1px solid var(--line);}
+  section.cat:last-of-type{border-bottom:none;}
+  .cat-head{display:flex;align-items:baseline;gap:10px;margin-bottom:4px;}
+  .cat-head .icon{font-size:26px;}
+  .cat-head h2{font-size:20px;margin:0;}
+  .cat-sub{font-size:12.5px;color:var(--ink-soft);margin:0 0 18px;}
+
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+  .fcard{
+    background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;
+    box-shadow:0 2px 8px rgba(34,38,46,0.05);
+  }
+  .fcard .fc-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .fcard .fc-icon{font-size:20px;flex-shrink:0;}
+  .fcard h3{font-size:14px;margin:0;line-height:1.4;}
+  .fcard p{font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.65;}
+  .fcard .fc-tag{
+    display:inline-block;font-size:10px;font-weight:700;color:var(--accent);
+    background:var(--accent-soft);border-radius:8px;padding:1px 7px;margin-left:6px;vertical-align:middle;
+  }
+
+  footer{max-width:1040px;margin:40px auto 0;padding:0 20px;text-align:center;font-size:11.5px;color:var(--ink-soft);}
+  footer a{color:var(--teal);}
+
+  @media (max-width:600px){
+    .hero h1{font-size:22px;}
+    .card-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hanko">読</div>
+    <div>
+      <h1>機能紹介</h1>
+      <p class="tagline">読みノートでできること、ぜんぶまとめました</p>
+    </div>
+  </div>
+  <div class="hero-inner hero-back"><a href="./Yomi_note_home_v28.html">← ホームに戻る</a></div>
+</div>
+
+<nav class="quicknav">
+  <div class="quicknav-inner">
+    <a href="#cat-write">✍️ 手書き</a>
+    <a href="#cat-text">🔤 テキスト</a>
+    <a href="#cat-ocr">📷 OCR</a>
+    <a href="#cat-read">🔊 読み上げ</a>
+    <a href="#cat-formula">🧮 数式</a>
+    <a href="#cat-media">🖼 メディア</a>
+    <a href="#cat-grade">🎒 学年モード</a>
+    <a href="#cat-dlc">🧩 追加DLC</a>
+    <a href="#cat-test">🎯 テストモード</a>
+    <a href="#cat-save">💾 保存・書き出し</a>
+    <a href="#cat-cmd">⌨️ コマンド</a>
+    <a href="#cat-platform">📱 対応環境</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="cat" id="cat-write">
+    <div class="cat-head"><span class="icon">✍️</span><h2>手書き・描画</h2></div>
+    <p class="cat-sub">指でもペンタブレットでも、紙のノートのように書き込めます。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🖊</span><h3>ペン</h3></div><p>太さ・色を自由に変えて手書き入力。筆圧に応じた自然な線が描けます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🩹</span><h3>消しゴム</h3></div><p>書いた線だけをなぞって消せます。サイズ調整も可能です。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">📏</span><h3>定規</h3></div><p>まっすぐな線・図形の補助線を引きたいときに。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">➰</span><h3>輪投げ（投げ縄選択）</h3></div><p>手書きの一部を丸く囲んで選択し、そのまま移動・拡大縮小・削除できます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">👆</span><h3>2本指スワイプでスクロール</h3></div><p>ペンや選択ツールを使っている最中でも、2本指でスワイプすればページをスクロールできます（iPhone・iPad対応）。</p></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cat-text">
+    <div class="cat-head"><span class="icon">🔤</span><h2>テキスト入力</h2></div>
+    <p class="cat-sub">手書きが苦手でも、いろいろな方法で文字を入力できます。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">T</span><h3>テキストボックス</h3></div><p>好きな位置にクリックしてキーボード入力。フォント・サイズ・色・縦書き/横書きを変更できます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">✍</span><h3>手動登録</h3></div><p>範囲を指定してテキストを直接入力。OCRで読み取れない箇所も確実に読み上げ対象にできます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">✒</span><h3>手書き→文字変換</h3></div><p>範囲をドラッグすると、その中の手書き文字をきれいな活字テキストに変換します。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">📐</span><h3>文字サイズの自動調整<span class="fc-tag">新機能</span></h3></div><p>OCR実行済みのページで、新しいテキストボックスの文字サイズを周りの文字に自動で合わせるON/OFFボタンを右パネルに搭載。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🎤</span><h3>音声入力<span class="fc-tag">強化</span></h3></div><p>話した内容をリアルタイムで反映。無音が続いてブラウザ側が自動終了させても、気づかないうちにシームレスに再開します。</p></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cat-ocr">
+    <div class="cat-head"><span class="icon">📷</span><h2>OCR・画像認識</h2></div>
+    <p class="cat-sub">紙のプリントやPDF、写真の文字を自動で読み取ります。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">📥</span><h3>PDF/画像の取り込み</h3></div><p>プリントをスキャン・撮影したPDFや画像ファイルをそのままノートに取り込めます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🔍</span><h3>自動OCR</h3></div><p>ページ全体を一括で文字認識。信頼度・向き（縦書き/横書き）も自動判定します。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🔎</span><h3>部分OCR</h3></div><p>文字が小さい・かすれている箇所だけ範囲を選んで高精度に再認識し、その場で読み上げます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🚫</span><h3>OCR除外</h3></div><p>写真やイラストなど、文字として認識してほしくない範囲を指定して無視させます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">┃</span><h3>区切り線</h3></div><p>上下・左右がくっついてしまう文章に、自分で境界線を指定できます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🖼</span><h3>挿入した画像自体もOCR<span class="fc-tag">新機能</span></h3></div><p>「画像」ツールで貼り付けた写真・スクリーンショットも、選択して「🔍OCR」ボタンを押すだけで文字を読み取れるようになりました。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🌀</span><h3>スライドOCR</h3></div><p>板書や資料をスライドさせながら撮影しても、まとめて高精度に認識します（全ページ一括も可）。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🌐</span><h3>多言語OCR</h3></div><p>認識する言語を日本語＋外国語などから選べます。</p></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cat-read">
+    <div class="cat-head"><span class="icon">🔊</span><h2>読み上げ</h2></div>
+    <p class="cat-sub">認識した文章を、自分のペースで聞くことができます。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🔊</span><h3>全文読み上げ</h3></div><p>ページ全体を自然な順番（段組みも考慮）で最初から読み上げます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">⏯</span><h3>一文ずつ再生</h3></div><p>前の文・次の文への移動、この文だけ再生、といった細かい操作ができます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🏃</span><h3>速度調整</h3></div><p>読み上げの速さを自分に合わせて変更できます。</p></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cat-formula">
+    <div class="cat-head"><span class="icon">🧮</span><h2>数式入力</h2></div>
+    <p class="cat-sub">数学の答案も、きれいな数式として書き込めます。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">∑</span><h3>数式パレット</h3></div><p>分数・ルート・積分・行列などをボタンから挿入。LaTeXの直接入力にも切替可能です。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🎓</span><h3>学年別レベル</h3></div><p>小学生〜大学生・一般の学年モードに応じて、パレットに出る記号の範囲が自動で絞られます。</p></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cat-media">
+    <div class="cat-head"><span class="icon">🖼</span><h2>メディア挿入</h2></div>
+    <p class="cat-sub">画像や資料、参考リンクをノートに貼り付けられます。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🖼</span><h3>画像</h3></div><p>写真やスクリーンショットを挿入し、移動・拡大縮小できます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">📊</span><h3>グラフ</h3></div><p>数値を入力するだけで棒グラフ・折れ線グラフ・円グラフを作成・挿入できます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🔗</span><h3>リンク</h3></div><p>参考サイトのURLをカード形式で挿入できます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🎬</span><h3>動画</h3></div><p>YouTube等の動画を埋め込んで、ノートの中でそのまま視聴できます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">📷</span><h3>カメラ撮影</h3></div><p>端末のカメラでその場で撮影し、画像として挿入・またはOCR用の新しいページとして追加できます。</p></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cat-grade">
+    <div class="cat-head"><span class="icon">🎒</span><h2>学年モード</h2></div>
+    <p class="cat-sub">使う人の学年に合わせて、画面の見え方を切り替えられます。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🎒📘📗🎓</span><h3>4段階の学年モード</h3></div><p>小学生／中学生／高校生／大学生・一般から選択。数式パレットの範囲もこれに連動します。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🈁</span><h3>小学生モードのひらがな表示</h3></div><p>小学生モードでは、上部バー・ツール一覧・主要なモーダルの漢字表示が自動でひらがなに置き換わります。</p></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cat-dlc">
+    <div class="cat-head"><span class="icon">🧩</span><h2>追加DLC（拡張機能）</h2></div>
+    <p class="cat-sub">必要な人だけ、あとから機能を追加できます。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🔍</span><h3>ディスレクシア支援パック</h3></div><p>UDフォント表示・音声選択・大文字表示など、読み書きが苦手な人向けの支援機能をまとめて追加します。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🎹</span><h3>MIDIプレーヤーパック</h3></div><p>楽譜・MIDIファイルをノート上で再生できるようにします。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">💻</span><h3>プログラミングパック</h3></div><p>簡単なプログラムを書いて動かせる専用モードを追加します。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">📥</span><h3>DLCの追加・管理</h3></div><p>内蔵DLCはバージョンを選んで有効化するだけ。外部の.jsファイルを取り込むこともできます。</p></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cat-test">
+    <div class="cat-head"><span class="icon">🎯</span><h2>テストモード</h2></div>
+    <p class="cat-sub">学校の中間・期末テストでも安心して使えるよう設計された特別モードです。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🧪</span><h3>テストモードON/OFF</h3></div><p>不要・不適切な機能をまとめてブロック。数式の「よく使う公式」やグラフ・画像・リンク・動画などを制限します。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">⚙️</span><h3>詳細設定</h3></div><p>画像・カメラ・定規・輪投げ・学年変更を個別にブロックON/OFFできます（設定はテスト開始前のみ）。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">📋</span><h3>操作ログ</h3></div><p>テスト中の操作・ブロックされた試行・離席や画面遷移まで記録。オフラインでも残り、テスト中はクリアできません。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🔒</span><h3>抜け道対策</h3></div><p>数式ラベルの記号化、ロック中画像のOCR拒否など、制限を回避されにくい設計にしています。</p></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cat-save">
+    <div class="cat-head"><span class="icon">💾</span><h2>保存・書き出し</h2></div>
+    <p class="cat-sub">作ったノートは、いろいろな形で残せます。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">💾</span><h3>ブラウザに保存</h3></div><p>端末内（localStorage）にノートを保存し、あとで呼び出せます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">📄</span><h3>PDF書き出し</h3></div><p>ノートをそのままPDFファイルとして書き出せます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🗜️</span><h3>ZIP書き出し</h3></div><p>ノートのデータをまるごとZIPファイルとして保存・共有できます。</p></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cat-cmd">
+    <div class="cat-head"><span class="icon">⌨️</span><h2>コマンド操作</h2></div>
+    <p class="cat-sub">キーボード操作に慣れている人向けの入力方法です。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">&gt;_</span><h3>コマンドパレット</h3></div><p>画面下部の「コマンド」から呼び出せます。<code>@0</code>通常・<code>@1</code>数式・<code>@2</code>システムの3モード。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">📖</span><h3>コマンド一覧</h3></div><p>代表的なコマンドは専用ページにまとまっています。</p></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cat-platform">
+    <div class="cat-head"><span class="icon">📱</span><h2>対応環境</h2></div>
+    <p class="cat-sub">教室でも自宅でも、いつもの端末で使えます。</p>
+    <div class="card-grid">
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">📱</span><h3>スマホ・タブレット対応</h3></div><p>2本指スワイプでのスクロール、開きやすい左右パネル、タップしやすい大きめのボタンなど、タッチ操作に最適化しています。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🖥️</span><h3>デスクトップアプリ</h3></div><p>Windows（.exe）・Mac（Intel/Apple Silicon .app）向けのアプリ版も配布できます。</p></div>
+      <div class="fcard"><div class="fc-head"><span class="fc-icon">🔌</span><h3>オフライン配慮</h3></div><p>通信が切れても、音声入力など一部機能は端末によって動作を試みる設計にしています。</p></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  読みノート (Yomi-Note) 機能紹介 v4 ／ <a href="./Yomi_note_home_v28.html">🏠 ホームに戻る</a> ／ <a href="./%E4%BD%BF%E3%81%84%E6%96%B9v21.html">📖 使い方</a>
+</footer>
+
+</body>
+</html>
