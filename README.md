@@ -1,22 +1,22 @@
 # 読みノート（Yomi Note）
 ****
 👉 **公式ページはこちら**
-https://suzaki-ao.github.io/yomi-note/Yomi_note_home_v39.html
+https://suzaki-ao.github.io/yomi-note/Yomi_note_home_v41.html
 ****
 👉 **使い方ガイドはこちら**
-https://suzaki-ao.github.io/yomi-note/%E4%BD%BF%E3%81%84%E6%96%B9v32.html
+https://suzaki-ao.github.io/yomi-note/%E4%BD%BF%E3%81%84%E6%96%B9v34.html
 ****
 👉 **機能紹介はこちら**
-https://suzaki-ao.github.io/yomi-note/%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv15.html
+https://suzaki-ao.github.io/yomi-note/%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv18.html
 ****
 👉 **利用規約はこちら**
-https://suzaki-ao.github.io/yomi-note/%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v30.html
+https://suzaki-ao.github.io/yomi-note/%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v33.html
 ****
 👉 **コマンド一覧はこちら**
-https://suzaki-ao.github.io/yomi-note/command-list-v25.html
+https://suzaki-ao.github.io/yomi-note/command-list-v27.html
 ****
 👉 **研究開発の状況はこちら**
-https://suzaki-ao.github.io/yomi-note/%E7%A0%94%E7%A9%B6v0_7.html
+https://suzaki-ao.github.io/yomi-note/%E7%A0%94%E7%A9%B6v0_10.html
 ****
 👉 **アプリはこちら**
 https://github.com/suzaki-ao/yomi-note/releases/tag/%E8%AA%AD%E3%81%BF%E3%83%8E%E3%83%BC%E3%83%88%E3%82%A2%E3%83%97%E3%83%AAver
@@ -30,10 +30,10 @@ https://github.com/suzaki-ao/yomi-note/issues/1
 ****
 # アプリについてのお知らせ
 > - v6.0アプリについて
-> 現在アプリv6.0は配信していませんおそらくv6.1でアプリ化すると思います。(.exe/.app/.app intel)
+> 現在アプリv6.1は配信していませんおそらくv6.5でアプリ化すると思います。(.exe/.app/.app intel)
 >****
 > - v5.5以下のアプリについて
-> 現在v5.5以下のバージョンのアプリは配信しておりません。
+> 現在v6.1以下のバージョンのアプリは配信しておりません。なおv6.5以上は残しときます。
 ****
 # 読みノート以外のao作のおすすめアプリなどはこちら
 - midi-player
