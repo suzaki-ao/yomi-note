@@ -43,3 +43,5 @@ https://github.com/suzaki-ao/yomi-note/issues/1
 - gamen-yomi
 > https://github.com/suzaki-ao/gamen-yomi
 ****
+**読みノートは2026年8月22日からサービスを始めております。**
+****
