@@ -1,5 +1,5 @@
 /*!
- * AOCRv02 ― 頂点（線の端・交点・曲がり角）にもとづく、独自のOCR本体エンジン（試作）  v0.1
+ * AOCRv02 ― 頂点（線の端・交点・曲がり角）にもとづく、独自のOCR本体エンジン（試作）  v0.2
  * ------------------------------------------------------------------
  * 文字を細線（骨格）に直し、その「頂点」を見つけて、あらかじめ作った見本と照らし合わせて読みます。
  * Tesseract などの外部OCRには依存しません（単体のJavaScript）。
@@ -19,7 +19,7 @@
   else root.AOCR2 = factory();
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
-  var VERSION = '0.1', NAME = 'AOCRv02', S = 64;                  // S：正規化した文字の大きさ（ピクセル）
+  var VERSION = '0.2', NAME = 'AOCRv02', S = 64;                  // S：正規化した文字の大きさ（ピクセル）
 
   /* ---------- 文字集合 ---------- */
   var HIRA = 'ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろわゐゑをんー';
@@ -205,7 +205,7 @@
     var g = extractGraph(sk, W, H, { eps: S * 0.045, turnDeg: opt.turnDeg || 38 });
     var nx = function (p) { return [(p[0] - 4) / Math.max(1, tw - 1), (p[1] - 4) / Math.max(1, th - 1)]; };
     var ncomp = smallComponentsMask(sk, W, H, 0).comps;
-    var f = { ncomp: ncomp, E: g.E.map(nx), J: g.J.map(nx), C: g.C.map(nx), holes: holes, aspect: bw / bh,
+    var f = { R: rasterVec(sk, W, H, tw, th), bw: bw, bh: bh, ncomp: ncomp, E: g.E.map(nx), J: g.J.map(nx), C: g.C.map(nx), holes: holes, aspect: bw / bh,
       edges: g.edges.map(function (e) { var a = nx(e.a), b = nx(e.b); return { mx: (a[0] + b[0]) / 2, my: (a[1] + b[1]) / 2, th: Math.atan2(b[1] - a[1], b[0] - a[0]), len: e.len / S }; }) };
     return f;
   }
@@ -236,13 +236,50 @@
     if (mode !== 'vertex') d += 1.2 * edgeDist(a.edges, b.edges);
     return d;
   }
+  /* ---------- v0.2：骨格にもとづく「面」の特徴（太さに左右されない） ---------- */
+  var GD = 8, GO = 4;                                               // 密度の格子 8×8 ／ 向きの格子 4×4（向き4種）
+  function splat(arr, n, u, v, wgt, off, stride) {                  // 双一次で格子に配る
+    var gx = u * n - 0.5, gy = v * n - 0.5, x0 = Math.floor(gx), y0 = Math.floor(gy), fx = gx - x0, fy = gy - y0;
+    for (var dy = 0; dy < 2; dy++) for (var dx = 0; dx < 2; dx++) {
+      var xx = x0 + dx, yy = y0 + dy; if (xx < 0 || yy < 0 || xx >= n || yy >= n) continue;
+      arr[off + (yy * n + xx) * stride] += wgt * (dx ? fx : 1 - fx) * (dy ? fy : 1 - fy);
+    }
+  }
+  function rasterVec(sk, W, H, tw, th) {
+    var dens = new Float32Array(GD * GD), ori = new Float32Array(GO * GO * 4), x, y, dx, dy;
+    for (y = 0; y < H; y++) for (x = 0; x < W; x++) {
+      if (!sk[y * W + x]) continue;
+      var u = Math.min(1, Math.max(0, (x - 4) / Math.max(1, tw - 1))), v = Math.min(1, Math.max(0, (y - 4) / Math.max(1, th - 1)));
+      splat(dens, GD, u, v, 1, 0, 1);
+      var sxx = 0, syy = 0, sxy = 0, n = 0;                          // 5×5 の窓で線の向きを求める（主成分）
+      for (dy = -2; dy <= 2; dy++) for (dx = -2; dx <= 2; dx++) { var xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= W || yy >= H || !sk[yy * W + xx]) continue; sxx += dx * dx; syy += dy * dy; sxy += dx * dy; n++; }
+      if (n < 3) continue;
+      var th2 = 0.5 * Math.atan2(2 * sxy, sxx - syy); if (th2 < 0) th2 += Math.PI;   // 0〜π
+      var b = th2 / (Math.PI / 4), b0 = Math.floor(b) % 4, fr = b - Math.floor(b), b1 = (b0 + 1) % 4;
+      var gx = u * GO - 0.5, gy = v * GO - 0.5, x0 = Math.floor(gx), y0 = Math.floor(gy), fx = gx - x0, fy = gy - y0;
+      for (var qy = 0; qy < 2; qy++) for (var qx = 0; qx < 2; qx++) {
+        var cx = x0 + qx, cy = y0 + qy; if (cx < 0 || cy < 0 || cx >= GO || cy >= GO) continue;
+        var wq = (qx ? fx : 1 - fx) * (qy ? fy : 1 - fy);
+        ori[(cy * GO + cx) * 4 + b0] += wq * (1 - fr); ori[(cy * GO + cx) * 4 + b1] += wq * fr;
+      }
+    }
+    function nrm(a) { var s = 0, i; for (i = 0; i < a.length; i++) { a[i] = Math.sqrt(a[i]); s += a[i] * a[i]; } s = Math.sqrt(s) || 1; for (i = 0; i < a.length; i++) a[i] /= s; }
+    nrm(dens); nrm(ori);
+    var R = new Float32Array(dens.length + ori.length); R.set(dens, 0); R.set(ori, dens.length); return R;
+  }
+  function rDist(a, b) {                                            // 0（同じ）〜1
+    var s1 = 0, s2 = 0, i, n1 = GD * GD, n = a.length;
+    for (i = 0; i < n1; i++) s1 += a[i] * b[i]; for (; i < n; i++) s2 += a[i] * b[i];
+    return 1 - 0.5 * (s1 + s2);
+  }
+  var SMALLK = 'ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮ';
   function tidy(f) { f.E = dedupe(f.E, 0.03); f.C = dedupe(f.C, 0.05); f.J = dedupe(f.J, 0.05); return f; }
 
   /* ---------- エンジン ---------- */
   function create(options) {
     options = options || {};
     var fonts = options.fonts || ['Noto Sans CJK JP', 'Noto Serif CJK JP', 'sans-serif'], templates = [], co = { createCanvas: options.createCanvas };
-    var mode = options.mode || 'full';
+    var mode = options.mode || 'full', wV = options.wV != null ? options.wV : 0.01, wR = options.wR != null ? options.wR : 1, PRE = options.prefilter || 80, wS = options.wS != null ? options.wS : 0, ctxW = options.ctxWeight != null ? options.ctxWeight : 1, tmplSize = 120;
 
     function glyphToBin(canvas) {
       var G = grayOf(canvas), thr = otsu(G.g), dark = 0, n = G.g.length, bin = new Uint8Array(n), i;
@@ -265,18 +302,36 @@
       var set = (o.hira !== false ? HIRA : '') + (o.kata !== false ? KATA : '') + kanjiStr, seenCh = {};
       Array.from(set).forEach(function (ch) {
         if (seenCh[ch]) return; seenCh[ch] = 1;
-        fonts.forEach(function (fn) { var f = featuresOfCanvas(renderChar(ch, fn, o.size || 120, o.weight)); if (f) templates.push({ ch: ch, script: scriptOf(ch), font: fn, f: f }); });
+        tmplSize = o.size || 120; (o.weights || [o.weight]).forEach(function (wt) { fonts.forEach(function (fn) { var f = featuresOfCanvas(renderChar(ch, fn, tmplSize, wt)); if (f) templates.push({ ch: ch, script: scriptOf(ch), font: fn, rel: Math.max(f.bw, f.bh) / tmplSize, f: f }); }); });
       });
       return templates.length;
     }
-    function recognizeFeatures(f, k) {
-      var best = {}, i;
-      for (i = 0; i < templates.length; i++) { var t = templates[i], d = distance(f, t.f, mode); if (best[t.ch] === undefined || d < best[t.ch].d) best[t.ch] = { ch: t.ch, script: t.script, d: d }; }
+    function relPenalty(rl, rt) { var m = Math.min(rl, rt); return m < 0.8 ? 0.6 * Math.abs(Math.log(Math.min(1.1, rl) / Math.min(1.1, rt))) : 0; }
+    function recognizeFeatures(f, k, ctx) {
+      var i, cand = new Array(templates.length);
+      for (i = 0; i < templates.length; i++) cand[i] = { i: i, r: rDist(f.R, templates[i].f.R) };
+      cand.sort(function (a, b) { return a.r - b.r; });
+      if (cand.length > PRE) cand.length = PRE;
+      var best = {}, rl = ctx && ctx.rel;
+      cand.forEach(function (c) {
+        var t = templates[c.i], d = mode === 'raster' ? wR * c.r : wV * distance(f, t.f, mode) + wR * c.r;
+        d += wS * (Math.abs(f.holes - t.f.holes) + 0.5 * Math.abs(f.ncomp - t.f.ncomp));
+        if (rl) d += relPenalty(rl, t.rel);
+        if (best[t.ch] === undefined || d < best[t.ch].d) best[t.ch] = { ch: t.ch, script: t.script, d: d };
+      });
       var arr = Object.keys(best).map(function (c) { return best[c]; }).sort(function (a, b) { return a.d - b.d; }).slice(0, k || 5);
       var script = {}; arr.slice(0, 3).forEach(function (a, ix) { script[a.script] = (script[a.script] || 0) + (3 - ix); });
       var sc = Object.keys(script).sort(function (a, b) { return script[b] - script[a]; })[0];
-      return { candidates: arr, script: sc, ch: arr[0] ? arr[0].ch : '', distance: arr[0] ? arr[0].d : 9 };
+      var d1 = arr[0] ? arr[0].d : 9, d2 = arr[1] ? arr[1].d : d1 + 1;
+      var conf = 0.5 * Math.max(0, Math.min(1, 1 - d1 / 3)) + 0.5 * Math.max(0, Math.min(1, (d2 - d1) / 0.5));   // 近さ＋2位との差
+      return { candidates: arr, script: sc, ch: arr[0] ? arr[0].ch : '', distance: d1, margin: d2 - d1, conf: conf };
     }
+    function verify(canvas, chars) {                                // AOCRv01 の迷った候補を、頂点＋骨格の特徴で見分ける
+      var f = featuresOfCanvas(canvas); if (!f) return null;
+      var r = recognizeFeatures(f, 9999), want = {}; chars.forEach(function (c) { want[c] = 1; });
+      return r.candidates.filter(function (c) { return want[c.ch]; });
+    }
+    function recognizeFromFeatures(f, k) { return recognizeFeatures(f, k); }
     function recognizeGlyph(canvas, k) {
       var f = featuresOfCanvas(canvas); if (!f) return null;
       var r = recognizeFeatures(f, k); r.features = { E: f.E.length, J: f.J.length, C: f.C.length, holes: f.holes }; r.vertices = f; return r;
@@ -297,6 +352,56 @@
       }
       return comps.filter(function (c) { return c.n >= 4; });
     }
+    function padOne(b, w, h) { var o = new Uint8Array((w + 2) * (h + 2)); for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) o[(y + 1) * (w + 2) + x + 1] = b[y * w + x]; return o; }
+    function splitWide(groups, sub, w, lh, cell) {                  // 幅が広すぎる塊（くっついた文字）を、投影の谷で切る
+      var out = [];
+      groups.forEach(function (g) {
+        var gw = g.x1 - g.x0, n = Math.round(gw / cell);
+        if (gw <= cell * 1.3 || n < 2) { out.push(g); return; }
+        var proj = new Float32Array(gw), x, y; for (x = 0; x < gw; x++) { var t = 0; for (y = g.y0; y < g.y1; y++) t += sub[y * w + g.x0 + x]; proj[x] = t; }
+        var cuts = [0];
+        for (var i = 1; i < n; i++) { var c0 = Math.round(i * gw / n), lo = Math.max(cuts[cuts.length - 1] + 3, Math.round(c0 - cell * 0.2)), hi = Math.min(gw - 3, Math.round(c0 + cell * 0.2)), bx = c0, bv = 1e9; for (x = lo; x <= hi; x++) if (proj[x] < bv) { bv = proj[x]; bx = x; } cuts.push(bx); }
+        cuts.push(gw);
+        for (i = 0; i < cuts.length - 1; i++) {                       // 切った各部分の上下の端を求め直す
+          var a = cuts[i], b = cuts[i + 1], yy0 = g.y1, yy1 = g.y0;
+          for (y = g.y0; y < g.y1; y++) for (x = a; x < b; x++) if (sub[y * w + g.x0 + x]) { if (y < yy0) yy0 = y; if (y >= yy1) yy1 = y + 1; }
+          if (yy1 > yy0) out.push({ x0: g.x0 + a, x1: g.x0 + b, y0: yy0, y1: yy1, big: true });
+        }
+      });
+      return out;
+    }
+    function transCost(p, q) {                                      // 文字種のつながりの自然さ（0＝自然）
+      var a = p ? p.script : 'start', b = q.script, c = 0;
+      if (q.ch === 'ー' || a === 'sym' || b === 'sym') return 0;
+      if (a !== 'start' && a !== b) {
+        if ((a === 'hira' && b === 'kata') || (a === 'kata' && b === 'hira')) c += 0.14;
+        else if (a === 'kanji' && b === 'hira') c += 0;
+        else if (a === 'hira' && b === 'kanji') c += 0.03;
+        else c += 0.07;
+      }
+      if (SMALLK.indexOf(q.ch) >= 0 && (a === 'start' || a === 'kanji')) c += 0.25;     // 小さな かな は、行頭や漢字の直後には来にくい
+      return c;
+    }
+    function applyContext(chars) {                                  // 候補の並びを、文字種のつながりで選び直す（ビタビ法）
+      if (chars.length < 2) return;
+      var n = chars.length, cost = [], back = [], i, j, k;
+      for (i = 0; i < n; i++) {
+        var cs = chars[i].candidates; cost[i] = []; back[i] = [];
+        for (j = 0; j < cs.length; j++) {
+          var base = cs[j].d, bestc = 1e9, bk = -1;
+          if (i === 0) { bestc = ctxW * transCost(null, cs[j]); bk = -1; }
+          else for (k = 0; k < chars[i - 1].candidates.length; k++) { var v = cost[i - 1][k] + ctxW * transCost(chars[i - 1].candidates[k], cs[j]); if (v < bestc) { bestc = v; bk = k; } }
+          cost[i][j] = base + bestc; back[i][j] = bk;
+        }
+      }
+      var bj = 0; for (j = 1; j < cost[n - 1].length; j++) if (cost[n - 1][j] < cost[n - 1][bj]) bj = j;
+      for (i = n - 1; i >= 0; i--) { var cand = chars[i].candidates[bj]; if (cand.ch !== chars[i].ch) { chars[i].rawCh = chars[i].ch; chars[i].ch = cand.ch; chars[i].script = cand.script; chars[i].byContext = true; } bj = back[i][bj]; }
+    }
+    function exportTemplates() { return JSON.stringify({ v: VERSION, size: tmplSize, t: templates.map(function (t) { return { ch: t.ch, font: t.font, rel: t.rel, f: Object.assign({}, t.f, { R: Array.from(t.f.R) }) }; }) }); }
+    function importTemplates(json) {
+      var o = typeof json === 'string' ? JSON.parse(json) : json; tmplSize = o.size;
+      templates = o.t.map(function (t) { t.f.R = Float32Array.from(t.f.R); return { ch: t.ch, script: scriptOf(t.ch), font: t.font, rel: t.rel, f: t.f }; }); return templates.length;
+    }
     async function recognize(image, opts) {
       opts = opts || {}; var canvas = await toCanvas(image), b = glyphToBin(canvas), w = b.w, h = b.h, bin = b.bin;
       // 行：横方向の投影で分ける
@@ -312,20 +417,27 @@
           if (cur && (Math.max(cur.x1, c.x1) - cur.x0) <= cell * 1.08 && c.x0 - cur.x1 <= cell * 0.28) { cur.x1 = Math.max(cur.x1, c.x1); cur.y0 = Math.min(cur.y0, c.y0); cur.y1 = Math.max(cur.y1, c.y1); }
           else { cur = { x0: c.x0, x1: c.x1, y0: c.y0, y1: c.y1 }; groups.push(cur); }
         });
+        groups = splitWide(groups, sub, w, lh, cell);
         var chars = groups.map(function (g) {
           var gw = g.x1 - g.x0, gh = g.y1 - g.y0, cb = new Uint8Array(gw * gh);
           for (var yy = 0; yy < gh; yy++) for (var xx = 0; xx < gw; xx++) cb[yy * gw + xx] = sub[(yy + g.y0) * w + xx + g.x0];
-          var small = gw < cell * 0.45 && gh < cell * 0.45;         // 、。・などの小さな記号
-          if (small) return { ch: gw > gh * 2.2 ? 'ー' : '、', conf: 0.2, bbox: { x0: g.x0, y0: g.y0 + y0, x1: g.x1, y1: g.y1 + y0 }, symbol: true };
+          var small = gw < cell * 0.38 && gh < cell * 0.38 && !(g.big);   // 、。・などの小さな記号
+          var bb2 = { x0: g.x0, y0: g.y0 + y0, x1: g.x1, y1: g.y1 + y0 };
+          if (small) {
+            var cyr = ((g.y0 + g.y1) / 2) / lh, hl = holesOf(padOne(cb, gw, gh), gw + 2, gh + 2);
+            var sym = hl ? '。' : (gw > gh * 2.2 ? 'ー' : (cyr > 0.62 ? '、' : (cyr > 0.3 ? '・' : '、')));
+            return { ch: sym, script: 'sym', candidates: [{ ch: sym, script: 'sym', d: 0 }], conf: 0.3, bbox: bb2, symbol: true };
+          }
           var f = featuresOfBin(cb, gw, gh, options); if (!f) return null; tidy(f);
-          var r = recognizeFeatures(f, 3);
-          return { ch: r.ch, script: r.script, candidates: r.candidates, conf: Math.max(0, 1 - r.distance), distance: r.distance, bbox: { x0: g.x0, y0: g.y0 + y0, x1: g.x1, y1: g.y1 + y0 } };
+          var r = recognizeFeatures(f, 5, { rel: Math.max(gw, gh) / cell });
+          return { ch: r.ch, script: r.script, candidates: r.candidates, conf: r.conf, margin: r.margin, distance: r.distance, bbox: bb2 };
         }).filter(Boolean);
+        if (ctxW > 0 && !opts.noContext) applyContext(chars);
         lines.push({ text: chars.map(function (c) { return c.ch; }).join(''), chars: chars, bbox: { x0: chars.length ? chars[0].bbox.x0 : 0, y0: y0, x1: chars.length ? chars[chars.length - 1].bbox.x1 : 0, y1: y1 } });
       }
       return { engine: NAME, version: VERSION, text: lines.map(function (l) { return l.text; }).join('\n'), lines: lines };
     }
-    return { buildTemplates: buildTemplates, recognizeGlyph: recognizeGlyph, recognize: recognize, featuresOfCanvas: featuresOfCanvas, renderChar: renderChar,
+    return { recognizeFromFeatures: recognizeFromFeatures, buildTemplates: buildTemplates, exportTemplates: exportTemplates, importTemplates: importTemplates, verify: verify, recognizeGlyph: recognizeGlyph, recognize: recognize, featuresOfCanvas: featuresOfCanvas, renderChar: renderChar,
       get templates() { return templates; }, setMode: function (m) { mode = m; }, version: VERSION, name: NAME };
   }
   return { name: NAME, version: VERSION, create: create, scriptOf: scriptOf, charsets: { HIRA: HIRA, KATA: KATA, kanjiLevel1: kanjiLevel1 } };
