@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>コマンド一覧 ― 読みノート (Yomi-Note)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F2; --paper-deep:#F3EEE3; --ink:#22262E; --ink-soft:#5B6270;
+    --line:#DAD3C4; --accent:#B5432E; --accent-soft:#EFD9CF; --teal:#3E6E63; --white:#FFFFFF;
+    --shadow:0 6px 22px rgba(34,38,46,0.14);
+  }
+  *{box-sizing:border-box;}
+  .hidden{display:none !important;}
+  html.dlc-ud-font, html.dlc-ud-font body, html.dlc-ud-font button, html.dlc-ud-font h1,
+  html.dlc-ud-font h2, html.dlc-ud-font h3, html.dlc-ud-font p, html.dlc-ud-font li, html.dlc-ud-font a,
+  html.dlc-ud-font code{
+    font-family:'BIZ UDGothic','BIZ UDPGothic','Yu Gothic UI',sans-serif !important;
+  }
+  html,body{margin:0;padding:0;background:var(--paper-deep);color:var(--ink);font-family:"Noto Sans JP",sans-serif;line-height:1.75;}
+  h1,h2,h3{font-family:"Shippori Mincho",serif;}
+  a{color:var(--teal);}
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px 80px;}
+
+  .hero{
+    background:linear-gradient(160deg, var(--ink) 0%, #2E3440 100%);
+    color:#fff;padding:44px 24px 54px;margin-bottom:-40px;
+  }
+  .hero-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .hanko{
+    width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:"Shippori Mincho",serif;
+    font-weight:700;font-size:26px;flex-shrink:0;box-shadow:inset 0 0 0 3px rgba(255,255,255,0.35),0 6px 18px rgba(0,0,0,0.35);
+  }
+  .hero h1{font-size:26px;margin:0 0 4px;color:#fff;}
+  .hero p.tagline{margin:0;font-size:13.5px;color:#C9D0D8;}
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .cta-btn{
+    display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:24px;
+    font-size:13px;text-decoration:none;font-weight:700;background:rgba(255,255,255,0.1);color:#fff;
+    border:1px solid rgba(255,255,255,0.3);cursor:pointer;
+  }
+  .cta-btn.primary{background:var(--accent);border-color:var(--accent);}
+  .cta-btn:hover{filter:brightness(1.08);}
+
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 28px;
+    box-shadow:var(--shadow);margin-bottom:22px;
+  }
+  .card h2{font-size:18px;margin:0 0 6px;display:flex;align-items:center;gap:8px;}
+  .card .lead{font-size:12.5px;color:var(--ink-soft);margin:0 0 16px;}
+
+  .mode-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .mode-tab{
+    padding:7px 14px;border-radius:16px;font-size:12.5px;font-weight:700;cursor:pointer;
+    border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);
+  }
+  .mode-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .mode-panel{display:none;}
+  .mode-panel.active{display:block;}
+  .cmd-row{
+    display:flex;gap:14px;padding:10px 0;border-bottom:1px dashed var(--line);align-items:flex-start;
+  }
+  .cmd-row:last-child{border-bottom:none;}
+  .cmd-syntax{
+    font-family:"Courier New",monospace;font-size:13px;background:var(--accent-soft);color:var(--accent);
+    padding:3px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;min-width:150px;text-align:center;
+  }
+  .cmd-desc{font-size:13px;color:var(--ink);padding-top:3px;}
+  .note-box{
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+    font-size:12.5px;color:var(--ink-soft);margin-top:14px;
+  }
+  .warn-box{background:#FFF6E9;border:1px solid #E7C77C;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#7A5B12;margin-top:10px;}
+
+  footer{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:10px;padding:24px 0 0;}
+  @media (max-width:600px){
+    .hero{padding:36px 18px 46px;} .card{padding:20px 18px;}
+    .cmd-row{flex-direction:column;gap:4px;}
+    .cmd-syntax{min-width:0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hanko">読</div>
+    <div>
+      <h1>コマンド一覧</h1>
+      <p class="tagline">コマンドパレット（@0・@1・@2 各モード）で使えるコマンドの一覧です</p>
+      <div class="cta-row" style="margin-top:10px;margin-bottom:2px;">
+        <span class="cta-btn" style="cursor:default;background:var(--accent,#B5432E);border-color:transparent;">コマンド一覧 v30</span>
+      </div>
+      <div class="cta-row">
+        <a class="cta-btn primary" href="./index.html">📓 アプリを開く</a>
+        <a class="cta-btn" href="./Yomi_note_home_v44.html">🏠 ホームに戻る</a>
+        <a class="cta-btn" href="./%E4%BD%BF%E3%81%84%E6%96%B9v37.html">📖 使い方</a>
+        <a class="cta-btn" href="./%E7%A0%94%E7%A9%B6v0_12.html">🔬 研究</a>
+        <button class="cta-btn" id="readAloudBtn" type="button">🔊 このページを読み上げる</button>
+        <button class="cta-btn" id="udFontToggleBtn" type="button">Aa UDフォント</button>
+        <span class="cta-btn" id="readRateLabel" style="cursor:default;user-select:none;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>① コマンドパレットの使い方</h2>
+    <p class="lead">キーボード操作に慣れている方向けの、テキスト入力によるコマンド実行方法です。</p>
+    <ol style="font-size:13px;color:var(--ink-soft);padding-left:20px;margin:0;">
+      <li style="margin-bottom:8px;">画面下部のコマンド入力欄に、<code>/</code>から始まるコマンドを入力してEnterキーを押します。</li>
+      <li style="margin-bottom:8px;">コマンドには3つのモードがあります。<b>@0</b>＝通常（ページ・OCR操作）、<b>@1</b>＝数式、<b>@2</b>＝システム（表示・DLC管理）。<code>/command mode @0</code> のように入力すると切り替えられます。</li>
+      <li>どのモードからでも <code>/all command</code> と入力すると、今のモードで使えるコマンドの一覧がその場に表示されます（このページの内容と同じです）。</li>
+    </ol>
+    <div class="note-box">💡 数式や図形の挿入は、コマンド入力よりも、ツールバーの「∑数式」ボタンからタップ操作で組み立てる方法の方が直感的です（詳しくは使い方ガイドをご覧ください）。コマンドは主に、キーボード操作に慣れている方向けの早道として用意しています。</div>
+  </div>
+
+  <div class="card">
+    <h2>② コマンド一覧</h2>
+    <div class="mode-tabs">
+      <div class="mode-tab active" data-mode="m0">@0：通常モード</div>
+      <div class="mode-tab" data-mode="m1">@1：数式モード</div>
+      <div class="mode-tab" data-mode="m2">@2：システムモード</div>
+    </div>
+
+    <div class="mode-panel active" id="m0">
+      <div class="cmd-row"><span class="cmd-syntax">/text</span><span class="cmd-desc">ページ中央にテキストボックスを作成</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/feedback</span><span class="cmd-desc">意見・アンケート画面を開く（利用状況の書き出しや、集計ページへのリンクもここ）。どのモードでも使えます</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/aocr</span><span class="cmd-desc">AOCRv01エンジンの状態表示・オン／オフ・方式の切り替え（/aocr on、/aocr off、/aocr mode balanced）。AOCRv01.js が必要。どのモードでも使えます</span></div>
+  <div class="cmd-row"><span class="cmd-syntax">/aocr2</span><span class="cmd-desc">AOCRv02エンジン（試作）の状態表示・オン／オフ・使い方の切り替え（/aocr2 on、/aocr2 off、/aocr2 mode compare|use、/aocr2 build）。AOCRv02.js が必要。部分OCRにだけ使います。どのモードでも使えます</span></div>
+        <div class="cmd-row"><span class="cmd-syntax">/note</span><span class="cmd-desc">ノートモード：用紙（罫線・方眼・コーネル式など）を選ぶ画面を開きます。どのモードでも使えます</span></div>
+        <div class="cmd-row"><span class="cmd-syntax">/note list</span><span class="cmd-desc">使える用紙の一覧を表示します</span></div>
+        <div class="cmd-row"><span class="cmd-syntax">/note new 用紙名</span><span class="cmd-desc">その用紙で新しいノートを作ります（例：/note new コーネル）。ページ数は、画面で最後に選んだ数です</span></div>
+        <div class="cmd-row"><span class="cmd-syntax">/note add 用紙名</span><span class="cmd-desc">いまのページの次に、その用紙のページを1つ追加します（例：/note add 方眼）</span></div>
+        <div class="cmd-row"><span class="cmd-syntax">/note change 用紙名</span><span class="cmd-desc">いまのページの用紙だけを変えます。書き込みは残ります（例：/note change 罫線）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/input</span><span class="cmd-desc">PDF/画像を追加読み込み（縦横選択→自動でその範囲をOCR）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/camera</span><span class="cmd-desc">カメラで撮影して画像挿入・OCR</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/output [pdf|image]</span><span class="cmd-desc">作成した全ページを書き出す（省略時はPDF）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/delete{N}</span><span class="cmd-desc">Nページ目を削除</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/ocr {N}</span><span class="cmd-desc">Nページ目を再OCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/slide ocr {N}</span><span class="cmd-desc">Nページ目を再スライドOCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/out of ocr{N}</span><span class="cmd-desc">Nページ目のOCR除外範囲（図・写真など）を自動検知</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all ocr</span><span class="cmd-desc">全ページを再OCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all slide ocr</span><span class="cmd-desc">全ページを再スライドOCR（最初の結果は削除されます）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all out of ocr</span><span class="cmd-desc">全ページのOCR除外範囲を自動検知</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/command mode @0|@1|@2</span><span class="cmd-desc">コマンドモードを切り替える</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all command</span><span class="cmd-desc">このコマンド一覧を表示</span></div>
+    </div>
+
+    <div class="mode-panel" id="m1">
+      <div class="cmd-row"><span class="cmd-syntax">/text ○</span><span class="cmd-desc">LaTeXの○を数式テキストボックスとして作成（例：<code>/text x^2+1</code>）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all kigou</span><span class="cmd-desc">数学記号一覧から選んで数式エディタに挿入</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/ofset text ○</span><span class="cmd-desc">○を手書き風の書体で作成</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all command</span><span class="cmd-desc">このコマンド一覧を表示</span></div>
+      <div class="note-box">v3.6以降、数式はタップ式のボタンと数字・変数キーパッドだけで組み立てられるようになりました（ツールバーの「∑数式」ボタン）。コマンド入力はLaTeXを直接書ける方向けの方法です。</div>
+    </div>
+
+    <div class="mode-panel" id="m2">
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @1</span><span class="cmd-desc">通常のシステム（全機能）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @2</span><span class="cmd-desc">ペン・消しゴム機能なし</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @3</span><span class="cmd-desc">画像・動画・URL・グラフ挿入なし</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @4</span><span class="cmd-desc">ペン・消しゴムに加え画像・動画・URL・グラフ挿入もなし</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/note mode @5</span><span class="cmd-desc">部分OCRの精度を優先（画像・動画・URL・グラフ挿入は使用不可）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/tool up</span><span class="cmd-desc">ツールバーを上端表示に切り替える（ページ一覧が見やすくなる）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/tool side</span><span class="cmd-desc">ツールバーを左（通常）表示に戻す</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/test mode on</span><span class="cmd-desc">テストモードON（v4.5で追加：数式パレットの「よく使う公式」、ノート内のリンク・動画をブロック。学校のテスト時などに）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/test mode off</span><span class="cmd-desc">テストモードOFF（v4.5で追加）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/import dlc</span><span class="cmd-desc">追加DLC（.jsファイル）を選んで取り込む（複数取り込み可）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc on [番号]</span><span class="cmd-desc">DLCを有効にする（番号省略ですべて）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc off [番号]</span><span class="cmd-desc">DLCを無効にする（番号省略ですべて）</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc remove 番号</span><span class="cmd-desc">指定した番号のDLCを削除する</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc list</span><span class="cmd-desc">取り込み済みDLCの一覧と番号を表示する</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/dlc check</span><span class="cmd-desc">DLCのバージョン照合（選んだ版・保存内容・実際に読み込まれた版・画面上のバッジ表記が合っているか）を確認する</span></div>
+      <div class="cmd-row"><span class="cmd-syntax">/all command</span><span class="cmd-desc">このコマンド一覧を表示</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>③ コマンド検索</h2>
+    <p class="lead">気になるコマンドのキーワードを入力すると、①②の一覧から一致する行だけを表示します。</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <input type="text" id="cmdSearchInput" placeholder="例：ocr／test mode／delete" style="flex:1;min-width:180px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:var(--paper);color:var(--ink);">
+      <button type="button" class="cta-btn" id="cmdSearchClearBtn" style="background:var(--paper);color:var(--ink-soft);border:1px solid var(--line);">クリア</button>
+    </div>
+    <div id="cmdSearchCount" class="note-box hidden" style="margin-top:10px;"></div>
+    <div id="cmdSearchPassArea" class="hidden" style="margin-top:12px;">
+      <input type="password" id="cmdSearchPassInput" placeholder="pass" style="padding:9px 12px;border:1px solid var(--accent);border-radius:8px;font-size:13px;width:180px;">
+    </div>
+    <div class="card hidden" id="newCmdCard" style="margin-top:16px;background:var(--paper);"></div>
+  </div>
+
+  <div class="card">
+    <h2>④ 困ったときは</h2>
+    <ul style="font-size:13px;color:var(--ink-soft);padding-left:20px;margin:0;">
+      <li>コマンドが実行できない → 先頭に <code>/</code> を付け忘れていないか確認してください。</li>
+      <li>思ったモードのコマンドが出てこない → 今どのモード（@0/@1/@2）か、入力欄の左のプロンプト表示（@0 / @1 / @2）で確認できます。</li>
+      <li>その他のご質問・不具合報告 → <a href="https://github.com/suzaki-ao/yomi-note" target="_blank" rel="noopener noreferrer">GitHubリポジトリ</a>からご連絡ください。</li>
+    </ul>
+    <div class="warn-box">このページはアプリ本体（読みノート）のコマンド実装から内容を書き出しています。アプリのバージョンアップに伴いコマンドが追加・変更された場合、このページも合わせて更新されます。</div>
+  </div>
+
+  <footer>
+    読みノート (Yomi-Note) コマンド一覧 v30 ／ © <span id="footerYear">2026</span> Yomi-Note Project. All rights reserved.
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+  document.querySelectorAll('.mode-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.mode-tab').forEach(function(t){ t.classList.remove('active'); });
+      document.querySelectorAll('.mode-panel').forEach(function(p){ p.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.mode).classList.add('active');
+    });
+  });
+  /* ページの読み上げ・目次・翻訳（共通モジュール YomiReader v1.0） */
+/* ==== YomiReader v1.0 : 読みノート ページ読み上げ共通モジュール ====
+   ・範囲選択読み上げ（ドラッグした範囲を読む）  ・速度（キー／入力欄／＋－／スライダー／プリセット）
+   ・左端の目次＋「ここだけ大きく表示」  ・ページ翻訳＋ネイティブ音声
+   各ページに同じものを埋め込んで使う（外部ファイル不要）。 */
+(function(){
+'use strict';
+var CAND='h1,h2,h3,h4,p,li,tr,dt,dd,blockquote,figcaption,.cmd-row,.link-card';
+var SKIP='script,style,nav,button,footer,pre,select,input,textarea,.yr-ui,.yr-focus,.yr-menu,.meta-bar,.quicknav,.ver-tabs,.mode-tabs,.skip-read';
+var JA=/[\u3040-\u30ff\u3400-\u9fff]/;
+var EMOJI=/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu;
+var LANGS=[
+ {n:'English',t:'en',g:'en',s:'en-US'},{n:'中文（简体）',t:'zh',g:'zh-CN',s:'zh-CN'},{n:'中文（繁體）',t:'zh-Hant',g:'zh-TW',s:'zh-TW'},
+ {n:'한국어',t:'ko',g:'ko',s:'ko-KR'},{n:'Español',t:'es',g:'es',s:'es-ES'},{n:'Français',t:'fr',g:'fr',s:'fr-FR'},
+ {n:'Deutsch',t:'de',g:'de',s:'de-DE'},{n:'Português (Brasil)',t:'pt',g:'pt',s:'pt-BR'},{n:'Italiano',t:'it',g:'it',s:'it-IT'},
+ {n:'Русский',t:'ru',g:'ru',s:'ru-RU'},{n:'العربية',t:'ar',g:'ar',s:'ar-SA',rtl:1},{n:'हिन्दी',t:'hi',g:'hi',s:'hi-IN'},
+ {n:'ไทย',t:'th',g:'th',s:'th-TH'},{n:'Tiếng Việt',t:'vi',g:'vi',s:'vi-VN'},{n:'Bahasa Indonesia',t:'id',g:'id',s:'id-ID'},
+ {n:'Türkçe',t:'tr',g:'tr',s:'tr-TR'},{n:'Nederlands',t:'nl',g:'nl',s:'nl-NL'},{n:'Polski',t:'pl',g:'pl',s:'pl-PL'},
+ {n:'Українська',t:'uk',g:'uk',s:'uk-UA'},{n:'Filipino',t:'tl',g:'tl',s:'fil-PH'},{n:'Svenska',t:'sv',g:'sv',s:'sv-SE'},
+ {n:'Ελληνικά',t:'el',g:'el',s:'el-GR'}
+];
+var K={rate:'yomiReaderRate',auto:'yomiReaderAutoSel',toc:'yomiReaderToc',zoom:'yomiReaderFocusZoom',voice:'yomiReaderVoice_'};
+function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){} return null; }
+function $(s,r){ return (r||document).querySelector(s); }
+function mk(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+
+var root, readBtn, dock, tocEl, bubble, focusEl, fBody, menu, banner;
+var rate=1, playing=false, items=[], pos=0, token=0, mode='page', keep=[];
+var heads=[], focusK=-2, rateTimer=null;
+var tr={lang:null,list:[],cache:{},busy:false,gen:0};
+
+function css(){
+ var c='.yr-ui,.yr-ui *{box-sizing:border-box}'+
+ '.yr-dock{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:9000;width:min(980px,calc(100vw - 16px));background:#fff;color:#22262E;border:1px solid #DAD3C4;border-radius:14px;box-shadow:0 6px 24px rgba(34,38,46,.22);padding:8px 10px;font:13px/1.4 "Noto Sans JP",sans-serif}'+
+ '.yr-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0}'+
+ '.yr-ui button{font:inherit;cursor:pointer;border:1px solid #DAD3C4;background:#fff;color:#22262E;border-radius:9px;padding:5px 10px;min-height:32px}'+
+ '.yr-ui button:hover{border-color:#3E6E63;background:#f4f8f6}'+
+ '.yr-ui button.yr-main{background:#B5432E;color:#fff;border-color:#B5432E;font-weight:700}'+
+ '.yr-ui button.on{background:#3E6E63;color:#fff;border-color:#3E6E63}'+
+ '.yr-sp{flex:1}'+
+ '.yr-rate input[type=number]{width:62px;font:inherit;padding:4px 6px;border:1px solid #DAD3C4;border-radius:8px;text-align:center}'+
+ '.yr-rate{display:inline-flex;align-items:center;gap:4px}'+
+ '.yr-ui input[type=range]{width:140px;accent-color:#B5432E;vertical-align:middle}'+
+ '.yr-chip{padding:3px 8px!important;min-height:28px!important;font-size:12px}'+
+ '.yr-status{font-size:12px;color:#5B6270}'+
+ '.yr-dock.yr-min .yr-hide{display:none}'+
+ '.yr-toc{position:fixed;left:0;top:0;bottom:0;width:260px;z-index:8900;background:#FBF8F2;border-right:1px solid #DAD3C4;display:none;flex-direction:column;font:13px/1.45 "Noto Sans JP",sans-serif;color:#22262E;box-shadow:4px 0 18px rgba(34,38,46,.12)}'+
+ 'html.yr-toc-on .yr-toc{display:flex}'+
+ '.yr-toc-h{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #DAD3C4;font-size:14px}'+
+ '.yr-toc-list{flex:1;overflow:auto;padding:6px 6px 90px}'+
+ '.yr-toc-f{font-size:11px;color:#5B6270;padding:6px 12px 90px;border-top:1px dashed #DAD3C4}'+
+ '.yr-ti{display:flex;align-items:flex-start;gap:2px;border-radius:8px;padding:2px 2px 2px 6px;border-left:3px solid transparent}'+
+ '.yr-ti a{flex:1;cursor:pointer;padding:4px 2px;color:#22262E;text-decoration:none;word-break:break-all}'+
+ '.yr-ti.lv3{margin-left:14px;font-size:12.5px}'+
+ '.yr-ti.on{background:#EFD9CF;border-left-color:#B5432E;font-weight:700}'+
+ '.yr-ti button{padding:0 6px;min-height:26px;font-size:12px;opacity:.7}.yr-ti:hover button,.yr-ti.on button{opacity:1}'+
+ '@media (min-width:1100px){html.yr-toc-on body{padding-left:268px}}'+
+ 'html.yr-on body{padding-bottom:130px}'+
+ '[data-yr-cur]{background:rgba(255,214,64,.5)!important;outline:2px solid #F0B400;border-radius:4px;scroll-margin-block:35vh}'+
+ '.yr-bubble{position:absolute;z-index:9500;display:none;gap:4px;background:#22262E;border-radius:10px;padding:4px;box-shadow:0 4px 16px rgba(0,0,0,.3)}'+
+ '.yr-bubble button{background:#22262E!important;color:#fff!important;border:0!important;min-height:30px}.yr-bubble button:hover{background:#3E6E63!important}'+
+ '.yr-focus{position:fixed;inset:0;z-index:9800;background:#FBF8F2;display:none;flex-direction:column;color:#22262E}'+
+ '.yr-focus.open{display:flex}'+
+ '.yr-fbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid #DAD3C4;background:#fff;font:13px "Noto Sans JP",sans-serif}'+
+ '.yr-ftitle{font-weight:700;font-size:14px;margin:0 6px}'+
+ '.yr-fbody{flex:1;overflow:auto;padding:24px 4vw 120px}.yr-fin{max-width:900px;margin:0 auto;line-height:1.9}'+
+ '.yr-fin section,.yr-fin .card{margin:0 0 12px}'+
+ '.yr-menu{position:fixed;inset:0;z-index:9900;background:rgba(34,38,46,.45);display:none;align-items:center;justify-content:center;padding:12px}'+
+ '.yr-menu.open{display:flex}'+
+ '.yr-mbox{background:#fff;border-radius:14px;padding:16px;max-width:620px;width:100%;max-height:86vh;overflow:auto;font:13px/1.6 "Noto Sans JP",sans-serif;color:#22262E}'+
+ '.yr-lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin:10px 0}'+
+ '.yr-banner{position:sticky;top:0;z-index:50;margin:0 0 12px;padding:8px 12px;background:#EAF3EF;border:1px solid #3E6E63;border-radius:10px;font:13px/1.6 "Noto Sans JP",sans-serif;color:#22262E;display:flex;flex-wrap:wrap;gap:8px;align-items:center}'+
+ '.yr-banner select{font:inherit;max-width:230px;padding:3px}'+
+ '@media (max-width:640px){.yr-ui input[type=range]{width:100px}.yr-dock{padding:6px}}'+
+ '@media print{.yr-ui,.yr-focus,.yr-menu,.yr-bubble{display:none!important}html.yr-toc-on body{padding-left:0!important}}';
+ var st=mk('style'); st.textContent=c; document.head.appendChild(st);
+}
+
+/* ---------- テキスト ---------- */
+function norm(t){ return String(t||'').replace(EMOJI,'').replace(/[\u00a0\t]+/g,' ').replace(/\s*\n\s*/g,'。').replace(/\s+/g,' ').replace(/([。！？!?、,])。+/g,'$1').replace(/^。+/,'').trim(); }
+function strip(e){ var c=e.cloneNode(true); var x=c.querySelectorAll('button,select,input'); for(var i=0;i<x.length;i++) x[i].remove(); return c; }
+function ownText(e){ var c=e.cloneNode(true); var x=c.querySelectorAll(CAND+',button,select,input'); for(var i=0;i<x.length;i++) x[i].remove(); return norm(c.textContent); }
+function textOf(e){
+ if(e.tagName==='TR') return norm(Array.prototype.map.call(e.cells,function(c){ return norm(c.innerText); }).filter(Boolean).join('、'));
+ if(e.matches('.link-card')) return norm(Array.prototype.map.call(e.children,function(c){ return c.textContent.trim(); }).filter(Boolean).join('。'));
+ if(e.querySelector('button,select,input')) return norm(strip(e).textContent);
+ return norm(e.innerText||e.textContent);
+}
+function visible(e){ return e.getClientRects().length>0; }
+function speechLang(e){
+ var l=(e&&e.closest&&e.closest('[lang]')||document.documentElement).getAttribute('lang')||'ja';
+ if(/^ja/i.test(l)) return 'ja-JP';
+ if(l.length<=2){ for(var i=0;i<LANGS.length;i++) if(LANGS[i].g===l) return LANGS[i].s; }
+ return l;
+}
+function buildUnits(){
+ var old=document.querySelectorAll('[data-yr-i]'); for(var j=0;j<old.length;j++) old[j].removeAttribute('data-yr-i');
+ var all=root.querySelectorAll(CAND), out=[];
+ for(var i=0;i<all.length;i++){
+  var e=all[i];
+  if(e.closest(SKIP)||!visible(e)) continue;
+  if(e.tagName!=='TR'&&e.closest('tr')) continue;
+  var nested=e.tagName!=='TR'&&e.querySelector(CAND);
+  var t=nested?ownText(e):textOf(e);
+  if(!t) continue;
+  e.setAttribute('data-yr-i',out.length);
+  out.push({el:e,text:t,lang:speechLang(e),i:out.length});
+ }
+ return out;
+}
+
+/* ---------- 音声 ---------- */
+function voicesFor(lang){
+ if(!window.speechSynthesis) return [];
+ var vs=speechSynthesis.getVoices()||[], lc=lang.toLowerCase(), pre=lc.split('-')[0];
+ function nl(v){ return v.lang.toLowerCase().replace('_','-'); }
+ var ex=vs.filter(function(v){ return nl(v)===lc; });
+ var pr=vs.filter(function(v){ return nl(v).split('-')[0]===pre; });
+ var pool=ex.length?ex:pr;
+ function sc(v){ return (/natural|neural|online/i.test(v.name)?3:0)+(/google|premium|enhanced/i.test(v.name)?2:0)+(v.default?1:0); }
+ return pool.slice().sort(function(a,b){ return sc(b)-sc(a); });
+}
+function pickVoice(lang){
+ var pool=voicesFor(lang), saved=ls(K.voice+lang);
+ if(saved) for(var i=0;i<pool.length;i++) if(pool[i].voiceURI===saved) return pool[i];
+ return pool[0]||null;
+}
+function chunks(text){
+ var s=text.replace(/([。！？!?]+)/g,'$1\u0001').replace(/([.．])\s+/g,'$1\u0001').split('\u0001'), out=[], cur='';
+ function push(p){ p=p.trim(); if(!p) return; if(cur&&(cur+p).length>140){ out.push(cur); cur=''; } cur+=p; }
+ for(var i=0;i<s.length;i++){
+  if(s[i].length>160){ var sub=s[i].replace(/([、,，;；])/g,'$1\u0002').split('\u0002'); for(var k=0;k<sub.length;k++) push(sub[k]); }
+  else push(s[i]);
+ }
+ if(cur) out.push(cur);
+ return out.length?out:[text];
+}
+function say(msg,ms){ var s=$('#yr-status'); if(!s) return; s.textContent=msg||''; if(ms) setTimeout(function(){ if(s.textContent===msg) s.textContent=''; },ms); }
+function updateBtns(){
+ if(readBtn) readBtn.textContent=playing?'⏹ 読み上げを停止':'🔊 このページを読み上げる';
+ var p=$('[data-a=play]',dock); if(p) p.textContent=playing?'⏹ 止める':'▶ 画面から読む';
+ var fr=$('[data-f=read]',focusEl); if(fr) fr.textContent=playing?'⏹ 止める':'▶ 読む';
+}
+function clearCur(){ var c=document.querySelectorAll('[data-yr-cur]'); for(var i=0;i<c.length;i++) c[i].removeAttribute('data-yr-cur'); }
+function markCur(u){
+ clearCur(); if(!u||u.i==null) return;
+ var els=document.querySelectorAll('[data-yr-i="'+u.i+'"]'), target=null;
+ for(var i=0;i<els.length;i++){ els[i].setAttribute('data-yr-cur','1'); if(focusEl.classList.contains('open')?focusEl.contains(els[i]):!focusEl.contains(els[i])) target=els[i]; }
+ if(target){
+  var r=target.getBoundingClientRect();
+  if(focusEl.classList.contains('open')||r.top<90||r.bottom>innerHeight-150) target.scrollIntoView({block:'center',behavior:'smooth'});
+ }
+ syncToc(u.el);
+}
+function stopSpeech(){ token++; playing=false; try{ speechSynthesis.cancel(); }catch(e){} clearCur(); updateBtns(); }
+function start(list,from,m){
+ if(!window.speechSynthesis){ alert('このブラウザは読み上げに対応していません'); return; }
+ token++; try{ speechSynthesis.cancel(); }catch(e){}
+ items=list; pos=from||0; mode=m||'page'; playing=true; updateBtns();
+ if(!items.length){ playing=false; updateBtns(); return; }
+ var t=token; setTimeout(function(){ if(t===token) run(pos); },40);
+}
+function run(i){
+ if(!playing) return;
+ if(i>=items.length){ playing=false; clearCur(); updateBtns(); return; }
+ pos=i; var it=items[i], t=token, ch=chunks(it.text), k=0;
+ markCur(it.u);
+ (function step(){
+  if(!playing||t!==token) return;
+  if(k>=ch.length){ run(i+1); return; }
+  var u=new SpeechSynthesisUtterance(ch[k++]);
+  u.lang=it.lang; u.rate=rate;
+  var v=pickVoice(it.lang); if(v) u.voice=v;
+  u.onend=step;
+  u.onerror=function(e){ if(e&&(e.error==='interrupted'||e.error==='canceled')) return; step(); };
+  keep.push(u); if(keep.length>6) keep.shift();
+  speechSynthesis.speak(u);
+ })();
+}
+function restartHere(){ if(!playing) return; var t=++token; try{ speechSynthesis.cancel(); }catch(e){} setTimeout(function(){ if(t===token&&playing) run(pos); },60); }
+function pageItems(from){ var us=buildUnits(); return {all:us.map(function(u){ return {text:u.text,lang:u.lang,u:u}; }),units:us}; }
+function firstOnScreen(us){ for(var i=0;i<us.length;i++){ if(us[i].el.getBoundingClientRect().bottom>90) return i; } return 0; }
+function readPage(fromScreen){
+ if(playing){ stopSpeech(); return; }
+ var p=pageItems(); start(p.all,fromScreen?firstOnScreen(p.units):0,'page');
+}
+function readSelection(){
+ var s=getSelection(); if(!s||s.isCollapsed) return;
+ var txt=s.toString(); var a=s.anchorNode; var el=a&&(a.nodeType===1?a:a.parentElement);
+ var lang=speechLang(el), list=[];
+ txt.split(/\n+/).forEach(function(line){ line=norm(line); if(line) list.push({text:line,lang:lang,u:null}); });
+ if(list.length) start(list,0,'sel');
+}
+function jump(d){
+ if(!playing){ readPage(true); return; }
+ pos=Math.max(0,Math.min(items.length-1,pos+d)); restartHere();
+}
+
+/* ---------- 速度 ---------- */
+function setRate(v,quiet){
+ v=parseFloat(v); if(isNaN(v)) return;
+ v=Math.max(0.5,Math.min(3,Math.round(v*10)/10)); rate=v; ls(K.rate,String(v));
+ var i=$('#yr-rate-in'),g=$('#yr-rate-rg'); if(i&&document.activeElement!==i) i.value=v.toFixed(1); if(g) g.value=v;
+ var lb=$('#readRateLabel'); if(lb) lb.textContent='速度 '+v.toFixed(1)+'倍';
+ var chips=dock.querySelectorAll('.yr-chip'); for(var c=0;c<chips.length;c++) chips[c].classList.toggle('on',parseFloat(chips[c].getAttribute('data-r'))===v);
+ if(!quiet){ clearTimeout(rateTimer); rateTimer=setTimeout(restartHere,220); }
+}
+
+/* ---------- 目次 ---------- */
+function buildToc(){
+ var hs=root.querySelectorAll('h2,h3'); heads=[];
+ for(var i=0;i<hs.length;i++){
+  var h=hs[i]; if(h.closest(SKIP)||!visible(h)) continue;
+  var t=norm(h.textContent); if(!t) continue;
+  heads.push({h:h,lv:h.tagName==='H2'?2:3,t:t});
+ }
+ var L=$('.yr-toc-list',tocEl); L.innerHTML='';
+ heads.forEach(function(o,k){
+  var d=mk('div','yr-ti lv'+o.lv); d.setAttribute('data-k',k);
+  var a=mk('a'); a.textContent=o.t; a.title=o.t;
+  var b1=mk('button',null,'▶'); b1.title='ここから読み上げ'; b1.setAttribute('data-t','read');
+  var b2=mk('button',null,'🔍'); b2.title='ここだけ大きく表示'; b2.setAttribute('data-t','zoom');
+  a.addEventListener('click',function(){ o.h.scrollIntoView({block:'start',behavior:'smooth'}); if(innerWidth<1100) toggleToc(false); });
+  b1.addEventListener('click',function(){ readFromHead(k); });
+  b2.addEventListener('click',function(){ openFocus(k); });
+  d.appendChild(a); d.appendChild(b1); d.appendChild(b2); L.appendChild(d);
+ });
+ syncToc();
+}
+function activeHead(el){
+ var best=-1;
+ for(var i=0;i<heads.length;i++){
+  if(el){ if(heads[i].h===el||heads[i].h.contains(el)||(heads[i].h.compareDocumentPosition(el)&4)) best=i; else break; }
+  else { if(heads[i].h.getBoundingClientRect().top<=150) best=i; else break; }
+ }
+ return best;
+}
+function syncToc(el){
+ if(!heads.length||!tocEl) return;
+ var k=focusEl.classList.contains('open')&&focusK>=0?focusK:activeHead(el||null);
+ var rows=tocEl.querySelectorAll('.yr-ti');
+ for(var i=0;i<rows.length;i++) rows[i].classList.toggle('on',i===k);
+ if(k>=0&&rows[k]&&document.documentElement.classList.contains('yr-toc-on')){ var l=$('.yr-toc-list',tocEl),r=rows[k]; if(r.offsetTop<l.scrollTop||r.offsetTop>l.scrollTop+l.clientHeight-40) l.scrollTop=r.offsetTop-60; }
+}
+function toggleToc(on){
+ var h=document.documentElement; if(on===undefined) on=!h.classList.contains('yr-toc-on');
+ h.classList.toggle('yr-toc-on',on); ls(K.toc,on?'1':'0');
+ var b=$('[data-a=toc]',dock); if(b) b.classList.toggle('on',on);
+ if(on) buildToc();
+}
+function headEnd(k){
+ for(var j=k+1;j<heads.length;j++) if(heads[j].lv<=heads[k].lv) return heads[j].h;
+ return null;
+}
+function inSeg(k,el){
+ var h=heads[k].h, e=headEnd(k);
+ if(!(h===el||h.contains(el)||(h.compareDocumentPosition(el)&4))) return false;
+ if(e&&!(e.compareDocumentPosition(el)&2)) return false;
+ return true;
+}
+function readFromHead(k){
+ var p=pageItems(), from=0;
+ for(var i=0;i<p.units.length;i++){ var el=p.units[i].el; if(heads[k].h===el||heads[k].h.contains(el)||(heads[k].h.compareDocumentPosition(el)&4)){ from=i; break; } }
+ start(p.all,from,'page'); if(innerWidth<1100) toggleToc(false);
+}
+
+/* ---------- 大きく表示 ---------- */
+function setZoom(z){ z=Math.max(1,Math.min(4,Math.round(z*10)/10)); ls(K.zoom,String(z)); fBody.firstChild.style.zoom=z; $('#yr-fz').textContent=Math.round(z*100)+'%'; }
+function cleanFrag(f){
+ var d=mk('div'); d.appendChild(f);
+ var x=d.querySelectorAll('script,style,[id]');
+ for(var i=0;i<x.length;i++){ if(x[i].tagName==='SCRIPT'||x[i].tagName==='STYLE') x[i].remove(); else x[i].removeAttribute('id'); }
+ var c=d.querySelectorAll('[data-yr-cur]'); for(var j=0;j<c.length;j++) c[j].removeAttribute('data-yr-cur');
+ var kids=Array.prototype.slice.call(d.children);
+ kids.forEach(function(n){ if(!n.textContent.trim()&&!n.querySelector('img,svg,canvas,table')) n.remove(); });
+ return d;
+}
+function showFocus(title,node){
+ $('.yr-ftitle',focusEl).textContent=title;
+ fBody.innerHTML=''; var inn=mk('div','yr-fin'); inn.appendChild(node); fBody.appendChild(inn);
+ setZoom(parseFloat(ls(K.zoom))||1.8);
+ focusEl.classList.add('open'); fBody.scrollTop=0; document.documentElement.style.overflow='hidden';
+ var pr=$('[data-f=prev]',focusEl), nx=$('[data-f=next]',focusEl);
+ pr.disabled=nx.disabled=focusK<0; updateBtns();
+}
+function openFocus(k){
+ if(k<0||k>=heads.length) return;
+ buildUnits(); focusK=k;
+ var h=heads[k].h, r=document.createRange(), e=headEnd(k);
+ r.setStartBefore(h);
+ if(e) r.setEndBefore(e); else { var f=root.querySelector('footer'); if(f) r.setEndBefore(f); else r.setEndAfter(root.lastChild); }
+ showFocus(heads[k].t,cleanFrag(r.cloneContents()));
+ if(innerWidth<1100) toggleToc(false);
+ syncToc();
+}
+function focusSelection(){
+ var s=getSelection(); if(!s||s.isCollapsed) return;
+ buildUnits(); focusK=-1;
+ showFocus('選んだところ',cleanFrag(s.getRangeAt(0).cloneContents()));
+}
+function closeFocus(){ focusEl.classList.remove('open'); document.documentElement.style.overflow=''; if(mode!=='sel') { clearCur(); } focusK=-2; updateBtns(); }
+function readFocus(){
+ if(playing){ stopSpeech(); return; }
+ var p=pageItems(), list=[];
+ if(focusK>=0){ p.all.forEach(function(it){ if(inSeg(focusK,it.u.el)) list.push(it); }); start(list,0,'focus'); }
+ else { var t=fBody.innerText; var l=speechLang(fBody); var a=[]; t.split(/\n+/).forEach(function(x){ x=norm(x); if(x) a.push({text:x,lang:l,u:null}); }); start(a,0,'sel'); }
+}
+
+/* ---------- 選択バブル ---------- */
+function onSelect(e){
+ if(e&&e.target&&e.target.closest&&e.target.closest('.yr-bubble')) return;
+ setTimeout(function(){
+  var s=getSelection(); if(!s||s.isCollapsed||!s.rangeCount){ bubble.style.display='none'; return; }
+  var txt=s.toString().trim(), a=s.anchorNode, el=a&&(a.nodeType===1?a:a.parentElement);
+  if(!txt||!el||el.closest('input,textarea,.yr-dock,.yr-toc,.yr-menu')||!(root.contains(el)||fBody.contains(el))){ bubble.style.display='none'; return; }
+  var rc=s.getRangeAt(0).getBoundingClientRect();
+  bubble.style.display='flex';
+  var bw=bubble.offsetWidth;
+  bubble.style.top=(window.scrollY+rc.bottom+8)+'px';
+  bubble.style.left=Math.max(6,Math.min(window.scrollX+rc.left,window.scrollX+innerWidth-bw-6))+'px';
+  if(ls(K.auto)==='1') readSelection();
+ },12);
+}
+
+/* ---------- 翻訳 ---------- */
+function oneGtx(tl,s){
+ return fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=ja&tl='+tl+'&dt=t',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'q='+encodeURIComponent(s)})
+ .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+ .then(function(j){ return (j[0]||[]).map(function(x){ return x[0]||''; }).join(''); });
+}
+function gtxEngine(tl){
+ return function(list){
+  return oneGtx(tl,list.join('\n')).then(function(txt){
+   var out=txt.split('\n'); if(out.length===list.length) return out;
+   var res=[],p=Promise.resolve();
+   list.forEach(function(s,i){ p=p.then(function(){ return oneGtx(tl,s); }).then(function(x){ res[i]=x; }); });
+   return p.then(function(){ return res; });
+  });
+ };
+}
+function getEngine(L){
+ var g=gtxEngine(L.g), fb={name:'Google翻訳',fn:g};
+ if(!('Translator' in self)) return Promise.resolve(fb);
+ return Translator.availability({sourceLanguage:'ja',targetLanguage:L.t}).then(function(av){
+  if(av==='unavailable') return fb;
+  return Translator.create({sourceLanguage:'ja',targetLanguage:L.t}).then(function(t){
+   return {name:'Chrome内蔵翻訳（端末内）',fn:function(list){
+    var res=[],p=Promise.resolve();
+    list.forEach(function(s,i){ p=p.then(function(){ return t.translate(s); }).then(function(x){ res[i]=x; }); });
+    return p.then(function(){ return res; }).catch(function(){ return g(list); });
+   }};
+  });
+ }).catch(function(){ return fb; });
+}
+function collectNodes(){
+ var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null), out=[], n;
+ while((n=w.nextNode())){
+  var p=n.parentElement; if(!p||!JA.test(n.nodeValue)) continue;
+  if(p.closest('script,style,textarea,pre,.yr-ui,.yr-focus,.yr-menu,.yr-nt')||!visible(p)) continue;
+  out.push(n);
+ }
+ return out;
+}
+function restoreJa(){
+ tr.gen++;
+ tr.list.forEach(function(o){ if(o.n.isConnected) o.n.nodeValue=o.orig; if(o.p) o.p.removeAttribute('lang'); });
+ tr.list=[]; tr.lang=null; tr.cache={};
+ root.removeAttribute('dir'); if(banner){ banner.remove(); banner=null; }
+ buildToc(); say('日本語に戻しました',2500);
+}
+function translateTo(L){
+ if(tr.busy) return;
+ if(tr.lang) restoreJa();
+ tr.busy=true; var gen=++tr.gen;
+ say('翻訳の準備中…');
+ getEngine(L).then(function(eng){
+  tr.lang=L; tr.engine=eng.name; var cache=tr.cache[L.g]=tr.cache[L.g]||{};
+  return runTranslate(L,eng,cache,gen);
+ }).catch(function(e){
+  say('⚠ 翻訳に失敗しました（ネットワーク接続を確認してください）',8000);
+  if(!tr.list.length) tr.lang=null;
+ }).then(function(){ tr.busy=false; showBanner(); buildToc(); });
+}
+function runTranslate(L,eng,cache,gen){
+ var nodes=collectNodes().filter(function(n){ return !tr.list.some(function(o){ return o.n===n; }); });
+ var jobs=nodes.map(function(n){ var m=n.nodeValue.match(/^(\s*)([\s\S]*?)(\s*)$/); return {n:n,lead:m[1],core:m[2].replace(/\s+/g,' '),trail:m[3],orig:n.nodeValue}; });
+ var chunksList=[],cur=[],len=0;
+ jobs.forEach(function(j){ if(cur.length&&(len+j.core.length>1100||cur.length>=30)){ chunksList.push(cur); cur=[]; len=0; } cur.push(j); len+=j.core.length; });
+ if(cur.length) chunksList.push(cur);
+ var done=0,total=jobs.length||1,idx=0,failed=false;
+ function apply(j,t){
+  if(gen!==tr.gen) return;
+  var p=j.n.parentElement; j.n.nodeValue=j.lead+t+j.trail;
+  if(p){ p.setAttribute('lang',L.s); }
+  tr.list.push({n:j.n,orig:j.orig,p:p});
+ }
+ function worker(){
+  if(idx>=chunksList.length||gen!==tr.gen||failed) return Promise.resolve();
+  var ch=chunksList[idx++], need=[], needJ=[];
+  ch.forEach(function(j){ if(cache[j.core]!=null) apply(j,cache[j.core]); else { need.push(j.core); needJ.push(j); } });
+  var pr=need.length?eng.fn(need):Promise.resolve([]);
+  return pr.then(function(res){
+   needJ.forEach(function(j,i){ var t=(res[i]==null?j.core:res[i]); cache[j.core]=t; apply(j,t); });
+   done+=ch.length; say('翻訳中… '+Math.round(done/total*100)+'%'); return worker();
+  },function(e){ failed=true; throw e; });
+ }
+ if(!jobs.length){ say('このページに翻訳する文章がありません',3000); return Promise.resolve(); }
+ root.setAttribute('dir',L.rtl?'rtl':'');
+ return Promise.all([worker(),worker(),worker()]).then(function(){ if(gen===tr.gen) say('✅ 翻訳が完了しました',4000); });
+}
+function showBanner(){
+ if(banner){ banner.remove(); banner=null; }
+ if(!tr.lang) return;
+ var L=tr.lang;
+ banner=mk('div','yr-ui yr-banner');
+ banner.innerHTML='<span>🌐 <b></b> に翻訳しました（'+tr.engine+'による機械翻訳）。<b>内容は日本語の原文が正</b>です。</span>';
+ banner.querySelector('b').textContent=L.n;
+ var vs=voicesFor(L.s), lab=mk('label',null,'🔊 音声：'), sel=mk('select');
+ if(vs.length){
+  var cur=pickVoice(L.s);
+  vs.forEach(function(v){ var o=mk('option'); o.value=v.voiceURI; o.textContent=v.name+' ('+v.lang+')'; if(cur&&cur.voiceURI===v.voiceURI) o.selected=true; sel.appendChild(o); });
+  sel.addEventListener('change',function(){ ls(K.voice+L.s,sel.value); restartHere(); });
+  lab.appendChild(sel);
+ } else { lab.textContent='⚠ この端末に '+L.n+' の音声が見つかりません。端末（OS／ブラウザ）の設定で音声を追加すると、ネイティブの発音で読めます。'; }
+ var b1=mk('button',null,'🌐 別の言語'), b2=mk('button',null,'日本語に戻す');
+ b1.onclick=function(){ openMenu(); }; b2.onclick=restoreJa;
+ banner.appendChild(lab); banner.appendChild(b1); banner.appendChild(b2);
+ root.insertBefore(banner,root.firstChild);
+}
+function openMenu(){
+ var g=$('.yr-lgrid',menu); g.innerHTML='';
+ var jb=mk('button',null,'日本語（元に戻す）'); jb.onclick=function(){ menu.classList.remove('open'); if(tr.lang) restoreJa(); }; g.appendChild(jb);
+ LANGS.forEach(function(L){ var b=mk('button',null); b.textContent=L.n; if(tr.lang&&tr.lang.g===L.g) b.classList.add('on'); b.onclick=function(){ menu.classList.remove('open'); translateTo(L); }; g.appendChild(b); });
+ menu.classList.add('open');
+}
+function onNewlyVisible(){
+ if(tr.lang&&!tr.busy){ tr.busy=true; getEngine(tr.lang).then(function(eng){ return runTranslate(tr.lang,eng,tr.cache[tr.lang.g]||(tr.cache[tr.lang.g]={}),tr.gen); }).catch(function(){}).then(function(){ tr.busy=false; buildToc(); }); }
+ else buildToc();
+}
+
+/* ---------- 初期化 ---------- */
+function init(o){
+ o=o||{};
+ root=$(o.root||'.wrap')||document.body; readBtn=$(o.readBtn||'#readAloudBtn');
+ css(); document.documentElement.classList.add('yr-on');
+ var sv=parseFloat(ls(K.rate)); rate=isNaN(sv)?1:sv;
+
+ dock=mk('div','yr-ui yr-dock');
+ dock.innerHTML=
+ '<div class="yr-row"><button class="yr-main" data-a="play">▶ 画面から読む</button><button data-a="prev" title="前の段落へ">⏮</button><button data-a="next" title="次の段落へ">⏭</button>'+
+ '<span class="yr-sp"></span><button data-a="slow" title="遅く（−キー）">−</button>'+
+ '<label class="yr-rate" title="数字を入力して Enter（0.5〜3.0）。Rキーでここに移動">速度 <input id="yr-rate-in" type="number" min="0.5" max="3" step="0.1" inputmode="decimal"> 倍</label>'+
+ '<button data-a="fast" title="速く（＋キー）">＋</button><input id="yr-rate-rg" type="range" min="0.5" max="3" step="0.1" aria-label="読み上げ速度">'+
+ '<button data-a="min" title="たたむ／ひらく">▾</button></div>'+
+ '<div class="yr-row yr-hide"><span>よく使う速度：</span>'+[0.8,1,1.2,1.5,2,2.5].map(function(r){ return '<button class="yr-chip" data-r="'+r+'">'+r.toFixed(1)+'</button>'; }).join('')+
+ '<span class="yr-sp"></span><button data-a="toc">📑 目次</button><button data-a="trans">🌐 翻訳</button><button data-a="zoomsel" title="選んだ文章だけを大きく表示">🔍 選択を大きく</button></div>'+
+ '<div class="yr-row yr-hide"><label><input type="checkbox" id="yr-auto"> 文章をドラッグして選んだらすぐ読む</label><span class="yr-sp"></span><span class="yr-status" id="yr-status">文章をドラッグすると「ここを読む」が出ます ／ キー：＋ − 0（速度）・R（速度入力）・Esc（停止）</span></div>';
+ document.body.appendChild(dock);
+
+ tocEl=mk('aside','yr-ui yr-toc'); tocEl.setAttribute('aria-label','目次');
+ tocEl.innerHTML='<div class="yr-toc-h"><b>📑 目次</b><button data-a="toc">✕</button></div><div class="yr-toc-list"></div><div class="yr-toc-f">▶ その章から読み上げ／🔍 その章だけ大きく表示</div>';
+ document.body.appendChild(tocEl);
+
+ bubble=mk('div','yr-ui yr-bubble'); bubble.innerHTML='<button data-b="read">🔊 ここを読む</button><button data-b="stop">⏹</button><button data-b="zoom">🔍 大きく</button>';
+ bubble.addEventListener('mousedown',function(e){ e.preventDefault(); });
+ bubble.addEventListener('touchstart',function(e){ e.preventDefault(); },{passive:false});
+ document.body.appendChild(bubble);
+
+ focusEl=mk('div','yr-focus'); focusEl.setAttribute('role','dialog');
+ focusEl.innerHTML='<div class="yr-fbar yr-ui"><button data-f="prev">◀ 前へ</button><span class="yr-ftitle"></span><button data-f="next">次へ ▶</button><span class="yr-sp"></span>'+
+ '<button data-f="smaller">A−</button><span id="yr-fz">180%</span><button data-f="bigger">A＋</button><button class="yr-main" data-f="read">▶ 読む</button><button data-f="close">✕ 閉じる</button></div><div class="yr-fbody"><div></div></div>';
+ document.body.appendChild(focusEl); fBody=$('.yr-fbody',focusEl);
+
+ menu=mk('div','yr-ui yr-menu'); menu.innerHTML='<div class="yr-mbox"><b style="font-size:15px">🌐 このページを翻訳</b><p style="margin:6px 0;font-size:12px;color:#5B6270">言語を選ぶと、ページの文章を翻訳し、その言語の音声で読み上げます。お使いのChromeに内蔵翻訳があれば端末内で翻訳し、なければ Google翻訳 にこのページの文章だけを送って翻訳します（ノートの内容は送りません）。機械翻訳のため、内容は日本語の原文が正です。</p><div class="yr-lgrid"></div><button data-m="close">閉じる</button></div>';
+ menu.addEventListener('click',function(e){ if(e.target===menu||e.target.getAttribute('data-m')==='close') menu.classList.remove('open'); });
+ document.body.appendChild(menu);
+
+ if(readBtn){
+  readBtn.classList.add('yr-nt'); readBtn.addEventListener('click',function(){ readPage(false); });
+  var tb=readBtn.cloneNode(false); tb.id='yrTransBtn'; tb.textContent='🌐 このページを翻訳'; tb.className=readBtn.className;
+  tb.addEventListener('click',openMenu); readBtn.parentNode.insertBefore(tb,readBtn.nextSibling);
+ }
+ var lb=$('#readRateLabel'); if(lb){ lb.classList.add('yr-nt'); lb.style.cursor='pointer'; lb.title='クリックで速度の入力欄へ'; lb.addEventListener('click',function(){ dock.classList.remove('yr-min'); var i=$('#yr-rate-in'); i.focus(); i.select(); }); }
+
+ dock.addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  var a=b.getAttribute('data-a'), r=b.getAttribute('data-r');
+  if(r){ setRate(r); return; }
+  if(a==='play') readPage(true);
+  else if(a==='prev') jump(-1); else if(a==='next') jump(1);
+  else if(a==='slow') setRate(rate-0.1); else if(a==='fast') setRate(rate+0.1);
+  else if(a==='toc') toggleToc();
+  else if(a==='trans') openMenu();
+  else if(a==='zoomsel'){ var s=getSelection(); if(s&&!s.isCollapsed) focusSelection(); else say('先に文章をドラッグして選んでください',3000); }
+  else if(a==='min'){ dock.classList.toggle('yr-min'); b.textContent=dock.classList.contains('yr-min')?'▴':'▾'; }
+ });
+ tocEl.addEventListener('click',function(e){ var b=e.target.closest('button[data-a=toc]'); if(b) toggleToc(false); });
+ var ri=$('#yr-rate-in'), rg=$('#yr-rate-rg');
+ ri.addEventListener('input',function(){ var v=parseFloat(ri.value); if(!isNaN(v)&&v>=0.5&&v<=3) setRate(v); });
+ ri.addEventListener('change',function(){ setRate(ri.value); ri.value=rate.toFixed(1); });
+ ri.addEventListener('keydown',function(e){ if(e.key==='Enter'){ setRate(ri.value); ri.value=rate.toFixed(1); ri.blur(); } e.stopPropagation(); });
+ rg.addEventListener('input',function(){ setRate(rg.value); });
+ var au=$('#yr-auto'); au.checked=ls(K.auto)==='1'; au.addEventListener('change',function(){ ls(K.auto,au.checked?'1':'0'); });
+ bubble.addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return; var t=b.getAttribute('data-b');
+  if(t==='read') readSelection(); else if(t==='stop') stopSpeech(); else if(t==='zoom') focusSelection();
+  bubble.style.display='none';
+ });
+ focusEl.addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return; var f=b.getAttribute('data-f');
+  if(f==='close') closeFocus(); else if(f==='read') readFocus();
+  else if(f==='prev'){ if(playing) stopSpeech(); openFocus(Math.max(0,focusK-1)); }
+  else if(f==='next'){ if(playing) stopSpeech(); openFocus(Math.min(heads.length-1,focusK+1)); }
+  else if(f==='bigger') setZoom((parseFloat(ls(K.zoom))||1.8)+0.2);
+  else if(f==='smaller') setZoom((parseFloat(ls(K.zoom))||1.8)-0.2);
+ });
+ document.addEventListener('mouseup',onSelect); document.addEventListener('touchend',onSelect); document.addEventListener('keyup',function(e){ if(e.shiftKey) onSelect(e); });
+ document.addEventListener('mousedown',function(e){ if(!e.target.closest('.yr-bubble')) bubble.style.display='none'; });
+ document.addEventListener('keydown',function(e){
+  var t=e.target, tag=(t&&t.tagName)||'';
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable)||e.metaKey||e.ctrlKey||e.altKey) return;
+  if(e.key==='+'||e.key==='='){ e.preventDefault(); setRate(rate+0.1); }
+  else if(e.key==='-'||e.key==='_'){ e.preventDefault(); setRate(rate-0.1); }
+  else if(e.key==='0'){ e.preventDefault(); setRate(1); }
+  else if(e.key==='r'||e.key==='R'){ e.preventDefault(); dock.classList.remove('yr-min'); ri.focus(); ri.select(); }
+  else if(e.key==='Escape'){ if(menu.classList.contains('open')) menu.classList.remove('open'); else if(focusEl.classList.contains('open')) closeFocus(); else if(playing) stopSpeech(); }
+ });
+ var raf=0; window.addEventListener('scroll',function(){ if(raf) return; raf=requestAnimationFrame(function(){ raf=0; if(!playing) syncToc(); }); },{passive:true});
+ var mt=null; new MutationObserver(function(recs){ if(!recs.some(function(r){ return !(r.target.closest&&r.target.closest('.yr-ui,.yr-focus,.yr-menu,.yr-bubble')); })) return; clearTimeout(mt); mt=setTimeout(onNewlyVisible,450); }).observe(root,{subtree:true,attributes:true,attributeFilter:['class','hidden','style']});
+ if(window.speechSynthesis) speechSynthesis.onvoiceschanged=function(){ if(banner) showBanner(); };
+ window.addEventListener('beforeunload',function(){ try{ speechSynthesis.cancel(); }catch(e){} });
+
+ setRate(rate,true); updateBtns(); buildToc();
+ var pref=ls(K.toc), long=heads.length>=6||(root.innerText||'').length>6000;
+ toggleToc(pref==='1'||(pref===null&&long&&innerWidth>=1100));
+}
+window.YomiReader={init:init,version:'1.0'};
+})();
+
+YomiReader.init({root:'body'});
+  (function(){
+    var KEY = 'yomiDlcUdFontEnabled';
+    var btn = document.getElementById('udFontToggleBtn');
+    function apply(){
+      var on = false;
+      try { on = localStorage.getItem(KEY) === 'true'; } catch(e){}
+      document.documentElement.classList.toggle('dlc-ud-font', on);
+      if (btn) btn.style.background = on ? 'var(--accent,#B5432E)' : '';
+      if (btn) btn.style.color = on ? '#fff' : '';
+    }
+    if (btn) btn.addEventListener('click', function(){
+      var on = document.documentElement.classList.contains('dlc-ud-font');
+      try { localStorage.setItem(KEY, on ? 'false' : 'true'); } catch(e){}
+      apply();
+    });
+    apply();
+  })();
+  /* 【v15で新規追加・v19で変更】コマンド検索エンジン。
+     通常は①②の一覧（.cmd-row）をキーワードで絞り込むだけの機能。
+     【v19での変更】v15〜v18では、解除コードを入力すると解除状態がlocalStorageに
+     永続保存され、一度解除した端末ではこのページを開くたびに@new研究開発
+     コマンドが最初から見えていた（管理者専用のはずなのに「初期状態で出てしまう」
+     状態）。v19では次のように改めた。
+       ①@new一覧の中身はページの初期HTMLに書かない（解除したときだけ組み立てて表示）
+       ②解除状態はタブを閉じると消える（sessionStorage）。古い版が残した
+         永続的な解除状態も、このページを開いた時点で消去する
+       ③解除コードの判定は、文字そのものではなくハッシュ値で行う
+       ④解除後は「🔒 ロックする」ボタンですぐ元に戻せる
+     ※これは「うっかり見えてしまう」ことを防ぐための目隠しであり、ページのソースを
+       読めば分かる程度の簡易なもの。強い秘匿が必要な情報は載せないこと。 */
+  (function(){
+    var UNLOCK_KEY = 'yomiNewCmdUnlockedSession';
+    try { localStorage.removeItem('yomiNewCmdUnlocked'); } catch(e){}
+    var NEW_CARD_B64 = "CiAgICAgIDxoMj7wn5STIEBuZXcg56CU56m26ZaL55m644Kz44Oe44Oz44OJ5LiA6KanIDxidXR0b24gdHlwZT0iYnV0dG9uIiBpZD0ibmV3Q21kTG9ja0J0biIgY2xhc3M9ImN0YS1idG4iIHN0eWxlPSJiYWNrZ3JvdW5kOnZhcigtLXBhcGVyLWRlZXApO2NvbG9yOnZhcigtLWluay1zb2Z0KTtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWxpbmUpO3BhZGRpbmc6NHB4IDEycHg7Zm9udC1zaXplOjExLjVweDttYXJnaW4tbGVmdDo4cHg7Ij7wn5SSIOODreODg+OCr+OBmeOCizwvYnV0dG9uPjwvaDI+CiAgICAgIDxwIGNsYXNzPSJsZWFkIj7jgqLjg5fjg6rmnKzkvZPjga7nibnliKXjg6Ljg7zjg4nvvIhAbmV377yJ44Gn44Gu44G/5L2/44GG44CB566h55CG6ICF55So44Gu5a6f6aiT55qE44Gq5qSc6Ki844Kz44Oe44Oz44OJ44Gn44GZ44CC6YCa5bi444Gu5Yip55So44Gn44Gv5LiN6KaB44Gn44GZ44CC44GT44Gu44Oa44O844K444KS6ZaJ44GY44KL77yI44K/44OW44KS6ZaJ44GY44KL77yJ44Go44CB6KGo56S644Gv6Ieq5YuV44Gn5YWD44Gr5oi744KK44G+44GZ44CCPC9wPgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBoZWxwPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+44GT44Gu5LiA6Kan44KS44Ki44OX44Oq44Gu44Kz44Oe44Oz44OJ44Ot44Kw44Gr6KGo56S6PC9zcGFuPjwvZGl2PgogICAgICA8cCBzdHlsZT0iZm9udC1zaXplOjEycHg7Zm9udC13ZWlnaHQ6Ym9sZDttYXJnaW46MTRweCAwIDRweDsiPuKXhiDjg4bjgq3jgrnjg4jjg5zjg4Pjgq/jgrnoh6rli5XphY3nva48L3A+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGJsYW5rIGNvbXBhcmU8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7jgIzlvpPmnaXmlrnlvI/jgI3jgajjgIzooYzplpPjg7vmnKvlsL7jga7kvZnnmb3jgoLmpJzlh7rjgZnjgovlvLfljJbniYjjgI3jga7oh6rli5XphY3nva7lgJnoo5zmlbDjgpLmr5TovIM8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGJyYWNrZXQgY29tcGFyZTwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuaLrOW8p+ODu+KWoeOBruWAmeijnOS7tuaVsOOCkuW+k+adpeaWueW8j+OBqFYy77yI5Y2Y6Kqe44Gu5bqn5qiZ77yJ44Gn5q+U6LyDPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBib3ggdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuKWoeOCkuOAjOaWh+Wtl+OBqOOBl+OBpuiqjeitmOOBleOCjOOBn+OCguOBruOAjeOBqOOAjOeUu+WDj+OBruWbm+inkuOBhOi8qumDreOAjeOBruS4oeaWueOBi+OCieaknOefpeOBl+OBpueiuuiqjTwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgcGFyZW4gdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPu+8iO+8ieOCkuepuuashO+8j+ODqeODmeODq++8iOOCouODu+KRoOOBquOBqe+8ie+8j+aWh+eroOOBq+WIhumhnuOBl+OBpjHku7bjgZrjgaTnorroqo08L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGZyYW1lIHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7mnqDvvIjilqHjgaflm7Ljgb7jgozjgZ/poJjln5/vvInjgajjgIHjgZ3jga7kuK3jga7nqbrmrITjg7vlhaXjgozlrZDjgpLnorroqo08L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGJyYWNrZXQgb3ZlcmxhcCB0ZXN0PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+5qSc55+l44GX44Gf56m65qyE44GM5pei5a2Y44Gu56m655m95qSc5Ye644KE44OG44Kt44K544OI44Oc44OD44Kv44K544Go6YeN44Gq44Gj44Gm44GE44Gq44GE44GL56K66KqNPC9zcGFuPjwvZGl2PgogICAgICA8cCBzdHlsZT0iZm9udC1zaXplOjEycHg7Zm9udC13ZWlnaHQ6Ym9sZDttYXJnaW46MTRweCAwIDRweDsiPuKXhiBPQ1LpmaTlpJbvvIjlm7PooajmpJzlh7rvvIk8L3A+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGdyYXBoaWMgdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuW+k+adpeOBrjPkv6Hlj7fmlrnlvI/jgajmp4vpgKDmlrnlvI/vvIjnvavnt5rjg7vnt5rnlLvvvInjga7mpJzlh7rntZDmnpzjgpLmr5TovIM8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGdyYXBoaWMgYWxsIHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7jg47jg7zjg4jlhajjg5rjg7zjgrjjgaflvpPmnaXmlrnlvI/jgajmp4vpgKDmlrnlvI/jgpLmr5TjgbnjgovjgrXjg7zjg5njgqQ8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGJveCBjb250ZW50IHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7mnqDjga7kuK3ouqvjgpLjgIzmloflrZfjgaDjgZHvvI/lm7PjgaDjgZHvvI/mt7flnKjvvI/nqbrjgI3jgavmjK/jgorliIbjgZE8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGZpZ3VyZSB0ZXh0IHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7lm7Pjga7kuK3jgavjgYLjgovmloflrZfjg6njg5njg6vjga7mlbDvvIjlm7PjgZTjgajpmaTlpJbjgZfjgZ/jgajjgY3jgavmtojjgYjjgovmloflrZfvvInjgpLnorroqo08L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGdyYXBoaWMgc2Vuc2l0aXZpdHkgdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuaknOWHuuOBruW8t+OBleWIpeOBq+OAgeOCueOCs+OCouOBqOOBl+OBjeOBhOWApOOBruW3ruOBvuOBp+WQq+OCgeOBpueiuuiqjTwvc3Bhbj48L2Rpdj4KICAgICAgPHAgc3R5bGU9ImZvbnQtc2l6ZToxMnB4O2ZvbnQtd2VpZ2h0OmJvbGQ7bWFyZ2luOjE0cHggMCA0cHg7Ij7il4YgT0NS6KqN6K2Y44Gd44Gu44KC44GuPC9wPgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBvY3IgY29tcGFyZTwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuOAjOW+k+adpeaWueW8j+OAjeOBqOOAjOWxgOaJgOmBqeW/nOS6jOWApOWMlu+8iOWun+mok+eahO+8ieOAjeOBrk9DUue1kOaenOOCkuavlOi8gzwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgb2NyIHBzbSB0ZXN0PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+44Oa44O844K45YiG5Ymy44Oi44O844OJ44KS5aSJ44GI44Gf44Go44GN44GuT0NS57WQ5p6c44KS5q+U6LyDPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBvY3Igc2NhbGUgdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuaLoeWkp+ebruaomeOBruino+WDj+W6puOCkuWkieOBiOOBn+OBqOOBjeOBrk9DUue1kOaenOOCkuavlOi8gzwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgb2NyIHdvcmRzIHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7kvY7kv6HpoLzluqbjga7ljZjoqp7jga7mlbDjgajlrp/kvovvvIjoqqToqq3jga7loLTmiYDvvInjgpLnorroqo08L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IG9jciBhZ3JlZSB0ZXN0PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+NOaWueW8j+OBruaWh+eroOOBruS4gOiHtOeOh+OBqOS9juS/oemgvOW6puWNmOiqnuaVsOOCkuavlOi8gzwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgb2NyIGRlZ3JhZGUgdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPue4ruWwj+ODu+OBvOOBi+OBl+ODu+ODjuOCpOOCuuOBruWKo+WMlueUu+WDj+OBp+OBqeOBruaWueW8j+OBjOeymOOCi+OBi+eiuuiqjTwvc3Bhbj48L2Rpdj4KICAgICAgPHAgc3R5bGU9ImZvbnQtc2l6ZToxMnB4O2ZvbnQtd2VpZ2h0OmJvbGQ7bWFyZ2luOjE0cHggMCA0cHg7Ij7il4Yg5pWw5byP44O75YyW5a2m5byPPC9wPgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBmb3JtdWxhIGRldGVjdCB0ZXN0PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+6KaL44Gf55uu44GM5pWw5byP44O75YyW5a2m5byP44KJ44GX44GE44OW44Ot44OD44Kv44KE44CB5YiG5pWw44KJ44GX44GN5LiK5LiLMuauteOBrue1hOOBv+WQiOOCj+OBm+OCkuaknOefpTwvc3Bhbj48L2Rpdj4KICAgICAgPHAgc3R5bGU9ImZvbnQtc2l6ZToxMnB4O2ZvbnQtd2VpZ2h0OmJvbGQ7bWFyZ2luOjE0cHggMCA0cHg7Ij7il4YgdjUuOeOBp+i/veWKoO+8iOWun+mok+KGkuS/ruato+KGkuaUueWWhO+8iTwvcD4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgdHJ1dGggc2V0IOaeoD0zIOWbsz0xIOaLrOW8pz01IOKWoT0yIOaVsOW8jz0zPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+44GT44Gu44Oa44O844K444Gu44CM5a6f6Zqb44Gu5YCL5pWw44CN44KS55m76Yyy44GZ44KL77yI44GT44Gu56uv5pyr44Gr44Gg44GR5L+d5a2Y44CC44OO44O844OI44Gr44Gv5YWl44KJ44Gq44GE77yJPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyB0cnV0aCB0ZXN0PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+55m76Yyy44GX44Gf5a6f6Zqb44Gu5YCL5pWw44Go44CB5qSc5Ye657WQ5p6c44KS6Ieq5YuV44Gn54Wn5ZCI44GZ44KLPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyB0cnV0aCBjbGVhcjwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuOBk+OBruODmuODvOOCuOOBrueZu+mMsuOCkuWJiumZpOOBmeOCizwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgY29sb3IgZmlndXJlIHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7loZfjgorjgaTjgbbjgZfjgZ/oibLku5jjgY3jga7lm7PlvaLvvIjntbXjg7vjgqTjg6njgrnjg4jvvInjgpLmpJznn6XjgZnjgos8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IGdseXBoIGJveCB0ZXN0PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+5pys5paH5Lit44Gu5paH5a2X44K144Kk44K644Gu4pah44KS5qSc55+l44GZ44KLPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBicmFja2V0IGRpZmYgdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuaLrOW8p+OBruaknOefpeS7tuaVsOOBjOOCs+ODnuODs+ODieOBq+OCiOOBo+OBpumBleOBhueQhueUseOCkueiuuiqjeOBmeOCizwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgb2NyIG9wdGlvbiBzcGxpdCB0ZXN0PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+5bGA5omA6YGp5b+c5LqM5YCk5YyW44Go6Zmw5b2x6KOc5q2j44Gu5Yq55p6c44KS5YiH44KK5YiG44GR44KLPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L25ldyBvY3IgcmVwZWF0IHRlc3Q8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj7lkIzjgZjmnaHku7bjga5PQ1LjgYzmr47lm57lkIzjgZjntZDmnpzjgavjgarjgovjgYvjgpLnorroqo3jgZnjgos8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vbmV3IHNoYWRpbmcgdGVzdDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuODmuODvOOCuOiDjOaZr+OBruaYjuOCi+OBleOBruODoOODqe+8iOW9seODu+eFp+aYjuOBruWBj+OCiu+8ieOCkuaVsOWApOOBq+OBmeOCi++8iOmZsOW9seijnOato+OBjOWKueOBj+adoeS7tuOCkuaOouOBmeOBn+OCge+8iTwvc3Bhbj48L2Rpdj4KICAgICAgPHAgc3R5bGU9ImZvbnQtc2l6ZToxMnB4O2ZvbnQtd2VpZ2h0OmJvbGQ7bWFyZ2luOjE0cHggMCA0cHg7Ij7il4Yg5LiA5ous5a6f6KGM77yI56CU56m26ZaL55m644Gu5Yq5546H5YyW77yJPC9wPgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L3J1biBhbGwgY29tbWFuZDwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuS4iuOBruOBmeOBueOBpuOBruaknOiovOOCkuOAgeS7iuOBhOOCi+ODmuODvOOCuOOBp+mghueVquOBq+Wun+ihjO+8iOWun+mam+OBruWAi+aVsOOBjOacqueZu+mMsuOBquOCieOAgeeFp+WQiOOBoOOBkeecgeeVpe+8ieOAgue1kOaenOOBr+ODnOOCv+ODs+OBvuOBn+OBryAvcnVuIGNvcHkg44Gn44Kz44OU44O844Gn44GN44KLPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L3J1biBhbGwgY29tbWFuZCBAYWxsIHBhZ2VzPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+44GZ44G544Gm44Gu5qSc6Ki844KS5YWo44Oa44O844K444Gn6aCG55Wq44Gr5a6f6KGM77yI44OO44O844OI5YWo5L2T44Gu6Kq/5p+744Gv5pyA5Yid44GrMeWbnuOBoOOBkeOAguWFqOS9k+OBpzMw5YiG5Lul5LiK44GL44GL44KL44GT44Go44GM44GC44KL77yJPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L3J1biBhbGwgY29tbWFuZCBAd2l0aCBvY3I8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj5PQ1LntZDmnpzjga7jgarjgYTjg5rjg7zjgrjjga/jgIHlhYjjgatPQ1LjgpLlrp/ooYzjgZfjgabjgYvjgonmpJzoqLzjgZnjgovvvIjjg47jg7zjg4jjgatPQ1LntZDmnpzjgYzov73liqDjgZXjgozjgovvvIk8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vcnVuIGFsbCBjb21tYW5kIEBhbGwgcGFnZXMgQHdpdGggb2NyPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+5YWo44Oa44O844K444Gn44CBT0NS57WQ5p6c44Gu44Gq44GE44Oa44O844K444KS5YWI44GrT0NS44GX44Gm44GL44KJ5qSc6Ki844GZ44KLPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L3J1biBzdG9wPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+5LiA5ous5a6f6KGM44KS5Lit5q2i77yI5a6f6KGM5Lit44Gu44Kz44Oe44Oz44OJ44GM57WC44KP44KK5qyh56ys5q2i44G+44KL77yJPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L3J1biBjb3B5PC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+55u05YmN44Gu5LiA5ous5a6f6KGM44Gu57WQ5p6c44KS44KC44GG5LiA5bqm44Kz44OU44O877yI5a6f6KGM5Lit44Gv6YCU5Lit57WM6YGO44KS44Kz44OU44O877yJPC9zcGFuPjwvZGl2PgogICAgICAgICAgICAgICAgICA8aDM+4peGIEFPQ1J2MDHvvIh2Ni4z77yJPC9oMz4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9uZXcgYW9jciBjb21wYXJlPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+5qiZ5rqW5pa55byP44GoQU9DUnYwMe+8iGZhc3Tjg7tiYWxhbmNlZOODu2FjY3VyYXRl77yJ44KS5ZCM44GY44Oa44O844K444Gn5q+U44G544KL77yIQU9DUnYwMS5qcyDjgYzlv4XopoHvvIk8L3NwYW4+PC9kaXY+Cgo8aDM+4peGIOeCueaknO+8iC9kZWJ1Z++8iTwvaDM+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vZGVidWcgYWxsPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+54K55qSc44KS44G+44Go44KB44Gm5a6f6KGM44GX44CB57WQ5p6c44KS44Kz44OU44O844Gn44GN44KLPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L2RlYnVnIGVudjwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuWun+ihjOeSsOWig++8iOODluODqeOCpuOCtuODu+eUu+mdouODu+mAmuS/oe+8iTwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9kZWJ1ZyB2ZXJzaW9uPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+44OQ44O844K444On44Oz6KGo6KiY44Go44Oq44Oz44Kv5YWI44Gu54mI44Gu5LiA6Ie0PC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L2RlYnVnIGRvbTwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPueUu+mdoumDqOWTge+8iElE77yJ44O76Kqs5piO44Gu44Gq44GE44Oc44K/44Oz44Gu54K55qScPC9zcGFuPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjbWQtcm93Ij48c3BhbiBjbGFzcz0iY21kLXN5bnRheCI+L2RlYnVnIGxpYnM8L3NwYW4+PHNwYW4gY2xhc3M9ImNtZC1kZXNjIj5PQ1Ljg7tQREbjg7vjgrDjg6njg5Xjgarjganjga7pg6jlk4Hjga7oqq3jgb/ovrzjgb/vvIhDaGFydC5qc+OBr+WIpeOBrumFjeS/oeWFg+OCguippuOBme+8iTwvc3Bhbj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY21kLXJvdyI+PHNwYW4gY2xhc3M9ImNtZC1zeW50YXgiPi9kZWJ1ZyBzdGF0czwvc3Bhbj48c3BhbiBjbGFzcz0iY21kLWRlc2MiPuWIqeeUqOeKtuazgeOBruiomOmMsuOBqOaEj+imi+OCouODs+OCseODvOODiOOBruWLleS9nO+8iOODjuODvOODiOOBruWGheWuueOBjOa3t+OBluOBo+OBpuOBhOOBquOBhOOBi+OCgueiuuiqjeOAgnY2LjLjgafov73liqDvvIk8L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImNtZC1yb3ciPjxzcGFuIGNsYXNzPSJjbWQtc3ludGF4Ij4vZGVidWcgZXJyb3JzPC9zcGFuPjxzcGFuIGNsYXNzPSJjbWQtZGVzYyI+6LW35YuV5pmC44GL44KJ6KiY6Yyy44GX44Gf44Ko44Op44O8PC9zcGFuPjwvZGl2PgoKPGRpdiBjbGFzcz0id2Fybi1ib3giPuOCouODl+ODquWBtOOBpyA8Y29kZT4vY29tbWFuZCBtb2RlIEBuZXc8L2NvZGU+IOOBq+WIh+OCiuabv+OBiOOBpuOBi+OCieS9v+eUqOOBl+OBpuOBj+OBoOOBleOBhOOAguS7u+aEj+OBruOCs+ODvOODieWun+ihjOOBq+OBr+WvvuW/nOOBl+OBpuOBhOOBvuOBm+OCk+OAgjwvZGl2Pgo=";
+    var PASS_HASH = 3367865245700036;
+    function h53(str){var h1=0xdeadbeef,h2=0x41c6ce57;for(var i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0);}
+    function decodeB64Utf8(b64){
+      var bin = atob(b64), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    }
+    var input = document.getElementById('cmdSearchInput');
+    var clearBtn = document.getElementById('cmdSearchClearBtn');
+    var countBox = document.getElementById('cmdSearchCount');
+    var passArea = document.getElementById('cmdSearchPassArea');
+    var passInput = document.getElementById('cmdSearchPassInput');
+    var newCard = document.getElementById('newCmdCard');
+    function isUnlocked(){
+      try { return sessionStorage.getItem(UNLOCK_KEY) === 'true'; } catch(e){ return false; }
+    }
+    function revealNewCard(){
+      newCard.innerHTML = decodeB64Utf8(NEW_CARD_B64);
+      newCard.classList.remove('hidden');
+      var lockBtn = document.getElementById('newCmdLockBtn');
+      if (lockBtn) lockBtn.addEventListener('click', lockNewCard);
+    }
+    function lockNewCard(){
+      try { sessionStorage.removeItem(UNLOCK_KEY); } catch(e){}
+      newCard.classList.add('hidden');
+      newCard.innerHTML = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function runSearch(keyword){
+      var kw = keyword.trim().toLowerCase();
+      var rows = document.querySelectorAll('#m0 .cmd-row, #m1 .cmd-row, #m2 .cmd-row');
+      if (!kw){
+        rows.forEach(function(r){ r.classList.remove('hidden'); });
+        countBox.classList.add('hidden');
+        return;
+      }
+      var hit = 0;
+      rows.forEach(function(r){
+        var text = r.textContent.toLowerCase();
+        var match = text.indexOf(kw) !== -1;
+        r.classList.toggle('hidden', !match);
+        if (match) hit++;
+      });
+      countBox.textContent = kw + '：' + hit + '件ヒットしました（該当しない行は隠しています）';
+      countBox.classList.remove('hidden');
+    }
+    input.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter') return;
+      if (input.value.trim() === '>_'){
+        passArea.classList.remove('hidden');
+        passInput.value = '';
+        passInput.placeholder = 'pass';
+        passInput.focus();
+        return;
+      }
+      runSearch(input.value);
+    });
+    input.addEventListener('input', function(){
+      if (!input.value.trim()) runSearch('');
+    });
+    clearBtn.addEventListener('click', function(){
+      input.value = '';
+      runSearch('');
+      passArea.classList.add('hidden');
+    });
+    passInput.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter') return;
+      if (h53(passInput.value.trim()) === PASS_HASH){
+        try { sessionStorage.setItem(UNLOCK_KEY, 'true'); } catch(err){}
+        revealNewCard();
+        passArea.classList.add('hidden');
+        input.value = '';
+        newCard.scrollIntoView({ behavior:'smooth', block:'start' });
+      } else {
+        passInput.value = '';
+        passInput.placeholder = '違います。もう一度';
+      }
+    });
+    if (isUnlocked()) revealNewCard();
+  })();
+</script>
+</body>
+</html>

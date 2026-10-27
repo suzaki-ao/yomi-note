@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>利用規約 ― 読みノート (Yomi-Note)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F2; --paper-deep:#F3EEE3; --ink:#22262E; --ink-soft:#5B6270;
+    --line:#DAD3C4; --accent:#B5432E; --accent-soft:#EFD9CF; --teal:#3E6E63; --white:#FFFFFF;
+    --shadow:0 6px 22px rgba(34,38,46,0.14);
+  }
+  *{box-sizing:border-box;}
+  html.dlc-ud-font, html.dlc-ud-font body, html.dlc-ud-font button, html.dlc-ud-font h1,
+  html.dlc-ud-font h2, html.dlc-ud-font h3, html.dlc-ud-font p, html.dlc-ud-font li,
+  html.dlc-ud-font a, html.dlc-ud-font td, html.dlc-ud-font th{
+    font-family:'BIZ UDGothic','BIZ UDPGothic','Yu Gothic UI',sans-serif !important;
+  }
+  html,body{margin:0;padding:0;background:var(--paper-deep);color:var(--ink);font-family:"Noto Sans JP",sans-serif;line-height:1.8;}
+  h1,h2,h3{font-family:"Shippori Mincho",serif;}
+  a{color:var(--teal);}
+  .wrap{max-width:820px;margin:0 auto;padding:40px 24px 80px;}
+  header.page-head{
+    display:flex;align-items:center;gap:12px;margin-bottom:8px;
+  }
+  .hanko{
+    width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:"Shippori Mincho",serif;
+    font-weight:700;font-size:17px;flex-shrink:0;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.35);
+  }
+  header.page-head h1{font-size:22px;margin:0;color:var(--ink);}
+  header.page-head p{margin:2px 0 0;font-size:11px;color:var(--ink-soft);}
+  .meta-bar{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0 30px;
+    font-size:12px;color:var(--ink-soft);
+  }
+  .ver-badge{
+    background:var(--accent);color:#fff;padding:2px 9px;border-radius:10px;font-weight:700;font-size:11px;
+  }
+  .meta-bar .sep{opacity:.5;}
+  .back-link{
+    display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--teal);text-decoration:none;
+    border:1px solid var(--line);padding:6px 12px;border-radius:20px;background:#fff;
+  }
+  .back-link:hover{border-color:var(--teal);}
+  section{
+    background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 26px;margin-bottom:16px;
+    box-shadow:0 2px 8px rgba(34,38,46,0.04);
+  }
+  section h2{
+    font-size:16px;margin:0 0 4px;color:var(--ink);display:flex;align-items:baseline;gap:8px;
+  }
+  section h2 .num{color:var(--accent);font-family:"Noto Sans JP",sans-serif;font-weight:700;}
+  .ja{font-size:14px;margin:10px 0;}
+  ul{margin:8px 0;padding-left:22px;}
+  li{margin-bottom:4px;font-size:14px;}
+  .lib-list{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px 16px;
+    margin:10px 0;font-size:12.5px;color:var(--ink-soft);
+  }
+  .lib-list div{padding:4px 0;border-bottom:1px dashed var(--line);}
+  .credit-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px;}
+  .credit-table th,.credit-table td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .credit-table th{color:var(--ink-soft);font-weight:700;font-size:11.5px;}
+  .credit-table td.lib-name{font-weight:700;color:var(--ink);white-space:nowrap;}
+  .credit-table td.lib-version{white-space:nowrap;color:var(--ink-soft);}
+  .credit-table td.lib-license{white-space:nowrap;}
+  .credit-table a{color:var(--teal);}
+  footer{
+    text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:30px;padding-top:20px;
+    border-top:1px solid var(--line);
+  }
+  .copyright-box{
+    background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 18px;
+    font-size:12.5px;color:var(--ink-soft);margin-top:10px;
+  }
+  .warn-box{
+    background:var(--accent-soft);border:1px solid var(--accent);border-radius:8px;padding:14px 18px;
+    font-size:13px;color:var(--ink);margin-top:10px;
+  }
+  @media (max-width:600px){
+    .wrap{padding:24px 14px 60px;}
+    section{padding:16px 16px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <div class="hanko">読</div>
+    <div>
+      <h1>利用規約</h1>
+      <p>読みノート (Yomi-Note) ― 手書き・PDF/画像OCR読み上げノート</p>
+    </div>
+  </header>
+
+  <div class="meta-bar">
+    <span class="ver-badge" id="docVersionBadge" style="background:var(--teal);">利用規約 v35</span>
+    <span class="ver-badge" id="versionBadge">v3.3</span>
+    <span class="sep">｜</span>
+    <span>最終更新日： <span id="lastUpdated">2026年（本ページ作成時点）</span></span>
+    <span class="sep">｜</span>
+    <a class="back-link" href="./index.html">← アプリに戻る</a>
+    <button class="back-link" id="readAloudBtn" type="button" style="cursor:pointer;">🔊 このページを読み上げる</button>
+    <button class="back-link" id="udFontToggleBtn" type="button" style="cursor:pointer;">Aa UDフォント</button>
+    <span class="back-link" id="readRateLabel" style="cursor:default;user-select:none;"></span>
+  </div>
+
+  <section>
+    <h2><span class="num">0.</span>はじめに</h2>
+    <p class="ja">本規約（以下「本規約」）は、「読みノート（Yomi-Note）」（以下「本サイト」）の利用条件を定めるものです。本サイトを利用した時点で、本規約に同意したものとみなします。本サイトは個人が開発・公開している学習支援ツールであり、営利目的の商用サービスではありません。</p>
+  </section>
+
+  <section>
+    <h2><span class="num">1.</span>本サイトの内容</h2>
+    <p class="ja">本サイトは、手書き入力、画像・PDFの取り込みと文字認識（OCR）、文章の読み上げ（音声合成）、テキストボックス、図・グラフ・数式・画像・動画・リンクなどの挿入、PDF書き出し、ブラウザ内保存（localStorage）といった機能を提供するノート作成ツールです。処理の大部分はご利用のブラウザ内で完結し、入力内容や作成したノートを本サイトのサーバーへ送信・保存することはありません（外部ライブラリの読み込み、および利用者ご自身が挿入したURL・動画へのアクセスを除く）。</p>
+  </section>
+
+  <section>
+    <h2><span class="num">2.</span>生成物（出力されたもの）について</h2>
+    <p class="ja">本サイト上でユーザーが作成・挿入した文章、手書き、テキストボックス、画像、動画、リンク、図・グラフ、数式、OCR認識結果、PDF書き出しファイルなど、ユーザーの操作によって作成・出力される一切のコンテンツを、本規約上まとめて「生成物」といいます。今後、追加のコンテンツ機能や拡張ツールが本サイトに追加された場合も、それらによって作成・出力されるものは同様に「生成物」に含まれます。</p>
+    <p class="ja">生成物の著作権・利用権は、法令に反しない限り、当該生成物を作成したユーザー本人に帰属します。本サイトは生成物の権利を主張しません。ただし、生成物の内容・利用・公開・第三者への提供について生じたあらゆる責任は、すべてユーザー自身が負うものとします。</p>
+  </section>
+
+  <section>
+    <h2><span class="num">3.</span>画像・動画・リンク等の挿入機能について</h2>
+    <p class="ja">本サイトには、画像・動画・リンク(URL)・グラフ・数式などを挿入できる機能があります。これらの機能を利用してユーザーが挿入するコンテンツについて、以下を遵守してください。</p>
+    <ul>
+      <li>挿入する画像・動画等については、ユーザー自身が著作権・肖像権・商標権その他の権利について適法に利用する権利を有していることを確認してください。</li>
+      <li>第三者の著作権・プライバシー・肖像権等を侵害するコンテンツ、法令に違反するコンテンツ、公序良俗に反するコンテンツの挿入・作成を禁止します。</li>
+      <li>動画の埋め込み・リンクの挿入によって外部サイト（YouTube等）へアクセスする場合、当該外部サイトの利用規約が別途適用されます。</li>
+      <li>アップロードした画像・動画ファイルは、ブラウザ内（localStorage等）にのみ保存され、本サイトのサーバーへ送信されることはありません。</li>
+    </ul>
+    <ul>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">4.</span>禁止事項</h2>
+    <p class="ja">ユーザーは、本サイトの利用にあたり、以下の行為を行ってはなりません。</p>
+    <ul>
+      <li>法令または公序良俗に違反する行為</li>
+      <li>本サイトのソースコード・デザイン・文章・その他構成要素を、著作権者の事前の書面による許可なく複製、転載、再配布、改変、または自己のサービスとして再公開する行為（「コード転載禁止」）</li>
+      <li>本サイトまたは本サイトを通じて生成された生成物を、違法に転載・二次配布する行為</li>
+      <li>本サイトの運営を妨害する行為（過度な自動アクセス、脆弱性の悪用等）</li>
+      <li>第三者になりすます行為、その他第三者に不利益・損害を与える行為</li>
+    </ul>
+    <ul>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">5.</span>著作権表記</h2>
+    <div class="copyright-box">
+      © <span id="copyrightYear">2026</span> Yomi-Note Project. All rights reserved.
+    </div>
+    <p class="ja" style="margin-top:14px;">本サイトのソースコードは学習・参考閲覧のためGitHub上で公開されていることがありますが、公開されていることは自由な複製・転載・再配布・改変・商用利用を許可するものではありません。本サイトのコード・デザイン・文章等を複製・転載・再配布・改変して利用する場合は、事前に著作権者の書面による許可を得てください。無断転載・無断使用を禁止します。</p>
+    <p class="ja" style="margin-top:14px;">本サイトは以下のオープンソースライブラリを利用しています。各ライブラリの著作権は、それぞれの権利者に帰属し、各ライブラリのライセンス条件が適用されます。</p>
+    <table class="credit-table">
+      <thead>
+        <tr><th>ライブラリ</th><th>バージョン</th><th>用途</th><th>ライセンス</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="lib-name"><a href="https://github.com/naptha/tesseract.js" target="_blank" rel="noopener noreferrer">Tesseract.js</a></td>
+          <td class="lib-version">5.0.4</td>
+          <td>OCR（手書き・印刷文字認識）</td>
+          <td class="lib-license">Apache License 2.0</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://mozilla.github.io/pdf.js/" target="_blank" rel="noopener noreferrer">PDF.js</a></td>
+          <td class="lib-version">3.11.174</td>
+          <td>PDFの表示・取り込み</td>
+          <td class="lib-license">Apache License 2.0</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://www.electronjs.org/" target="_blank" rel="noopener noreferrer">Electron</a></td>
+          <td class="lib-version">—</td>
+          <td>デスクトップ版（.exe／.app）の実行基盤（Chromium・Node.jsを含む）</td>
+          <td class="lib-license">MIT License（同梱のChromium等は各々のライセンス）</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://github.com/k2-fsa/sherpa-onnx" target="_blank" rel="noopener noreferrer">sherpa-onnx</a></td>
+          <td class="lib-version">—</td>
+          <td>デスクトップ版の内蔵の音声認識（通信不要）</td>
+          <td class="lib-license">Apache License 2.0</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://github.com/FunAudioLLM/SenseVoice" target="_blank" rel="noopener noreferrer">SenseVoice（音声認識モデル）</a></td>
+          <td class="lib-version">—</td>
+          <td>デスクトップ版の内蔵の音声認識（モデルデータ）</td>
+          <td class="lib-license">配布元（FunAudioLLM／Alibaba）のモデルライセンスに従う</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://github.com/snakers4/silero-vad" target="_blank" rel="noopener noreferrer">Silero VAD</a></td>
+          <td class="lib-version">—</td>
+          <td>デスクトップ版の内蔵の音声認識（話し終わりの検出）</td>
+          <td class="lib-license">MIT License</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://github.com/parallax/jsPDF" target="_blank" rel="noopener noreferrer">jsPDF</a></td>
+          <td class="lib-version">2.5.1</td>
+          <td>PDF書き出し</td>
+          <td class="lib-license">MIT License</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://www.chartjs.org/" target="_blank" rel="noopener noreferrer">Chart.js</a></td>
+          <td class="lib-version">4.4.4</td>
+          <td>グラフ描画（棒・折れ線・円・ドーナツ）</td>
+          <td class="lib-license">MIT License</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://www.mathjax.org/" target="_blank" rel="noopener noreferrer">MathJax</a></td>
+          <td class="lib-version">3.2.2</td>
+          <td>数式の描画（LaTeX→SVG）</td>
+          <td class="lib-license">Apache License 2.0</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a><br><span style="font-weight:400;color:var(--ink-soft);">Noto Sans JP / Shippori Mincho / BIZ UDゴシック</span></td>
+          <td class="lib-version">—</td>
+          <td>画面表示用フォント</td>
+          <td class="lib-license">SIL Open Font License 1.1</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://tonejs.github.io/" target="_blank" rel="noopener noreferrer">Tone.js</a></td>
+          <td class="lib-version">14.8.49</td>
+          <td>MIDIプレーヤーパックでの音源合成（追加DLC）</td>
+          <td class="lib-license">MIT License</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://github.com/Tonejs/Midi" target="_blank" rel="noopener noreferrer">@tonejs/midi</a></td>
+          <td class="lib-version">2.0.28</td>
+          <td>MIDIファイルの解析（追加DLC）</td>
+          <td class="lib-license">MIT License</td>
+        </tr>
+        <tr>
+          <td class="lib-name"><a href="https://github.com/felixhao28/JSCPP" target="_blank" rel="noopener noreferrer">JSCPP</a></td>
+          <td class="lib-version">2.0.9</td>
+          <td>C/C++の簡易ブラウザ内実行（追加DLC）</td>
+          <td class="lib-license">MIT License</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2><span class="num">6.</span>免責事項</h2>
+    <p class="ja">本サイトは、OCR（文字認識）や音声読み上げ、手書き文字認識などの結果の正確性・完全性・有用性について、いかなる保証も行いません。認識結果の誤りにより生じた損害について、本サイトは責任を負いません。本サイトの利用は、すべて自己責任にて行ってください。</p>
+    <div class="warn-box">
+      ブラウザの保存領域（localStorage）はブラウザの設定変更・キャッシュ削除・端末の初期化などにより消失する場合があります。重要なノートは、こまめにPDF書き出し等でバックアップを取ることを強く推奨します。
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">7.</span>本規約の変更</h2>
+    <p class="ja">本サイトは、必要と判断した場合、ユーザーへの個別の事前通知なく本規約の内容を変更できるものとします。変更後の規約は、本ページに掲載された時点から効力を生じます。</p>
+  </section>
+
+  <section>
+    <h2><span class="num">8.</span>準拠法</h2>
+    <p class="ja">本規約の解釈にあたっては、日本法を準拠法とします。</p>
+  </section>
+
+  <section>
+    <h2><span class="num">9.</span>お問い合わせ</h2>
+    <p class="ja">本サイトまたは本規約に関するお問い合わせは、本サイトの公開元（GitHubリポジトリ）を通じてご連絡ください。</p>
+  </section>
+
+  <section>
+    <h2><span class="num">10.</span>追加DLC（拡張機能）について</h2>
+    <p class="ja">本サイトは、利用者が任意でJavaScriptファイル（DLC）を取り込み、機能を拡張できる仕組みを提供しています。DLCファイルはノートの中身（ページ内容・OCR結果等）に自由にアクセスできるプログラムであり、その動作は本サイトの制作者が保証するものではありません。取り込みの際は内容をご確認のうえ、信頼できる配布元のファイルのみをご利用ください。取り込んだDLCによって生じたいかなる損害についても、本サイトは責任を負いません。</p>
+  </section>
+
+  <section>
+    <h2><span class="num">11.</span>プログラミング追加パックについて</h2>
+    <p class="ja">追加DLCのひとつ「プログラミング追加パック」は、有効化するとノート機能の代わりにHTML／CSS／JavaScript／Python／C言語系のコードを編集・実行できる画面に切り替わる拡張機能です。ユーザー自身が入力・実行するコードの内容について、本サイトはその安全性・正確性を保証しません。実行結果によって生じたいかなる損害についても、本サイトは責任を負いません。</p>
+    <ul>
+      <li>Python実行機能は、実行時に外部ライブラリ（Pyodide）をインターネット経由で読み込みます。オフライン環境では実行できない場合があります。</li>
+      <li>C言語系については、本パックv0.2からJSCPP（第三者製の簡易インタプリタ、MITライセンス）を用いたブラウザ内実行に対応しています。標準的な書き方の多くは動作しますが、実際のコンパイラ（gcc/clang等）と完全に同じ動作を保証するものではなく、対応していない標準ライブラリ関数や書き方がある点はご了承ください。</li>
+      <li>本パックの「DLCとしてエクスポート」機能で書き出したファイルも、第10条の「追加DLC（拡張機能）」に準じて扱われるものとし、書き出したファイルの内容・配布・利用について生じた責任は、すべて作成したユーザー自身が負うものとします。</li>
+    </ul>
+    <ul>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">12.</span>MIDIプレーヤーパックについて</h2>
+    <p class="ja">追加DLCのひとつ「MIDIプレーヤーパック」は、ユーザーが個別に開発した、MIDIファイルを自動演奏するためのツール（Web MIDI Piano Player）を組み込んだものです。安全のため、本体アプリとは別の独立した領域（iframe）内で動作し、ノートのデータには直接アクセスしません。「ノートに重ねて表示」機能を使うと、演奏中に降ってくるノーツの視覚効果を、作業中のノートに半透明で重ねて表示できますが、これはあくまで見た目の重ね合わせであり、ノートの内容（手書き・テキスト・画像など）を書き換えたり保存したりするものではありません。</p>
+    <ul>
+      <li>本パックはTone.js（MITライセンス）および@tonejs/midi（MITライセンス）という外部ライブラリを、それぞれの配布元（cdnjs／unpkg）から読み込んで利用しています。各ライブラリの著作権は、それぞれの開発者に帰属します。</li>
+      <li>本パックの利用には、ユーザーが用意したMIDIファイルの読み込みが必要です。読み込んだMIDIファイル自体の著作権については、本サイトは関与せず、ファイルの取得・利用に関する責任はユーザー自身が負うものとします。</li>
+      <li>演奏音声はブラウザ内蔵の音源で合成されるものであり、外部への通信や録音データの送信は行いません。「演奏録画」機能で生成される動画データも、ユーザーの端末内でのみ処理されます。</li>
+      <li>本パックも、第10条の「追加DLC（拡張機能）」の規定に準じて扱われるものとします。</li>
+    </ul>
+    <ul>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">13.</span>利用状況の記録と意見・アンケートについて</h2>
+    <p class="ja">本サイトは、利用者自身が自分の使い方を確認できるよう、利用状況をお使いの端末のブラウザ内（localStorage）に記録します。記録するのは、利用日と起動回数、コマンドの名前と成否（入力した文章は含みません）、ボタンの使用回数、エラーの種類、および利用者が任意で入力した意見・アンケートの回答です。ノートの内容（文字・画像・ファイル名）、音声、位置情報、氏名その他の個人を特定できる情報は記録しません。</p>
+    <p class="ja">これらの記録は、利用者の端末の外には送信されません。利用者が「ファイルに書き出す」を選んだ場合に限り、利用者自身が指定した場所にファイルが保存されます。記録の消去は、アプリ上部の💬ボタンからいつでもできます。ブラウザのデータを消去した場合も、記録は消えます。意見・アンケートの自由記述欄には、個人が特定できる情報を書かないでください。</p>
+  </section>
+
+  <section>
+    <h2><span class="num">14.</span>独自OCRエンジン「AOCR」（AOCRv01・AOCRv02）について</h2>
+    <p class="ja"><b>位置づけ。</b>「AOCR」は、本サイトの制作者が書いた、独自の文字認識（OCR）の拡張機能です。AOCRv01.js（ページ全体のOCRを補助するもの）とAOCRv02.js（試作の別方式のもの）があり、どちらも、あってもなくても本体が動く「任意の拡張機能」で、初期設定ではオフです。有効にするかどうかは、利用者が選びます。</p>
+    <p class="ja"><b>権利。</b>AOCRv01.js・AOCRv02.js のソースコードの著作権は、本サイトの制作者（Yomi-Note Project）にあります。第5条と同じく、公開されていることは、自由な複製・転載・再配布・改変・商用利用を許可するものではありません。読みノートの外（ほかのアプリなど）で使う場合や、複製・再配布・改変をする場合は、事前に著作権者の書面による許可を得てください。AOCRを使って認識した結果（文字列・ノート）は第2条の「生成物」であり、その権利は、利用者に帰属します。</p>
+    <p class="ja"><b>独創性・先行技術について。</b>AOCRは、外部のOCRライブラリには頼らず、制作者が実装した単体のJavaScriptです。ただし、文字の画像を細い線に直して形の特徴を見本と比べる、といった考え方は、文字認識で古くから知られているものを含みます。本サイトは、AOCRの新しさ・独創性・特許性を保証または主張せず、また、特許その他の権利を取得していることを主張するものではありません。第三者の権利を侵さないことの保証もしません。</p>
+    <p class="ja"><b>AOCRv02（試作）の見本とフォント。</b>AOCRv02は、利用者の端末に入っているフォントで文字を描いて、認識の見本をその場で作ります。フォントそのものは、本サイトからは配らず、保存もしません。見本をファイルに書き出して他の人に渡す場合は、元になったフォントのライセンスを、ご自身で確認してください。フォントの権利は、それぞれの権利者にあります。</p>
+    <p class="ja"><b>精度と免責。</b>AOCRは研究・試作の段階の機能で、読める範囲に限りがあります。AOCRv02は、日本語の活字（ひらがな・カタカナと、限られた数の漢字）の横書きだけが対象で、英数字・手書き・縦書き・図表は読めません。作業環境で、文字を描いた画像を使って測った結果であり、実際のプリントや、ご利用の端末での誤り率ではありません。誤った文字に置き換わることがあります。認識結果は、必ずご自身の目で確かめてください。AOCRの結果の正確性・完全性・有用性について、いかなる保証もせず、それによって生じた損害について、本サイトは責任を負いません（第6条も参照）。</p>
+    <p class="ja"><b>データの扱い。</b>AOCRは、すべて利用者の端末の中で動き、画像・認識結果を外部へ送信しません。</p>
+    <p class="ja"><b>AIの支援について。</b>AOCRおよび第15条のピン止め拡張機能は、制作者が、AIアシスタント（Anthropic社のClaude）の支援を受けて作成しました。AIの支援を受けて作られたプログラムの権利の扱いは、今後の法令や裁判例によって変わることがあります。</p>
+  </section>
+
+  <section>
+    <h2><span class="num">15.</span>ピン止め拡張機能（pin.js）について</h2>
+    <p class="ja"><b>概要。</b>追加DLCのひとつ「ピン止め拡張機能（pin.js）」は、今見ているページを画面の右側に固定表示し、別のページを見ながら、固定したページにも書き込み・テキストボックス・画像などの挿入・読み上げ・OCRなどができる拡張機能です。アプリ本体（v6.5以降）に内蔵されており、利用者が有効にしたときだけ働きます。ディスレクシア支援パックとは別の拡張機能として使えます。</p>
+    <p class="ja"><b>権利。</b>pin.js のソースコードの著作権は、本サイトの制作者（Yomi-Note Project）にあります。第5条・第14条と同じく、複製・再配布・改変・商用利用には、事前の書面による許可が必要です。固定表示のしかた・ほかのDLCからの呼び出し口（window.YomiPin）の利用は、本サイト（読みノート）の中での利用に限ります。</p>
+    <ul>
+      <li><b>ノートの内容を書き換えます。</b>固定したページへの書き込み、切り取り、テキストボックスの移動・削除、挿入などは、ノート本体の同じページのデータをそのまま書き換えます。固定側の「戻す」で戻せるのは、固定側の一部の操作だけです。重要なノートは、こまめにPDF書き出し等でバックアップしてください。</li>
+      <li><b>固定するページの内容の権利。</b>固定表示するプリント・PDF・画像・動画・リンク先などの著作権は、それぞれの権利者にあります。それらを取り込む・表示する・出力する際の権利処理と責任は、利用者自身が負います（第3条も参照）。固定側で作成した文章・手書き・切り取った画像などは、第2条の「生成物」であり、その権利は利用者に帰属します。</li>
+      <li><b>音声入力。</b>固定側のテキストボックスの音声入力は、本体の音声入力機能を使います。ブラウザ版では、お使いのブラウザの音声認識機能（Web Speech API）を使い、ブラウザの提供元の認識サービスに音声が送られることがあります（送り先・扱いは、ブラウザの提供元の規約に従います）。デスクトップ版では、通信を使わない内蔵の音声認識を優先して使います。</li>
+      <li><b>外部への送信。</b>固定表示・固定側での操作では、ノートの内容を本サイトのサーバーへ送信・保存しません。画像・グラフ・リンク・動画の挿入には、第3条が同じように適用されます。</li>
+      <li><b>テストモード。</b>固定側でも、テストモードの画像・輪投げ・定規などのブロック設定に従いますが、テストの公正さを保証するものではありません。</li>
+      <li><b>古い版との関係。</b>ディスレクシア支援パック v1.3 以前には、古いピン止めが入っています。pin.js を同時に使うと、pin.js が古いほうを無効にしようとしますが、動作は保証しません。</li>
+      <li><b>免責。</b>固定表示の見え方・操作の結果について、第6条の免責が同じように適用されます。</li>
+    </ul>
+    <ul>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">16.</span>デスクトップ版（.exe／.app）について</h2>
+    <p class="ja">デスクトップ版は、本サイトと同じ内容を、Electronで包んで、Windows（.exe）・Mac Apple Silicon（.app）・Mac Intel（.app）のアプリとしたものです。第1条から第15条までの内容は、デスクトップ版にもそのまま適用されます。デスクトップ版には、第5条の表のライブラリ（Electron・sherpa-onnx・SenseVoice・Silero VAD）が含まれます。これらの権利は、それぞれの権利者にあり、各ライセンスが適用されます。配布のためのZIPを、許可なく再配布することはできません。デスクトップ版の音声認識は、通信を使わずに、端末の中で動きます。</p>
+  </section>
+
+  <section>
+    <h2><span class="num">17.</span>ノートモード（用紙・升目文字・付箋など）について</h2>
+    <p class="ja"><b>用紙の権利。</b>ノートモードの用紙（罫線・方眼・コーネル式・原稿用紙などの絵と、それを描くプログラム）の著作権は、本サイトの制作者（Yomi-Note Project）にあります。ただし、「罫線」「方眼」「コーネル式」などの用紙の形式・考え方そのものは、一般に広く使われているもので、本サイトがこれを独占すると主張するものではありません。作成したノートに含まれる罫線・升目は、そのノートの一部として、利用者が自由に使えます。用紙のデザイン単体を取り出して、素材として配布・販売することはできません。</p>
+    <p class="ja"><b>作ったものの権利。</b>升目文字・付箋・図形・チェック欄・日付スタンプ・手書き・画像などで、利用者が作成したノートの内容は、第2条の「生成物」であり、その権利は利用者に帰属します。ノートに入れる画像・文章などの権利処理は、利用者自身が行ってください（第3条）。</p>
+    <p class="ja"><b>他社の製品・名称。</b>本サイトは、「グッドノート（GoodNotes）」をはじめとする他社のアプリ・名称・商標とは関係がありません。これらの名称は、機能の説明のために言及することがありますが、それぞれの権利者のものです。コーネル式という名称は、学習法の名称として一般に使われているものです。</p>
+    <p class="ja"><b>文字の見た目。</b>升目文字は、ノートの書き出し（PDF・ZIP・画像）でも、画面と同じ位置に出るよう描きますが、お使いの端末・ブラウザ・フォントによって、画面との間に少しずれが出ることがあります。英数字は、マスにきれいにそろわない場合があります。重要な書類として使う前に、書き出した結果をご自身で確かめてください（第6条も参照）。</p>
+    <p class="ja"><b>AIの支援について。</b>ノートモードも、制作者が、AIアシスタント（Anthropic社のClaude）の支援を受けて作成しました（第14条も参照）。</p>
+  </section>
+
+  <section>
+    <h2><span class="num">18.</span>ページの読み上げ・翻訳機能について</h2>
+    <p class="ja"><b>翻訳。</b>各ページの「このページを翻訳」ボタンで、ページの文章を別の言語に翻訳して表示できます。翻訳は機械翻訳であり、正確さや完全さは保証しません。この規約を含め、内容は<b>日本語の原文が正</b>です。翻訳した文章と日本語の原文に違いがあるときは、日本語の原文に従います。</p>
+    <p class="ja"><b>送られる情報。</b>お使いのChromeに内蔵翻訳がある場合は、端末の中で翻訳し、文章は外へ送られません。ない場合は、ページに書かれている文章だけを、Google の翻訳サービスへ送って翻訳します（ノートの内容や、利用者が入力した内容は送りません）。送った文章の扱いは、Google の利用規約・プライバシーポリシーに従います。通信したくない場合は、翻訳ボタンを使わないでください。</p>
+    <p class="ja"><b>読み上げの音声。</b>読み上げには、お使いの端末・ブラウザに入っている音声を使います。選んだ言語の音声が端末にないときは、別の言語の声で読まれたり、読めなかったりします。「Google」などの名前が付いたオンライン音声を選んだ場合は、読み上げる文章が、その音声の提供元に送られることがあります（扱いは、提供元の規約に従います）。</p>
+    <p class="ja"><b>範囲選択の読み上げ・目次・大きな表示。</b>これらは、ページの文章を、お使いの端末の中で読み上げたり表示したりするだけの機能です。読み上げの速さや、目次の開閉などの設定は、この端末のブラウザの中（localStorage）にだけ保存され、外へは送られません。</p>
+    <p class="ja"><b>AIの支援について。</b>この機能も、制作者が、AIアシスタント（Anthropic社のClaude）の支援を受けて作成しました（第14条も参照）。</p>
+  </section>
+
+  <footer>
+    読みノート (Yomi-Note) <span id="footerVersion">v3.4</span> ／ © <span id="footerYear">2026</span> Yomi-Note Project. All rights reserved.<br>
+    <a class="back-link" style="margin-top:10px;" href="./index.html">← アプリに戻る</a>
+  </footer>
+
+</div>
+<script>
+  // バージョン表記はアプリ本体と揃えるため、ここを更新する際は index.html 側のバージョンも確認してください。
+  var APP_VERSION = 'v6.7';
+  document.getElementById('versionBadge').textContent = APP_VERSION;
+  document.getElementById('footerVersion').textContent = APP_VERSION;
+  var y = new Date().getFullYear();
+  document.getElementById('copyrightYear').textContent = y;
+  document.getElementById('footerYear').textContent = y;
+
+  /* ページの読み上げ・目次・翻訳（共通モジュール YomiReader v1.0） */
+/* ==== YomiReader v1.0 : 読みノート ページ読み上げ共通モジュール ====
+   ・範囲選択読み上げ（ドラッグした範囲を読む）  ・速度（キー／入力欄／＋－／スライダー／プリセット）
+   ・左端の目次＋「ここだけ大きく表示」  ・ページ翻訳＋ネイティブ音声
+   各ページに同じものを埋め込んで使う（外部ファイル不要）。 */
+(function(){
+'use strict';
+var CAND='h1,h2,h3,h4,p,li,tr,dt,dd,blockquote,figcaption,.cmd-row,.link-card';
+var SKIP='script,style,nav,button,footer,pre,select,input,textarea,.yr-ui,.yr-focus,.yr-menu,.meta-bar,.quicknav,.ver-tabs,.mode-tabs,.skip-read';
+var JA=/[\u3040-\u30ff\u3400-\u9fff]/;
+var EMOJI=/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu;
+var LANGS=[
+ {n:'English',t:'en',g:'en',s:'en-US'},{n:'中文（简体）',t:'zh',g:'zh-CN',s:'zh-CN'},{n:'中文（繁體）',t:'zh-Hant',g:'zh-TW',s:'zh-TW'},
+ {n:'한국어',t:'ko',g:'ko',s:'ko-KR'},{n:'Español',t:'es',g:'es',s:'es-ES'},{n:'Français',t:'fr',g:'fr',s:'fr-FR'},
+ {n:'Deutsch',t:'de',g:'de',s:'de-DE'},{n:'Português (Brasil)',t:'pt',g:'pt',s:'pt-BR'},{n:'Italiano',t:'it',g:'it',s:'it-IT'},
+ {n:'Русский',t:'ru',g:'ru',s:'ru-RU'},{n:'العربية',t:'ar',g:'ar',s:'ar-SA',rtl:1},{n:'हिन्दी',t:'hi',g:'hi',s:'hi-IN'},
+ {n:'ไทย',t:'th',g:'th',s:'th-TH'},{n:'Tiếng Việt',t:'vi',g:'vi',s:'vi-VN'},{n:'Bahasa Indonesia',t:'id',g:'id',s:'id-ID'},
+ {n:'Türkçe',t:'tr',g:'tr',s:'tr-TR'},{n:'Nederlands',t:'nl',g:'nl',s:'nl-NL'},{n:'Polski',t:'pl',g:'pl',s:'pl-PL'},
+ {n:'Українська',t:'uk',g:'uk',s:'uk-UA'},{n:'Filipino',t:'tl',g:'tl',s:'fil-PH'},{n:'Svenska',t:'sv',g:'sv',s:'sv-SE'},
+ {n:'Ελληνικά',t:'el',g:'el',s:'el-GR'}
+];
+var K={rate:'yomiReaderRate',auto:'yomiReaderAutoSel',toc:'yomiReaderToc',zoom:'yomiReaderFocusZoom',voice:'yomiReaderVoice_'};
+function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){} return null; }
+function $(s,r){ return (r||document).querySelector(s); }
+function mk(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+
+var root, readBtn, dock, tocEl, bubble, focusEl, fBody, menu, banner;
+var rate=1, playing=false, items=[], pos=0, token=0, mode='page', keep=[];
+var heads=[], focusK=-2, rateTimer=null;
+var tr={lang:null,list:[],cache:{},busy:false,gen:0};
+
+function css(){
+ var c='.yr-ui,.yr-ui *{box-sizing:border-box}'+
+ '.yr-dock{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:9000;width:min(980px,calc(100vw - 16px));background:#fff;color:#22262E;border:1px solid #DAD3C4;border-radius:14px;box-shadow:0 6px 24px rgba(34,38,46,.22);padding:8px 10px;font:13px/1.4 "Noto Sans JP",sans-serif}'+
+ '.yr-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0}'+
+ '.yr-ui button{font:inherit;cursor:pointer;border:1px solid #DAD3C4;background:#fff;color:#22262E;border-radius:9px;padding:5px 10px;min-height:32px}'+
+ '.yr-ui button:hover{border-color:#3E6E63;background:#f4f8f6}'+
+ '.yr-ui button.yr-main{background:#B5432E;color:#fff;border-color:#B5432E;font-weight:700}'+
+ '.yr-ui button.on{background:#3E6E63;color:#fff;border-color:#3E6E63}'+
+ '.yr-sp{flex:1}'+
+ '.yr-rate input[type=number]{width:62px;font:inherit;padding:4px 6px;border:1px solid #DAD3C4;border-radius:8px;text-align:center}'+
+ '.yr-rate{display:inline-flex;align-items:center;gap:4px}'+
+ '.yr-ui input[type=range]{width:140px;accent-color:#B5432E;vertical-align:middle}'+
+ '.yr-chip{padding:3px 8px!important;min-height:28px!important;font-size:12px}'+
+ '.yr-status{font-size:12px;color:#5B6270}'+
+ '.yr-dock.yr-min .yr-hide{display:none}'+
+ '.yr-toc{position:fixed;left:0;top:0;bottom:0;width:260px;z-index:8900;background:#FBF8F2;border-right:1px solid #DAD3C4;display:none;flex-direction:column;font:13px/1.45 "Noto Sans JP",sans-serif;color:#22262E;box-shadow:4px 0 18px rgba(34,38,46,.12)}'+
+ 'html.yr-toc-on .yr-toc{display:flex}'+
+ '.yr-toc-h{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #DAD3C4;font-size:14px}'+
+ '.yr-toc-list{flex:1;overflow:auto;padding:6px 6px 90px}'+
+ '.yr-toc-f{font-size:11px;color:#5B6270;padding:6px 12px 90px;border-top:1px dashed #DAD3C4}'+
+ '.yr-ti{display:flex;align-items:flex-start;gap:2px;border-radius:8px;padding:2px 2px 2px 6px;border-left:3px solid transparent}'+
+ '.yr-ti a{flex:1;cursor:pointer;padding:4px 2px;color:#22262E;text-decoration:none;word-break:break-all}'+
+ '.yr-ti.lv3{margin-left:14px;font-size:12.5px}'+
+ '.yr-ti.on{background:#EFD9CF;border-left-color:#B5432E;font-weight:700}'+
+ '.yr-ti button{padding:0 6px;min-height:26px;font-size:12px;opacity:.7}.yr-ti:hover button,.yr-ti.on button{opacity:1}'+
+ '@media (min-width:1100px){html.yr-toc-on body{padding-left:268px}}'+
+ 'html.yr-on body{padding-bottom:130px}'+
+ '[data-yr-cur]{background:rgba(255,214,64,.5)!important;outline:2px solid #F0B400;border-radius:4px;scroll-margin-block:35vh}'+
+ '.yr-bubble{position:absolute;z-index:9500;display:none;gap:4px;background:#22262E;border-radius:10px;padding:4px;box-shadow:0 4px 16px rgba(0,0,0,.3)}'+
+ '.yr-bubble button{background:#22262E!important;color:#fff!important;border:0!important;min-height:30px}.yr-bubble button:hover{background:#3E6E63!important}'+
+ '.yr-focus{position:fixed;inset:0;z-index:9800;background:#FBF8F2;display:none;flex-direction:column;color:#22262E}'+
+ '.yr-focus.open{display:flex}'+
+ '.yr-fbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid #DAD3C4;background:#fff;font:13px "Noto Sans JP",sans-serif}'+
+ '.yr-ftitle{font-weight:700;font-size:14px;margin:0 6px}'+
+ '.yr-fbody{flex:1;overflow:auto;padding:24px 4vw 120px}.yr-fin{max-width:900px;margin:0 auto;line-height:1.9}'+
+ '.yr-fin section,.yr-fin .card{margin:0 0 12px}'+
+ '.yr-menu{position:fixed;inset:0;z-index:9900;background:rgba(34,38,46,.45);display:none;align-items:center;justify-content:center;padding:12px}'+
+ '.yr-menu.open{display:flex}'+
+ '.yr-mbox{background:#fff;border-radius:14px;padding:16px;max-width:620px;width:100%;max-height:86vh;overflow:auto;font:13px/1.6 "Noto Sans JP",sans-serif;color:#22262E}'+
+ '.yr-lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin:10px 0}'+
+ '.yr-banner{position:sticky;top:0;z-index:50;margin:0 0 12px;padding:8px 12px;background:#EAF3EF;border:1px solid #3E6E63;border-radius:10px;font:13px/1.6 "Noto Sans JP",sans-serif;color:#22262E;display:flex;flex-wrap:wrap;gap:8px;align-items:center}'+
+ '.yr-banner select{font:inherit;max-width:230px;padding:3px}'+
+ '@media (max-width:640px){.yr-ui input[type=range]{width:100px}.yr-dock{padding:6px}}'+
+ '@media print{.yr-ui,.yr-focus,.yr-menu,.yr-bubble{display:none!important}html.yr-toc-on body{padding-left:0!important}}';
+ var st=mk('style'); st.textContent=c; document.head.appendChild(st);
+}
+
+/* ---------- テキスト ---------- */
+function norm(t){ return String(t||'').replace(EMOJI,'').replace(/[\u00a0\t]+/g,' ').replace(/\s*\n\s*/g,'。').replace(/\s+/g,' ').replace(/([。！？!?、,])。+/g,'$1').replace(/^。+/,'').trim(); }
+function strip(e){ var c=e.cloneNode(true); var x=c.querySelectorAll('button,select,input'); for(var i=0;i<x.length;i++) x[i].remove(); return c; }
+function ownText(e){ var c=e.cloneNode(true); var x=c.querySelectorAll(CAND+',button,select,input'); for(var i=0;i<x.length;i++) x[i].remove(); return norm(c.textContent); }
+function textOf(e){
+ if(e.tagName==='TR') return norm(Array.prototype.map.call(e.cells,function(c){ return norm(c.innerText); }).filter(Boolean).join('、'));
+ if(e.matches('.link-card')) return norm(Array.prototype.map.call(e.children,function(c){ return c.textContent.trim(); }).filter(Boolean).join('。'));
+ if(e.querySelector('button,select,input')) return norm(strip(e).textContent);
+ return norm(e.innerText||e.textContent);
+}
+function visible(e){ return e.getClientRects().length>0; }
+function speechLang(e){
+ var l=(e&&e.closest&&e.closest('[lang]')||document.documentElement).getAttribute('lang')||'ja';
+ if(/^ja/i.test(l)) return 'ja-JP';
+ if(l.length<=2){ for(var i=0;i<LANGS.length;i++) if(LANGS[i].g===l) return LANGS[i].s; }
+ return l;
+}
+function buildUnits(){
+ var old=document.querySelectorAll('[data-yr-i]'); for(var j=0;j<old.length;j++) old[j].removeAttribute('data-yr-i');
+ var all=root.querySelectorAll(CAND), out=[];
+ for(var i=0;i<all.length;i++){
+  var e=all[i];
+  if(e.closest(SKIP)||!visible(e)) continue;
+  if(e.tagName!=='TR'&&e.closest('tr')) continue;
+  var nested=e.tagName!=='TR'&&e.querySelector(CAND);
+  var t=nested?ownText(e):textOf(e);
+  if(!t) continue;
+  e.setAttribute('data-yr-i',out.length);
+  out.push({el:e,text:t,lang:speechLang(e),i:out.length});
+ }
+ return out;
+}
+
+/* ---------- 音声 ---------- */
+function voicesFor(lang){
+ if(!window.speechSynthesis) return [];
+ var vs=speechSynthesis.getVoices()||[], lc=lang.toLowerCase(), pre=lc.split('-')[0];
+ function nl(v){ return v.lang.toLowerCase().replace('_','-'); }
+ var ex=vs.filter(function(v){ return nl(v)===lc; });
+ var pr=vs.filter(function(v){ return nl(v).split('-')[0]===pre; });
+ var pool=ex.length?ex:pr;
+ function sc(v){ return (/natural|neural|online/i.test(v.name)?3:0)+(/google|premium|enhanced/i.test(v.name)?2:0)+(v.default?1:0); }
+ return pool.slice().sort(function(a,b){ return sc(b)-sc(a); });
+}
+function pickVoice(lang){
+ var pool=voicesFor(lang), saved=ls(K.voice+lang);
+ if(saved) for(var i=0;i<pool.length;i++) if(pool[i].voiceURI===saved) return pool[i];
+ return pool[0]||null;
+}
+function chunks(text){
+ var s=text.replace(/([。！？!?]+)/g,'$1\u0001').replace(/([.．])\s+/g,'$1\u0001').split('\u0001'), out=[], cur='';
+ function push(p){ p=p.trim(); if(!p) return; if(cur&&(cur+p).length>140){ out.push(cur); cur=''; } cur+=p; }
+ for(var i=0;i<s.length;i++){
+  if(s[i].length>160){ var sub=s[i].replace(/([、,，;；])/g,'$1\u0002').split('\u0002'); for(var k=0;k<sub.length;k++) push(sub[k]); }
+  else push(s[i]);
+ }
+ if(cur) out.push(cur);
+ return out.length?out:[text];
+}
+function say(msg,ms){ var s=$('#yr-status'); if(!s) return; s.textContent=msg||''; if(ms) setTimeout(function(){ if(s.textContent===msg) s.textContent=''; },ms); }
+function updateBtns(){
+ if(readBtn) readBtn.textContent=playing?'⏹ 読み上げを停止':'🔊 このページを読み上げる';
+ var p=$('[data-a=play]',dock); if(p) p.textContent=playing?'⏹ 止める':'▶ 画面から読む';
+ var fr=$('[data-f=read]',focusEl); if(fr) fr.textContent=playing?'⏹ 止める':'▶ 読む';
+}
+function clearCur(){ var c=document.querySelectorAll('[data-yr-cur]'); for(var i=0;i<c.length;i++) c[i].removeAttribute('data-yr-cur'); }
+function markCur(u){
+ clearCur(); if(!u||u.i==null) return;
+ var els=document.querySelectorAll('[data-yr-i="'+u.i+'"]'), target=null;
+ for(var i=0;i<els.length;i++){ els[i].setAttribute('data-yr-cur','1'); if(focusEl.classList.contains('open')?focusEl.contains(els[i]):!focusEl.contains(els[i])) target=els[i]; }
+ if(target){
+  var r=target.getBoundingClientRect();
+  if(focusEl.classList.contains('open')||r.top<90||r.bottom>innerHeight-150) target.scrollIntoView({block:'center',behavior:'smooth'});
+ }
+ syncToc(u.el);
+}
+function stopSpeech(){ token++; playing=false; try{ speechSynthesis.cancel(); }catch(e){} clearCur(); updateBtns(); }
+function start(list,from,m){
+ if(!window.speechSynthesis){ alert('このブラウザは読み上げに対応していません'); return; }
+ token++; try{ speechSynthesis.cancel(); }catch(e){}
+ items=list; pos=from||0; mode=m||'page'; playing=true; updateBtns();
+ if(!items.length){ playing=false; updateBtns(); return; }
+ var t=token; setTimeout(function(){ if(t===token) run(pos); },40);
+}
+function run(i){
+ if(!playing) return;
+ if(i>=items.length){ playing=false; clearCur(); updateBtns(); return; }
+ pos=i; var it=items[i], t=token, ch=chunks(it.text), k=0;
+ markCur(it.u);
+ (function step(){
+  if(!playing||t!==token) return;
+  if(k>=ch.length){ run(i+1); return; }
+  var u=new SpeechSynthesisUtterance(ch[k++]);
+  u.lang=it.lang; u.rate=rate;
+  var v=pickVoice(it.lang); if(v) u.voice=v;
+  u.onend=step;
+  u.onerror=function(e){ if(e&&(e.error==='interrupted'||e.error==='canceled')) return; step(); };
+  keep.push(u); if(keep.length>6) keep.shift();
+  speechSynthesis.speak(u);
+ })();
+}
+function restartHere(){ if(!playing) return; var t=++token; try{ speechSynthesis.cancel(); }catch(e){} setTimeout(function(){ if(t===token&&playing) run(pos); },60); }
+function pageItems(from){ var us=buildUnits(); return {all:us.map(function(u){ return {text:u.text,lang:u.lang,u:u}; }),units:us}; }
+function firstOnScreen(us){ for(var i=0;i<us.length;i++){ if(us[i].el.getBoundingClientRect().bottom>90) return i; } return 0; }
+function readPage(fromScreen){
+ if(playing){ stopSpeech(); return; }
+ var p=pageItems(); start(p.all,fromScreen?firstOnScreen(p.units):0,'page');
+}
+function readSelection(){
+ var s=getSelection(); if(!s||s.isCollapsed) return;
+ var txt=s.toString(); var a=s.anchorNode; var el=a&&(a.nodeType===1?a:a.parentElement);
+ var lang=speechLang(el), list=[];
+ txt.split(/\n+/).forEach(function(line){ line=norm(line); if(line) list.push({text:line,lang:lang,u:null}); });
+ if(list.length) start(list,0,'sel');
+}
+function jump(d){
+ if(!playing){ readPage(true); return; }
+ pos=Math.max(0,Math.min(items.length-1,pos+d)); restartHere();
+}
+
+/* ---------- 速度 ---------- */
+function setRate(v,quiet){
+ v=parseFloat(v); if(isNaN(v)) return;
+ v=Math.max(0.5,Math.min(3,Math.round(v*10)/10)); rate=v; ls(K.rate,String(v));
+ var i=$('#yr-rate-in'),g=$('#yr-rate-rg'); if(i&&document.activeElement!==i) i.value=v.toFixed(1); if(g) g.value=v;
+ var lb=$('#readRateLabel'); if(lb) lb.textContent='速度 '+v.toFixed(1)+'倍';
+ var chips=dock.querySelectorAll('.yr-chip'); for(var c=0;c<chips.length;c++) chips[c].classList.toggle('on',parseFloat(chips[c].getAttribute('data-r'))===v);
+ if(!quiet){ clearTimeout(rateTimer); rateTimer=setTimeout(restartHere,220); }
+}
+
+/* ---------- 目次 ---------- */
+function buildToc(){
+ var hs=root.querySelectorAll('h2,h3'); heads=[];
+ for(var i=0;i<hs.length;i++){
+  var h=hs[i]; if(h.closest(SKIP)||!visible(h)) continue;
+  var t=norm(h.textContent); if(!t) continue;
+  heads.push({h:h,lv:h.tagName==='H2'?2:3,t:t});
+ }
+ var L=$('.yr-toc-list',tocEl); L.innerHTML='';
+ heads.forEach(function(o,k){
+  var d=mk('div','yr-ti lv'+o.lv); d.setAttribute('data-k',k);
+  var a=mk('a'); a.textContent=o.t; a.title=o.t;
+  var b1=mk('button',null,'▶'); b1.title='ここから読み上げ'; b1.setAttribute('data-t','read');
+  var b2=mk('button',null,'🔍'); b2.title='ここだけ大きく表示'; b2.setAttribute('data-t','zoom');
+  a.addEventListener('click',function(){ o.h.scrollIntoView({block:'start',behavior:'smooth'}); if(innerWidth<1100) toggleToc(false); });
+  b1.addEventListener('click',function(){ readFromHead(k); });
+  b2.addEventListener('click',function(){ openFocus(k); });
+  d.appendChild(a); d.appendChild(b1); d.appendChild(b2); L.appendChild(d);
+ });
+ syncToc();
+}
+function activeHead(el){
+ var best=-1;
+ for(var i=0;i<heads.length;i++){
+  if(el){ if(heads[i].h===el||heads[i].h.contains(el)||(heads[i].h.compareDocumentPosition(el)&4)) best=i; else break; }
+  else { if(heads[i].h.getBoundingClientRect().top<=150) best=i; else break; }
+ }
+ return best;
+}
+function syncToc(el){
+ if(!heads.length||!tocEl) return;
+ var k=focusEl.classList.contains('open')&&focusK>=0?focusK:activeHead(el||null);
+ var rows=tocEl.querySelectorAll('.yr-ti');
+ for(var i=0;i<rows.length;i++) rows[i].classList.toggle('on',i===k);
+ if(k>=0&&rows[k]&&document.documentElement.classList.contains('yr-toc-on')){ var l=$('.yr-toc-list',tocEl),r=rows[k]; if(r.offsetTop<l.scrollTop||r.offsetTop>l.scrollTop+l.clientHeight-40) l.scrollTop=r.offsetTop-60; }
+}
+function toggleToc(on){
+ var h=document.documentElement; if(on===undefined) on=!h.classList.contains('yr-toc-on');
+ h.classList.toggle('yr-toc-on',on); ls(K.toc,on?'1':'0');
+ var b=$('[data-a=toc]',dock); if(b) b.classList.toggle('on',on);
+ if(on) buildToc();
+}
+function headEnd(k){
+ for(var j=k+1;j<heads.length;j++) if(heads[j].lv<=heads[k].lv) return heads[j].h;
+ return null;
+}
+function inSeg(k,el){
+ var h=heads[k].h, e=headEnd(k);
+ if(!(h===el||h.contains(el)||(h.compareDocumentPosition(el)&4))) return false;
+ if(e&&!(e.compareDocumentPosition(el)&2)) return false;
+ return true;
+}
+function readFromHead(k){
+ var p=pageItems(), from=0;
+ for(var i=0;i<p.units.length;i++){ var el=p.units[i].el; if(heads[k].h===el||heads[k].h.contains(el)||(heads[k].h.compareDocumentPosition(el)&4)){ from=i; break; } }
+ start(p.all,from,'page'); if(innerWidth<1100) toggleToc(false);
+}
+
+/* ---------- 大きく表示 ---------- */
+function setZoom(z){ z=Math.max(1,Math.min(4,Math.round(z*10)/10)); ls(K.zoom,String(z)); fBody.firstChild.style.zoom=z; $('#yr-fz').textContent=Math.round(z*100)+'%'; }
+function cleanFrag(f){
+ var d=mk('div'); d.appendChild(f);
+ var x=d.querySelectorAll('script,style,[id]');
+ for(var i=0;i<x.length;i++){ if(x[i].tagName==='SCRIPT'||x[i].tagName==='STYLE') x[i].remove(); else x[i].removeAttribute('id'); }
+ var c=d.querySelectorAll('[data-yr-cur]'); for(var j=0;j<c.length;j++) c[j].removeAttribute('data-yr-cur');
+ var kids=Array.prototype.slice.call(d.children);
+ kids.forEach(function(n){ if(!n.textContent.trim()&&!n.querySelector('img,svg,canvas,table')) n.remove(); });
+ return d;
+}
+function showFocus(title,node){
+ $('.yr-ftitle',focusEl).textContent=title;
+ fBody.innerHTML=''; var inn=mk('div','yr-fin'); inn.appendChild(node); fBody.appendChild(inn);
+ setZoom(parseFloat(ls(K.zoom))||1.8);
+ focusEl.classList.add('open'); fBody.scrollTop=0; document.documentElement.style.overflow='hidden';
+ var pr=$('[data-f=prev]',focusEl), nx=$('[data-f=next]',focusEl);
+ pr.disabled=nx.disabled=focusK<0; updateBtns();
+}
+function openFocus(k){
+ if(k<0||k>=heads.length) return;
+ buildUnits(); focusK=k;
+ var h=heads[k].h, r=document.createRange(), e=headEnd(k);
+ r.setStartBefore(h);
+ if(e) r.setEndBefore(e); else { var f=root.querySelector('footer'); if(f) r.setEndBefore(f); else r.setEndAfter(root.lastChild); }
+ showFocus(heads[k].t,cleanFrag(r.cloneContents()));
+ if(innerWidth<1100) toggleToc(false);
+ syncToc();
+}
+function focusSelection(){
+ var s=getSelection(); if(!s||s.isCollapsed) return;
+ buildUnits(); focusK=-1;
+ showFocus('選んだところ',cleanFrag(s.getRangeAt(0).cloneContents()));
+}
+function closeFocus(){ focusEl.classList.remove('open'); document.documentElement.style.overflow=''; if(mode!=='sel') { clearCur(); } focusK=-2; updateBtns(); }
+function readFocus(){
+ if(playing){ stopSpeech(); return; }
+ var p=pageItems(), list=[];
+ if(focusK>=0){ p.all.forEach(function(it){ if(inSeg(focusK,it.u.el)) list.push(it); }); start(list,0,'focus'); }
+ else { var t=fBody.innerText; var l=speechLang(fBody); var a=[]; t.split(/\n+/).forEach(function(x){ x=norm(x); if(x) a.push({text:x,lang:l,u:null}); }); start(a,0,'sel'); }
+}
+
+/* ---------- 選択バブル ---------- */
+function onSelect(e){
+ if(e&&e.target&&e.target.closest&&e.target.closest('.yr-bubble')) return;
+ setTimeout(function(){
+  var s=getSelection(); if(!s||s.isCollapsed||!s.rangeCount){ bubble.style.display='none'; return; }
+  var txt=s.toString().trim(), a=s.anchorNode, el=a&&(a.nodeType===1?a:a.parentElement);
+  if(!txt||!el||el.closest('input,textarea,.yr-dock,.yr-toc,.yr-menu')||!(root.contains(el)||fBody.contains(el))){ bubble.style.display='none'; return; }
+  var rc=s.getRangeAt(0).getBoundingClientRect();
+  bubble.style.display='flex';
+  var bw=bubble.offsetWidth;
+  bubble.style.top=(window.scrollY+rc.bottom+8)+'px';
+  bubble.style.left=Math.max(6,Math.min(window.scrollX+rc.left,window.scrollX+innerWidth-bw-6))+'px';
+  if(ls(K.auto)==='1') readSelection();
+ },12);
+}
+
+/* ---------- 翻訳 ---------- */
+function oneGtx(tl,s){
+ return fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=ja&tl='+tl+'&dt=t',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'q='+encodeURIComponent(s)})
+ .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+ .then(function(j){ return (j[0]||[]).map(function(x){ return x[0]||''; }).join(''); });
+}
+function gtxEngine(tl){
+ return function(list){
+  return oneGtx(tl,list.join('\n')).then(function(txt){
+   var out=txt.split('\n'); if(out.length===list.length) return out;
+   var res=[],p=Promise.resolve();
+   list.forEach(function(s,i){ p=p.then(function(){ return oneGtx(tl,s); }).then(function(x){ res[i]=x; }); });
+   return p.then(function(){ return res; });
+  });
+ };
+}
+function getEngine(L){
+ var g=gtxEngine(L.g), fb={name:'Google翻訳',fn:g};
+ if(!('Translator' in self)) return Promise.resolve(fb);
+ return Translator.availability({sourceLanguage:'ja',targetLanguage:L.t}).then(function(av){
+  if(av==='unavailable') return fb;
+  return Translator.create({sourceLanguage:'ja',targetLanguage:L.t}).then(function(t){
+   return {name:'Chrome内蔵翻訳（端末内）',fn:function(list){
+    var res=[],p=Promise.resolve();
+    list.forEach(function(s,i){ p=p.then(function(){ return t.translate(s); }).then(function(x){ res[i]=x; }); });
+    return p.then(function(){ return res; }).catch(function(){ return g(list); });
+   }};
+  });
+ }).catch(function(){ return fb; });
+}
+function collectNodes(){
+ var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null), out=[], n;
+ while((n=w.nextNode())){
+  var p=n.parentElement; if(!p||!JA.test(n.nodeValue)) continue;
+  if(p.closest('script,style,textarea,pre,.yr-ui,.yr-focus,.yr-menu,.yr-nt')||!visible(p)) continue;
+  out.push(n);
+ }
+ return out;
+}
+function restoreJa(){
+ tr.gen++;
+ tr.list.forEach(function(o){ if(o.n.isConnected) o.n.nodeValue=o.orig; if(o.p) o.p.removeAttribute('lang'); });
+ tr.list=[]; tr.lang=null; tr.cache={};
+ root.removeAttribute('dir'); if(banner){ banner.remove(); banner=null; }
+ buildToc(); say('日本語に戻しました',2500);
+}
+function translateTo(L){
+ if(tr.busy) return;
+ if(tr.lang) restoreJa();
+ tr.busy=true; var gen=++tr.gen;
+ say('翻訳の準備中…');
+ getEngine(L).then(function(eng){
+  tr.lang=L; tr.engine=eng.name; var cache=tr.cache[L.g]=tr.cache[L.g]||{};
+  return runTranslate(L,eng,cache,gen);
+ }).catch(function(e){
+  say('⚠ 翻訳に失敗しました（ネットワーク接続を確認してください）',8000);
+  if(!tr.list.length) tr.lang=null;
+ }).then(function(){ tr.busy=false; showBanner(); buildToc(); });
+}
+function runTranslate(L,eng,cache,gen){
+ var nodes=collectNodes().filter(function(n){ return !tr.list.some(function(o){ return o.n===n; }); });
+ var jobs=nodes.map(function(n){ var m=n.nodeValue.match(/^(\s*)([\s\S]*?)(\s*)$/); return {n:n,lead:m[1],core:m[2].replace(/\s+/g,' '),trail:m[3],orig:n.nodeValue}; });
+ var chunksList=[],cur=[],len=0;
+ jobs.forEach(function(j){ if(cur.length&&(len+j.core.length>1100||cur.length>=30)){ chunksList.push(cur); cur=[]; len=0; } cur.push(j); len+=j.core.length; });
+ if(cur.length) chunksList.push(cur);
+ var done=0,total=jobs.length||1,idx=0,failed=false;
+ function apply(j,t){
+  if(gen!==tr.gen) return;
+  var p=j.n.parentElement; j.n.nodeValue=j.lead+t+j.trail;
+  if(p){ p.setAttribute('lang',L.s); }
+  tr.list.push({n:j.n,orig:j.orig,p:p});
+ }
+ function worker(){
+  if(idx>=chunksList.length||gen!==tr.gen||failed) return Promise.resolve();
+  var ch=chunksList[idx++], need=[], needJ=[];
+  ch.forEach(function(j){ if(cache[j.core]!=null) apply(j,cache[j.core]); else { need.push(j.core); needJ.push(j); } });
+  var pr=need.length?eng.fn(need):Promise.resolve([]);
+  return pr.then(function(res){
+   needJ.forEach(function(j,i){ var t=(res[i]==null?j.core:res[i]); cache[j.core]=t; apply(j,t); });
+   done+=ch.length; say('翻訳中… '+Math.round(done/total*100)+'%'); return worker();
+  },function(e){ failed=true; throw e; });
+ }
+ if(!jobs.length){ say('このページに翻訳する文章がありません',3000); return Promise.resolve(); }
+ root.setAttribute('dir',L.rtl?'rtl':'');
+ return Promise.all([worker(),worker(),worker()]).then(function(){ if(gen===tr.gen) say('✅ 翻訳が完了しました',4000); });
+}
+function showBanner(){
+ if(banner){ banner.remove(); banner=null; }
+ if(!tr.lang) return;
+ var L=tr.lang;
+ banner=mk('div','yr-ui yr-banner');
+ banner.innerHTML='<span>🌐 <b></b> に翻訳しました（'+tr.engine+'による機械翻訳）。<b>内容は日本語の原文が正</b>です。</span>';
+ banner.querySelector('b').textContent=L.n;
+ var vs=voicesFor(L.s), lab=mk('label',null,'🔊 音声：'), sel=mk('select');
+ if(vs.length){
+  var cur=pickVoice(L.s);
+  vs.forEach(function(v){ var o=mk('option'); o.value=v.voiceURI; o.textContent=v.name+' ('+v.lang+')'; if(cur&&cur.voiceURI===v.voiceURI) o.selected=true; sel.appendChild(o); });
+  sel.addEventListener('change',function(){ ls(K.voice+L.s,sel.value); restartHere(); });
+  lab.appendChild(sel);
+ } else { lab.textContent='⚠ この端末に '+L.n+' の音声が見つかりません。端末（OS／ブラウザ）の設定で音声を追加すると、ネイティブの発音で読めます。'; }
+ var b1=mk('button',null,'🌐 別の言語'), b2=mk('button',null,'日本語に戻す');
+ b1.onclick=function(){ openMenu(); }; b2.onclick=restoreJa;
+ banner.appendChild(lab); banner.appendChild(b1); banner.appendChild(b2);
+ root.insertBefore(banner,root.firstChild);
+}
+function openMenu(){
+ var g=$('.yr-lgrid',menu); g.innerHTML='';
+ var jb=mk('button',null,'日本語（元に戻す）'); jb.onclick=function(){ menu.classList.remove('open'); if(tr.lang) restoreJa(); }; g.appendChild(jb);
+ LANGS.forEach(function(L){ var b=mk('button',null); b.textContent=L.n; if(tr.lang&&tr.lang.g===L.g) b.classList.add('on'); b.onclick=function(){ menu.classList.remove('open'); translateTo(L); }; g.appendChild(b); });
+ menu.classList.add('open');
+}
+function onNewlyVisible(){
+ if(tr.lang&&!tr.busy){ tr.busy=true; getEngine(tr.lang).then(function(eng){ return runTranslate(tr.lang,eng,tr.cache[tr.lang.g]||(tr.cache[tr.lang.g]={}),tr.gen); }).catch(function(){}).then(function(){ tr.busy=false; buildToc(); }); }
+ else buildToc();
+}
+
+/* ---------- 初期化 ---------- */
+function init(o){
+ o=o||{};
+ root=$(o.root||'.wrap')||document.body; readBtn=$(o.readBtn||'#readAloudBtn');
+ css(); document.documentElement.classList.add('yr-on');
+ var sv=parseFloat(ls(K.rate)); rate=isNaN(sv)?1:sv;
+
+ dock=mk('div','yr-ui yr-dock');
+ dock.innerHTML=
+ '<div class="yr-row"><button class="yr-main" data-a="play">▶ 画面から読む</button><button data-a="prev" title="前の段落へ">⏮</button><button data-a="next" title="次の段落へ">⏭</button>'+
+ '<span class="yr-sp"></span><button data-a="slow" title="遅く（−キー）">−</button>'+
+ '<label class="yr-rate" title="数字を入力して Enter（0.5〜3.0）。Rキーでここに移動">速度 <input id="yr-rate-in" type="number" min="0.5" max="3" step="0.1" inputmode="decimal"> 倍</label>'+
+ '<button data-a="fast" title="速く（＋キー）">＋</button><input id="yr-rate-rg" type="range" min="0.5" max="3" step="0.1" aria-label="読み上げ速度">'+
+ '<button data-a="min" title="たたむ／ひらく">▾</button></div>'+
+ '<div class="yr-row yr-hide"><span>よく使う速度：</span>'+[0.8,1,1.2,1.5,2,2.5].map(function(r){ return '<button class="yr-chip" data-r="'+r+'">'+r.toFixed(1)+'</button>'; }).join('')+
+ '<span class="yr-sp"></span><button data-a="toc">📑 目次</button><button data-a="trans">🌐 翻訳</button><button data-a="zoomsel" title="選んだ文章だけを大きく表示">🔍 選択を大きく</button></div>'+
+ '<div class="yr-row yr-hide"><label><input type="checkbox" id="yr-auto"> 文章をドラッグして選んだらすぐ読む</label><span class="yr-sp"></span><span class="yr-status" id="yr-status">文章をドラッグすると「ここを読む」が出ます ／ キー：＋ − 0（速度）・R（速度入力）・Esc（停止）</span></div>';
+ document.body.appendChild(dock);
+
+ tocEl=mk('aside','yr-ui yr-toc'); tocEl.setAttribute('aria-label','目次');
+ tocEl.innerHTML='<div class="yr-toc-h"><b>📑 目次</b><button data-a="toc">✕</button></div><div class="yr-toc-list"></div><div class="yr-toc-f">▶ その章から読み上げ／🔍 その章だけ大きく表示</div>';
+ document.body.appendChild(tocEl);
+
+ bubble=mk('div','yr-ui yr-bubble'); bubble.innerHTML='<button data-b="read">🔊 ここを読む</button><button data-b="stop">⏹</button><button data-b="zoom">🔍 大きく</button>';
+ bubble.addEventListener('mousedown',function(e){ e.preventDefault(); });
+ bubble.addEventListener('touchstart',function(e){ e.preventDefault(); },{passive:false});
+ document.body.appendChild(bubble);
+
+ focusEl=mk('div','yr-focus'); focusEl.setAttribute('role','dialog');
+ focusEl.innerHTML='<div class="yr-fbar yr-ui"><button data-f="prev">◀ 前へ</button><span class="yr-ftitle"></span><button data-f="next">次へ ▶</button><span class="yr-sp"></span>'+
+ '<button data-f="smaller">A−</button><span id="yr-fz">180%</span><button data-f="bigger">A＋</button><button class="yr-main" data-f="read">▶ 読む</button><button data-f="close">✕ 閉じる</button></div><div class="yr-fbody"><div></div></div>';
+ document.body.appendChild(focusEl); fBody=$('.yr-fbody',focusEl);
+
+ menu=mk('div','yr-ui yr-menu'); menu.innerHTML='<div class="yr-mbox"><b style="font-size:15px">🌐 このページを翻訳</b><p style="margin:6px 0;font-size:12px;color:#5B6270">言語を選ぶと、ページの文章を翻訳し、その言語の音声で読み上げます。お使いのChromeに内蔵翻訳があれば端末内で翻訳し、なければ Google翻訳 にこのページの文章だけを送って翻訳します（ノートの内容は送りません）。機械翻訳のため、内容は日本語の原文が正です。</p><div class="yr-lgrid"></div><button data-m="close">閉じる</button></div>';
+ menu.addEventListener('click',function(e){ if(e.target===menu||e.target.getAttribute('data-m')==='close') menu.classList.remove('open'); });
+ document.body.appendChild(menu);
+
+ if(readBtn){
+  readBtn.classList.add('yr-nt'); readBtn.addEventListener('click',function(){ readPage(false); });
+  var tb=readBtn.cloneNode(false); tb.id='yrTransBtn'; tb.textContent='🌐 このページを翻訳'; tb.className=readBtn.className;
+  tb.addEventListener('click',openMenu); readBtn.parentNode.insertBefore(tb,readBtn.nextSibling);
+ }
+ var lb=$('#readRateLabel'); if(lb){ lb.classList.add('yr-nt'); lb.style.cursor='pointer'; lb.title='クリックで速度の入力欄へ'; lb.addEventListener('click',function(){ dock.classList.remove('yr-min'); var i=$('#yr-rate-in'); i.focus(); i.select(); }); }
+
+ dock.addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  var a=b.getAttribute('data-a'), r=b.getAttribute('data-r');
+  if(r){ setRate(r); return; }
+  if(a==='play') readPage(true);
+  else if(a==='prev') jump(-1); else if(a==='next') jump(1);
+  else if(a==='slow') setRate(rate-0.1); else if(a==='fast') setRate(rate+0.1);
+  else if(a==='toc') toggleToc();
+  else if(a==='trans') openMenu();
+  else if(a==='zoomsel'){ var s=getSelection(); if(s&&!s.isCollapsed) focusSelection(); else say('先に文章をドラッグして選んでください',3000); }
+  else if(a==='min'){ dock.classList.toggle('yr-min'); b.textContent=dock.classList.contains('yr-min')?'▴':'▾'; }
+ });
+ tocEl.addEventListener('click',function(e){ var b=e.target.closest('button[data-a=toc]'); if(b) toggleToc(false); });
+ var ri=$('#yr-rate-in'), rg=$('#yr-rate-rg');
+ ri.addEventListener('input',function(){ var v=parseFloat(ri.value); if(!isNaN(v)&&v>=0.5&&v<=3) setRate(v); });
+ ri.addEventListener('change',function(){ setRate(ri.value); ri.value=rate.toFixed(1); });
+ ri.addEventListener('keydown',function(e){ if(e.key==='Enter'){ setRate(ri.value); ri.value=rate.toFixed(1); ri.blur(); } e.stopPropagation(); });
+ rg.addEventListener('input',function(){ setRate(rg.value); });
+ var au=$('#yr-auto'); au.checked=ls(K.auto)==='1'; au.addEventListener('change',function(){ ls(K.auto,au.checked?'1':'0'); });
+ bubble.addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return; var t=b.getAttribute('data-b');
+  if(t==='read') readSelection(); else if(t==='stop') stopSpeech(); else if(t==='zoom') focusSelection();
+  bubble.style.display='none';
+ });
+ focusEl.addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return; var f=b.getAttribute('data-f');
+  if(f==='close') closeFocus(); else if(f==='read') readFocus();
+  else if(f==='prev'){ if(playing) stopSpeech(); openFocus(Math.max(0,focusK-1)); }
+  else if(f==='next'){ if(playing) stopSpeech(); openFocus(Math.min(heads.length-1,focusK+1)); }
+  else if(f==='bigger') setZoom((parseFloat(ls(K.zoom))||1.8)+0.2);
+  else if(f==='smaller') setZoom((parseFloat(ls(K.zoom))||1.8)-0.2);
+ });
+ document.addEventListener('mouseup',onSelect); document.addEventListener('touchend',onSelect); document.addEventListener('keyup',function(e){ if(e.shiftKey) onSelect(e); });
+ document.addEventListener('mousedown',function(e){ if(!e.target.closest('.yr-bubble')) bubble.style.display='none'; });
+ document.addEventListener('keydown',function(e){
+  var t=e.target, tag=(t&&t.tagName)||'';
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable)||e.metaKey||e.ctrlKey||e.altKey) return;
+  if(e.key==='+'||e.key==='='){ e.preventDefault(); setRate(rate+0.1); }
+  else if(e.key==='-'||e.key==='_'){ e.preventDefault(); setRate(rate-0.1); }
+  else if(e.key==='0'){ e.preventDefault(); setRate(1); }
+  else if(e.key==='r'||e.key==='R'){ e.preventDefault(); dock.classList.remove('yr-min'); ri.focus(); ri.select(); }
+  else if(e.key==='Escape'){ if(menu.classList.contains('open')) menu.classList.remove('open'); else if(focusEl.classList.contains('open')) closeFocus(); else if(playing) stopSpeech(); }
+ });
+ var raf=0; window.addEventListener('scroll',function(){ if(raf) return; raf=requestAnimationFrame(function(){ raf=0; if(!playing) syncToc(); }); },{passive:true});
+ var mt=null; new MutationObserver(function(recs){ if(!recs.some(function(r){ return !(r.target.closest&&r.target.closest('.yr-ui,.yr-focus,.yr-menu,.yr-bubble')); })) return; clearTimeout(mt); mt=setTimeout(onNewlyVisible,450); }).observe(root,{subtree:true,attributes:true,attributeFilter:['class','hidden','style']});
+ if(window.speechSynthesis) speechSynthesis.onvoiceschanged=function(){ if(banner) showBanner(); };
+ window.addEventListener('beforeunload',function(){ try{ speechSynthesis.cancel(); }catch(e){} });
+
+ setRate(rate,true); updateBtns(); buildToc();
+ var pref=ls(K.toc), long=heads.length>=6||(root.innerText||'').length>6000;
+ toggleToc(pref==='1'||(pref===null&&long&&innerWidth>=1100));
+}
+window.YomiReader={init:init,version:'1.0'};
+})();
+
+YomiReader.init({root:'.wrap'});
+  (function(){
+    var KEY = 'yomiDlcUdFontEnabled';
+    var btn = document.getElementById('udFontToggleBtn');
+    function apply(){
+      var on = false;
+      try { on = localStorage.getItem(KEY) === 'true'; } catch(e){}
+      document.documentElement.classList.toggle('dlc-ud-font', on);
+      if (btn) btn.style.background = on ? 'var(--accent,#B5432E)' : '';
+      if (btn) btn.style.color = on ? '#fff' : '';
+    }
+    if (btn) btn.addEventListener('click', function(){
+      var on = document.documentElement.classList.contains('dlc-ud-font');
+      try { localStorage.setItem(KEY, on ? 'false' : 'true'); } catch(e){}
+      apply();
+    });
+    apply();
+  })();
+</script>
+</body>
+</html>

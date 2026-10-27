@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>使い方 ― 読みノート (Yomi-Note)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F2; --paper-deep:#F3EEE3; --ink:#22262E; --ink-soft:#5B6270;
+    --line:#DAD3C4; --accent:#B5432E; --accent-soft:#EFD9CF; --teal:#3E6E63; --white:#FFFFFF;
+    --shadow:0 6px 22px rgba(34,38,46,0.14);
+  }
+  *{box-sizing:border-box;}
+  html.dlc-ud-font, html.dlc-ud-font body, html.dlc-ud-font button, html.dlc-ud-font h1,
+  html.dlc-ud-font h2, html.dlc-ud-font h3, html.dlc-ud-font p, html.dlc-ud-font li, html.dlc-ud-font a{
+    font-family:'BIZ UDGothic','BIZ UDPGothic','Yu Gothic UI',sans-serif !important;
+  }
+  html,body{margin:0;padding:0;background:var(--paper-deep);color:var(--ink);font-family:"Noto Sans JP",sans-serif;line-height:1.75;}
+  h1,h2,h3{font-family:"Shippori Mincho",serif;}
+  a{color:var(--teal);}
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px 80px;}
+
+  .hero{
+    background:linear-gradient(160deg, var(--ink) 0%, #2E3440 100%);
+    color:#fff;padding:44px 24px 54px;margin-bottom:-40px;
+  }
+  .hero-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .hanko{
+    width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:"Shippori Mincho",serif;
+    font-weight:700;font-size:26px;flex-shrink:0;box-shadow:inset 0 0 0 3px rgba(255,255,255,0.35),0 6px 18px rgba(0,0,0,0.35);
+  }
+  .hero h1{font-size:26px;margin:0 0 4px;color:#fff;}
+  .hero p.tagline{margin:0;font-size:13.5px;color:#C9D0D8;}
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .cta-btn{
+    display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:24px;
+    font-size:13px;text-decoration:none;font-weight:700;background:rgba(255,255,255,0.1);color:#fff;
+    border:1px solid rgba(255,255,255,0.3);cursor:pointer;
+  }
+  .cta-btn.primary{background:var(--accent);border-color:var(--accent);}
+  .cta-btn:hover{filter:brightness(1.08);}
+
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 28px;
+    box-shadow:var(--shadow);margin-bottom:22px;
+  }
+  .card h2{font-size:18px;margin:0 0 6px;display:flex;align-items:center;gap:8px;}
+  .card .lead{font-size:12.5px;color:var(--ink-soft);margin:0 0 16px;}
+
+  .step-list{list-style:none;margin:0;padding:0;counter-reset:step;}
+  .step-list li{
+    position:relative;padding:0 0 18px 40px;counter-increment:step;
+  }
+  .step-list li:last-child{padding-bottom:0;}
+  .step-list li::before{
+    content:counter(step);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;
+    background:var(--teal);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;
+  }
+  .step-list h3{font-size:14.5px;margin:0 0 4px;font-family:"Noto Sans JP",sans-serif;font-weight:700;}
+  .step-list p{font-size:13px;color:var(--ink-soft);margin:0;}
+
+  .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+  .feature-item{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
+  .feature-item .icon{font-size:20px;margin-bottom:6px;display:block;}
+  .feature-item h3{font-size:13.5px;margin:0 0 4px;font-weight:700;}
+  .feature-item p{font-size:12px;color:var(--ink-soft);margin:0;}
+
+  .dlc-box{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:12px;}
+  .dlc-box:last-child{margin-bottom:0;}
+  .dlc-box .title{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+  .dlc-box p{font-size:12.5px;color:var(--ink-soft);margin:4px 0;}
+  code{background:var(--accent-soft);color:var(--accent);padding:1px 6px;border-radius:5px;font-size:12px;}
+
+  .warn-box{background:#FFF6E9;border:1px solid #E7C77C;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#7A5B12;margin-top:10px;}
+
+  footer{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:10px;padding:24px 0 0;}
+  @media (max-width:600px){ .hero{padding:36px 18px 46px;} .card{padding:20px 18px;} }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hanko">読</div>
+    <div>
+      <h1>使い方ガイド</h1>
+      <p class="tagline">読みノートの基本操作・コマンド・追加DLCの導入方法をまとめました</p>
+      <div class="cta-row" style="margin-top:10px;margin-bottom:2px;">
+        <span class="cta-btn" style="cursor:default;background:var(--accent,#B5432E);border-color:transparent;">使い方 v37</span>
+      </div>
+      <div class="cta-row">
+        <a class="cta-btn primary" href="./index.html">📓 アプリを開く</a>
+        <a class="cta-btn" href="./Yomi_note_home_v44.html">🏠 ホームに戻る</a>
+        <a class="cta-btn" href="./%E6%A9%9F%E8%83%BD%E7%B4%B9%E4%BB%8Bv20.html">✨ 機能紹介</a>
+        <a class="cta-btn" href="./%E7%A0%94%E7%A9%B6v0_12.html">🔬 研究</a>
+        <button class="cta-btn" id="readAloudBtn" type="button">🔊 このページを読み上げる</button>
+        <button class="cta-btn" id="udFontToggleBtn" type="button">Aa UDフォント</button>
+        <span class="cta-btn" id="readRateLabel" style="cursor:default;user-select:none;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>① まずはノートを作ってみる</h2>
+    <p class="lead">はじめての方は、この順番で触ってみるとひと通りの機能がつかめます。</p>
+    <ol class="step-list">
+      <li><h3>ページを開く／増やす</h3><p>「📓 アプリを開く」からノートを開きます。画面下のページ一覧から新しいページを追加できます。</p></li>
+      <li><h3>用紙を選んでノートを作る（ノートモード）</h3><p>上のバーの「📒ノート」を押すと、罫線・方眼・コーネル式などの用紙を選んで、ノートを作れます。左の「田 升目文字」で、行やマスをクリックすると、そのまま文字が打てます。</p></li>
+      <li><h3>手書き・テキストボックスで書く</h3><p>ツールバーの「✏️ペン」で手書き、「Tテキスト」でテキストボックスを追加できます。</p></li>
+      <li><h3>PDF・画像を取り込んでOCR</h3><p>PDF/画像を取り込み、「全体OCR」または「部分OCR」で文字として認識させます。縦書き・横書きは自動判定、手動指定も可能です。</p></li>
+      <li><h3>読み上げる</h3><p>ツールバーの「🔊 全文読み上げ」や、認識結果の右上に出る🔊ボタンから、一文・選択範囲・テキストボックス単位で読み上げできます。</p></li>
+      <li><h3>保存・書き出し</h3><p>編集内容はブラウザ内（localStorage）に自動保存されます。「PDF書き出し」で外部ファイルとしても保存できます。</p></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>② よく使う機能</h2>
+    <p class="lead">似た内容の更新が版を重ねて増えていたため、v19でカテゴリ別に整理し直しました（過去の細かな改善履歴はホームページの更新履歴にまとめてあります）。</p>
+    <div class="feature-grid">
+      <div class="feature-item"><span class="icon">📒</span><h3>ノートモード（用紙・升目文字・付箋）</h3><p><b>用紙を選ぶ：</b>上のバーの「📒ノート」、左の「用紙」ボタン、またはコマンド <code>/note</code> で選択画面が開きます。用紙は、白紙・罫線・方眼・ドット方眼・コーネル式・2段ノート・原稿用紙・チェックリスト・時間割・英習字（4線）。サイズ・用紙の色・間隔・ページ数を選べ、「新しいノート」「ページを追加」「このページの用紙を変える（書き込みは残ります）」を選べます。コマンドでも <code>/note new コーネル</code>、<code>/note add 方眼</code>、<code>/note change 罫線</code>、<code>/note list</code> が使えます。<br><b>升目文字：</b>左の「田 升目文字」を選び、罫線の行・方眼のマス・コーネル式の「キーワード」「ノート」「まとめ」の欄などをクリックすると、その行・マスにそろえて、そのまま文字が打てます（テキストボックスを作る必要はありません）。罫線では行の高さに合わせて、方眼・原稿用紙では1文字が1マスに入ります（英数字は、マスの半分より少し広く入ります）。打ち進めると行が自動で増え、何も打たなかったときは自動で消えます。動かす・大きさを変えるときも、升目にそろいます。文字の色は、ツールを選んだときに出る欄で選べます。<br><b>付箋・図形・チェック・日付：</b>付箋（6色。貼ったあと、ダブルクリックで文字を直します）、図形（四角・角丸・円・直線・矢印・マーカーをドラッグして描きます。「中をぬる」と太さも選べます）、チェック欄（クリックした行に置き、クリックで✓が入ります）、日付（クリックした行に今日の日付を入れます）。付箋・図形は、選ぶと出るバーで色を変えられ、右下の角をドラッグして縦横を自由に変えられます。画像は、これまでの「画像」ツールで入れられます。<br><b>ほかの機能との関係：</b>用紙はページの背景画像なので、PDF書き出し・ZIP書き出し・サムネイル・「📌ピン止め」の固定表示でも、そのまま使えます。升目文字はテキストボックスの一種なので、読み上げの対象にもなります。</p></div>
+      <div class="feature-item"><span class="icon">✏️</span><h3>ペン・手書き</h3><p>太さはS/M/L/XLのワンタップ切替に加え、スライダーの横の数値欄に直接キーボードで入力もできます（v5.0）。色はカラーパネルから自由に選択。Apple Pencilなどのスタイラス使用時は、手のひらが触れても誤って描画されない「パームリジェクション」に対応しています。</p></div>
+      <div class="feature-item"><span class="icon">➰</span><h3>輪投げ・範囲選択</h3><p>手書きの一部を自由な形で丸く囲むと、「✂️画像として切り取る」か「∑数式に変換する」かを選べます（数式変換はv5.0で新規追加。手書きの数式をOCRで下書きとして読み取り、数式パレットの直接入力欄に入れてから、確認・修正して確定できます）。囲んだ輪郭は自動でなめらかに補正され、輪の中に完全に収まる画像・テキストボックスも一緒に選択されます。選択ツールで何もない場所からドラッグすると、矩形範囲内のテキストボックスや手書きインクをまとめて選択でき、Deleteキーでまとめて削除、Escapeキーで選択解除できます。</p></div>
+      <div class="feature-item"><span class="icon">✒</span><h3>手書き→文字</h3><p>範囲の縦横比から適切な認識方式を自動選択し、最大8倍まで拡大してから認識します。自信度の低い結果は複数の認識方式で試し、確認画面の「🔁他の候補を見る」でどの候補が正しいかを見比べてから確定できます（v5.0）。確定時は元の手書きを消してテキストボックスに置き換え、Ctrl+Zでいつでも元に戻せます。</p></div>
+      <div class="feature-item"><span class="icon">🔍</span><h3>OCR（文字認識）</h3><p>このページだけを読み取る「🔍このページをOCR認識」、複雑なレイアウト向けの「🌀スライドOCR」、全ページをまとめて処理する一括OCR（通常・スライド両方）があります。一括OCRは「認識済みページはスキップ」を選べるほか、「⏹一括OCRを中断」でいつでも途中で止められます（v5.0）。向きは横書き・縦書き・自動判定から選べ、自動判定がうまく判断できなかったときはその旨を知らせたうえで前回の向きを維持します。「🔎再判定」ボタンでその場で判定をやり直すこともできます（v5.0）。図表は自動でOCR対象から除外され、境界線は自動検知・手動指定の両方に対応。「検出の強さ：弱め／標準／強め」で資料の性質に合わせて感度を調整できます。カメラ撮影は照明ムラ・影を補正してから認識し、挿入した画像自体もOCR対象にできます。</p></div>
+      <div class="feature-item"><span class="icon">🔊</span><h3>読み上げ</h3><p>ツールバーの「🔊全文読み上げ」や、認識結果・テキストボックスの🔊ボタンから、一文・選択範囲・テキストボックス単位で読み上げできます。読んでいる箇所は自動でハイライトされ、読点でも短い間を空けて自然に読み上げます。英語が混じった文章は英語部分だけ自動で英語音声に切り替わります。読み上げ速度は上部の数値欄から調整できます。</p></div>
+      <div class="feature-item"><span class="icon">🌐</span><h3>このページの読み上げ・目次・翻訳（ホーム／使い方／コマンド一覧／研究／利用規約）</h3><p><b>範囲を選んで読む：</b>読みたい文章をドラッグして選ぶと、そのそばに「🔊 ここを読む」が出ます（下のバーの「選んだらすぐ読む」にチェックすると、選んだ瞬間に読み始めます）。<b>速さを変える：</b>下のバーの「−」「＋」、数字の入力欄（0.5〜3.0を入力してEnter）、スライダー、よく使う速度のボタンのどれでも変えられます。キーボードの＋／－／0（等倍）／R（入力欄へ移動）も使えます。読んでいる途中で変えると、その文から新しい速さで読み直します。<b>目次：</b>長いページでは、左端に目次が出ます（下のバーの「📑 目次」でも開閉）。目次の「▶」でその章から読み上げ、「🔍」でその章だけを大きな文字で表示できます（A−／A＋で大きさを変更。選んだ文章だけを大きく出すこともできます）。<b>翻訳：</b>ページ上の「🌐 このページを翻訳」から言語（English・中文・한국어・Español など21言語）を選ぶと、ページの文章を翻訳し、その言語の音声で読み上げます。音声は翻訳先の言語の声を自動で選び、一覧から変えることもできます（端末にその言語の音声がないときは、その旨が出ます）。機械翻訳のため、内容は日本語の原文が正です。</p></div>
+      <div class="feature-item"><span class="icon">∑</span><h3>数式入力</h3><p>タップ式のボタンと数字・変数キーパッドだけでキーボードいらずで組み立てられ、◀▶でカーソル移動、⌫で1文字削除も可能です。「よく使う公式」から二次方程式の解の公式・三平方の定理などをワンタップで挿入でき、ベクトル・数列、確率・統計、集合・論理記号なども揃っています。化学のイオン式・反応の矢印や、物理でよく使う計算式（運動方程式・エネルギーなど）にも対応しました（v5.6で追加）。慣れている方は「🔤直接入力」でLaTeXを直接書くこともできます。数式の挿入・更新はCtrl+Zで取り消せます（v5.0で修正）。</p></div>
+      <div class="feature-item"><span class="icon">T</span><h3>テキストボックス</h3><p>文字の配置（左/中央/右）・書体（ゴシック/明朝/手書き風）・背景色の塗りつぶし・複製（📋）に対応。四隅どこからでもつまんで拡大縮小でき（v5.0）、移動・リサイズのどちらもCtrl+Zで取り消せます（v5.0で修正）。OCR済みのページで作成すると、周りの文字サイズに自動で合わせることもできます。</p></div>
+      <div class="feature-item"><span class="icon">🖼️</span><h3>画像・グラフ・動画・リンクの挿入</h3><p>ページ内に自由に挿入できます。カメラでの直接撮影にも対応。</p></div>
+      <div class="feature-item"><span class="icon">🎤</span><h3>音声入力</h3><p>テキストボックスに話しかけて文字起こしできます。ブラウザ版はインターネット接続が必要です。デスクトップアプリ版（Windows／Mac）は、内蔵の音声認識エンジンで通信なしに使えます（アプリ版では、話し終えて少し間をあけると文字になります。初回は準備に数秒かかります）。マイクの使用を許可してください。話している途中の内容もリアルタイムで反映され、無音で自動終了してしまった場合も自分で止めていなければ自動再開します。オフライン時は自動的にグレーアウトします。</p></div>
+      <div class="feature-item"><span class="icon">🎓</span><h3>学年モード・UDフォント</h3><p>「🎒小学生／📘中学生／📗高校生／🎓大学生・一般」を選ぶと、その学年までの範囲に数式パレットが絞り込まれます。小学生モードでは画面の主な漢字がひらがな表示に。書体は、ディスレクシアに配慮した「BIZ UDゴシック」を標準搭載しています。</p></div>
+      <div class="feature-item"><span class="icon">🧪</span><h3>テストモード（試験対応）</h3><p>上部バーの「🧪テストモード」で、学校のテストで不要・不適切な機能（数式のよく使う公式、リンク・動画・画像・グラフの新規挿入や既存分の閲覧、輪投げ・定規・学年変更など）をまとめてブロックできます。ブロック内容は「⚙️詳細設定」で個別にON/OFFでき（v5.7で、数式の「よく使う公式」・化学の「よく使うイオン」・物理の「よく使う公式」の各一覧も、それぞれチェックで選べるようになりました。v5.9では「🔬除外プレビュー」（図表のある場所を見せる機能）、v6.0では化学記法の「↑（気体）」「↓（沈殿）」「Δ（加熱）」「(固)(液)(気)(水溶液)」のような答えのヒントになる（）の部分（記号だけを表示し、状態を表すボタンは出さない）も、隠せるようになりました。既定はすべてブロックです）、制限時間（分）を設定すると上部にカウントダウンタイマーが表示されます（v5.0で新規追加）。操作ログは「📋テストログ」から確認・テキスト書き出しができ、パスワードを設定すればクリアにも保護をかけられます。</p></div>
+      <div class="feature-item"><span class="icon">🧩</span><h3>追加DLC（拡張機能）</h3><p>右上の🧩ボタンからディスレクシア支援パック・プログラミング追加パック・MIDIプレイヤーパックなどを有効化できます（全バージョン内蔵済み・ダウンロード不要）。詳しくは「④ 追加DLCを使う」をご覧ください。</p></div>
+      <div class="feature-item"><span class="icon">💾</span><h3>保存・書き出し・オフライン対応</h3><p>編集内容はブラウザ内（localStorage）に自動保存。PDF書き出しに加え、各ページのPNG画像とノートデータ（復元用JSON）をまとめたZIP書き出しにも対応しています。オフライン時は上部に「🔌オフライン」と表示され、通信が必要な音声入力が自動的に使えなくなります（再接続で自動復帰）。</p></div>
+      <div class="feature-item"><span class="icon">🔎</span><h3>AOCRv01（拡張OCR・v6.3）</h3><p><code>AOCRv01.js</code> を index.html と同じフォルダに置いて開き直すと使えます。<code>/aocr</code> で状態を確認、<code>/aocr on</code> でオン（既定はオフ）、<code>/aocr mode fast|balanced|accurate</code> で方式を選びます（fast＝高速、balanced＝標準、accurate＝時間をかけて慎重に）。ページ全体のOCRに使われ、切り抜きなどの部分OCRは、これまでの方式のままです。AOCRで読み取れなかったときは、自動でこれまでの方式に戻ります。照明のムラや影のあるページ向けの拡張機能です。</p></div>
+  <div class="feature-item"><span class="icon">🔎</span><h3>AOCRv02（拡張OCR・試作）</h3><p><code>AOCRv02.js</code> を index.html と同じフォルダに置いて開き直すと使えます（デスクトップ版には同梱）。<code>/aocr2</code> で状態を確認、<code>/aocr2 on</code> でオン（既定はオフ）。<b>部分OCRにだけ</b>働きます。<code>/aocr2 mode compare</code>（既定）は、これまでのOCR結果は変えずに、AOCRv02の結果との一致度を表示するだけです。<code>/aocr2 mode use</code> は、結果をAOCRv02のものに置き換えます（試験用。誤りが増えることがあります）。日本語の活字（ひらがな・カタカナと、限られた漢字）の横書きだけが対象で、英数字・手書き・縦書きは読めません。縦書きや英数字が多い範囲では、自動で使いません。権利と免責は、利用規約の第14条をご覧ください。</p></div>
+      <div class="feature-item"><span class="icon">💬</span><h3>意見・アンケートと利用状況の送信（v6.2）</h3><p>上部バーの💬ボタン、または <code>/feedback</code> で開きます。使いやすさ・使い道・困っていること・自由記述を保存できます。利用状況（使った日数・コマンド名と成否・ボタンの使用回数・エラーの種類）は、この端末の中だけに記録され、外部へは送信されません。ノートの中身や入力した文章は記録しません。「集計ページで見る」から開く chartv0.html で、コマンドごとの回数や失敗、エラーを確認できます。ファイルへの書き出しと、記録の消去も、この画面からできます。</p></div>
+      <div class="feature-item"><span class="icon">📱</span><h3>画面・操作性</h3><p>画面左端・右端のタブ（◀／▶）でツール一覧・認識結果パネルを隠して画面を広く使え、上部バーの⛶で全画面表示にも切り替えられます。2本指スワイプでキャンバスをスクロールでき（1本指＝描画・選択、2本指＝スクロール）、iPad・iPhoneなどタッチ端末ではボタンのタップ領域を自動で広げ、ノッチ・ホームインジケーター部分にツールバーが隠れないよう配慮しています。</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>③ コマンドパレットを使う</h2>
+    <p class="lead">キーボード操作に慣れている方向けの入力方法です。<code>@0</code>通常・<code>@1</code>数式・<code>@2</code>システムの3モードがあります。</p>
+    <p style="font-size:13px;">代表的なコマンドの一覧は「<a href="./command-list-v30.html">コマンド一覧</a>」ページに詳しくまとまっています。同ページにはキーワードでコマンドを絞り込める「コマンド検索」も用意しています。</p>
+  </div>
+
+  <div class="card">
+    <h2>④ 追加DLC（拡張機能）を使う</h2>
+    <p class="lead">読みノートは、任意でJavaScriptファイル（DLC）を取り込んで機能を拡張できます。</p>
+    <ol class="step-list">
+      <li><h3>DLCファイルを入手する</h3><p>下の一覧、または <a href="https://github.com/suzaki-ao/yomi-note" target="_blank" rel="noopener noreferrer">GitHubリポジトリ</a> から .js ファイルをダウンロードします。</p></li>
+      <li><h3>取り込む</h3><p>画面右上の🧩ボタン、または <code>/import dlc</code> コマンドからファイルを選んで取り込みます。複数のDLCを同時に取り込むことも可能です。</p></li>
+      <li><h3>オン/オフを切り替える</h3><p>🧩ボタンのパネル、または <code>/dlc on [番号]</code> ・ <code>/dlc off [番号]</code> ・ <code>/dlc remove [番号]</code> ・ <code>/dlc list</code> で管理できます。<code>/dlc check</code> で、選んだ版・保存されている内容・実際に読み込まれた版が合っているかを確認できます（v5.9で追加）。</p></li>
+    </ol>
+    <div class="dlc-box">
+      <div class="title">🧩 ディスレクシア支援パック v1.4</div>
+      <p>気が散りやすいツールを非表示にし、部分OCR縦+/横+、区切り線の左右分割、UDフォント、操作ログなど、読み書きをサポートする機能を追加します。</p>
+      <p><b>ボタン読み上げ：</b>ツールバー・上部バー・各種ダイアログ・DLC一覧など、アプリ内のほぼ全てのボタンの右上に小さな🔊バッジが付きます。押すとそのボタンの名前や説明を音声で読み上げ、本体のクリックには影響しません。コマンドパレットで「/all command」などを実行したときに表示されるコマンドの構文一覧の各行にも同じく🔊バッジが付きます。ツールバーの「🔊ボタン読み上げ」でオン/オフを切り替えられ、初期状態はオンです。</p>
+      <p><b>v1.4の変更：</b>ページのピン止め（📌）は、別の追加コンテンツ「ピン止め拡張機能 pin.js」に分けました。ピン止めを使いたいときは、下の「ピン止め拡張機能」も有効にしてください。</p>
+      <p><b>v1.3の修正：</b>画面上部のバッジ（「📖 ディスレクシア支援パック v●.●」）が、v1.1・v1.2を有効にしても「v1.0」のままになっていた不具合を直しました。バッジの版表記は、パックの中の1か所から作るようになり、本体側でも、古い版（v1.1・v1.2）のバッジを実際の版に自動で書き換えます。<code>/dlc check</code> で、バッジの表記も確認できます。</p>
+      <p><b>v1.2の新機能（大幅強化）：</b>研究で「OCRは数式・化学式を正しく読めない」と分かったことを、読み上げの支援に反映しました。①<b>📏読み行ガイド</b>：いま読んでいる行だけを帯で示し、まわりをうっすら暗くします（なし→細め→ふつう→太め）。②<b>📚読みやすさ</b>：大文字表示・文字間・読みやすい色・読み行ガイドをまとめて切り替えます（やさしい／くっきり／集中。「なし」に戻すと、使う前の設定に戻ります）。③<b>🧮数式の読み上げ</b>：数式・化学式らしい部分を「数式」と読む（初期設定）／とばす／そのまま読む、から選べます。日付や英文は対象外です。④<b>⚠不確かな箇所</b>：このページの数式らしい箇所や、OCRの信頼度が低い箇所を一覧にして、1件ずつそのまま読み上げて確かめられます（テストモード中は使えません）。なお、v1.0でUDフォント切り替えボタンを廃止し、v1.1で「🎨読みやすい色」と「↔️文字間を広げる」を追加しています。</p>
+      <p><b>v0.8の改善：</b>ボタン読み上げの操作方法を改善しました。これまでボタンの右上の小さな🔊バッジを狙って押す必要がありましたが、バッジを廃止し、ボタンを押した瞬間に名前や説明を読み上げるようにしました（本体のボタン動作は妨げません）。また、読み上げに使う声を端末の一覧から選べる「🗣️音声選択」を新規追加し、選んだ声は保存されて次回以降も使われます。UDフォントはホーム・使い方・利用規約ページにも導入しました。</p>
+    </div>
+    <div class="dlc-box">
+      <div class="title">📌 ピン止め拡張機能 pin.js v1.3</div>
+      <p>今見ているページを画面の右側に「固定表示」して、本体で別のページを見たり操作したりしながら見比べられる機能です。ディスレクシア支援パックを使わなくても、ほかのDLCと一緒でも使えます。🧩のDLC一覧から有効にしてください。</p>
+      <p><b>画面の配置：</b>画面が広いときは、固定パネルが「本体のページ表示」と「右パネル（テキスト認識など）」の間に入ります。右パネルは隠れません。画面の一番右には、細い「右端タブ列」が常に出ます。画面が狭いとき（約900px未満）は、固定パネルが画面の上に重なります。パネルの左端をドラッグすると幅を変えられます。</p>
+      <p><b>右端タブ列：</b>「📌ピン止め」ボタンで、今見ているページを固定／解除します。固定したページは「P2」「P18」のようなタブになり、押すと表示するページを切り替えられます。表示中のタブをもう一度押すと、パネルをしまえます（タブは残ります）。複数のページを同時に固定できます。</p>
+      <p><b>ツールの4グループ：</b>パネルの上にある4つのボタンで切り替えます。（v1.3：ノートモードの升目文字・付箋・図形・チェック欄も、固定側に表示されます。）</p>
+      <ul>
+        <li><b>✏️ 描く：</b>選択／ペン／消す／定規／輪投げ／戻す（固定側の操作を1つ戻す）。ペン・消す・定規では、色と太さを選べます。</li>
+        <li><b>➕ 入れる：</b>文字（タップした所にテキストボックス）／数式（タップした所に数式エディタ）／画像／グラフ／リンク／動画。画像・グラフ・リンク・動画は、本体と同じ入力画面が開き、固定しているページに入ります。</li>
+        <li><b>🔎 読む・OCR：</b>▶全文を読む・■停止・⏮⏭（前後の文へ）、部分読上／部分OCR（向きは自動・横・縦から選べます）／OCR除外／手動登録／区切り線／手書→文字／ページOCR（このページ全体をOCR）。</li>
+        <li><b>⚙ その他：</b>前後のページも固定に足す、すべての固定を解除、ほかのDLCが追加したボタン。</li>
+      </ul>
+      <p><b>テキストボックス：</b>ボックスをタップして選ぶと、上に「⠿」バーが出ます。バーや枠の外側をドラッグで移動、まわりの白い丸でサイズ変更です。選ぶと出る帯で、文字サイズ（A−／A＋）・色・太字・枠・塗りつぶし・縦横書き・🎤音声入力・🔊読み上げ・削除ができます。内容は本体の同じページにも反映されます。</p>
+      <p><b>ページ読み上げ：</b>本体で別のページを見ていても、固定したページを読み上げます。読んでいる場所が黄色で示されます。読む速さは上部バーの速度に従います。OCR認識がまだのページは、先にOCRを実行してください。</p>
+      <p><b>輪投げ：</b>⭕を選んで手書きをぐるっと囲んで離すと、「画像として切り取る」か「数式に変換」を選べます。切り取った画像は、固定側でもドラッグで移動、四隅の丸で拡大縮小できます。</p>
+      <p><b>使えないもの・注意：</b>カメラ撮影は、固定側では使えません（本体の📷をお使いください）。別のページを固定しているときの数式入力には本体 v6.4 以降、画像などの挿入には本体 v6.5 以降が必要です。テストモード中は、輪投げ・定規のブロック設定と、画像・グラフ・リンク・動画のブロック設定に従い、ブロック中のボタンは押せなくなります。</p>
+      <p><b>古いパックとの関係：</b>ディスレクシア支援パックの v1.3 以前には古いピン止めが入っています。pin.js を同時に使うと、pin.js が古いほうを無効にします。</p>
+    </div>
+    <div class="dlc-box">
+      <div class="title">🧑‍💻 プログラミング追加パック v0.2</div>
+      <p>有効にすると、ノート機能の代わりにVS Code風のプログラミング画面に切り替わります。HTML/CSS/JavaScriptはその場でプレビュー実行（全画面表示も可能）、Pythonはブラウザ内で実行できます（初回実行時にPython実行環境を読み込むため、通信環境が必要です）。C/C++もv0.2からブラウザ内実行に対応しました（簡易インタプリタ「JSCPP」を使用。printf/coutでの出力、if/for/while、配列、関数など標準的な書き方が動作します。本物のgcc/clang相当ではないため、対応していない書き方もある点はご了承ください）。</p>
+      <p>カテゴリ別に整理された、ブロックを組み立てるような「ツールパレット」（v0.1で種類を大幅に増やし、使いやすく改善）や、独自のコマンド機能、作った作品を新しいDLCとして書き出す「DLCエクスポート」機能もついています。子ども向けの入門用としても、自分だけの追加DLCを作る土台としても使えます。</p>
+      <div class="warn-box">プログラミング追加パックは、有効化すると通常のノート機能が使えなくなります。無効に戻すと、通常のノートにそのまま戻れます。詳しくは<a href="./%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84v35.html">利用規約（第11条）</a>をご確認ください。</div>
+    </div>
+    <div class="dlc-box">
+      <div class="title">🎹 MIDIプレーヤーパック v0.1</div>
+      <p>MIDIファイルを読み込んで自動演奏できる、フル機能のピアノプレーヤーです。降ってくるノーツの表示、鍵盤アニメーション、メドレー再生、演奏の画面録画などができます。有効にすると上部バーに「🎹 MIDIプレーヤー」ボタンが現れ、押すとノートとは別画面（オーバーレイ）で開きます。「✕ 閉じてノートに戻る」でいつでもノートの画面に戻れ、ノート側の内容には影響しません。</p>
+      <p><b>v0.1の新機能「ノートに重ねて表示」：</b>プレーヤー内の「🎵 ノートに重ねて表示」ボタンを押すと、演奏中に降ってくるノーツを、今作業中のノートに半透明で重ねて表示できます。操作パネルはそのまま使えるので、重ねて表示中も普通に演奏の操作ができます。もう一度押すと元の見た目に戻ります。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⑤ デスクトップ版アプリ（Windows / Mac）を使う</h2>
+    <p class="lead">ブラウザを開かなくても、デスクトップから直接起動できるWindows版・Mac版があります。</p>
+    <div class="dlc-box">
+      <div class="title">💻 ダウンロード方法（v3.6でGitHub Releasesに一本化）</div>
+      <p>ホームページの「💻 アプリダウンロードページ」ボタンから、GitHub Releasesのページへ移動してください。そのページ内にWindows版・Mac版（Apple Silicon / Intel）それぞれの.zipファイルが並んでいるので、お使いの環境に合ったものをダウンロードします。</p>
+    </div>
+    <div class="dlc-box">
+      <div class="title">🖥️ 読みノート デスクトップ版（Windows / .exe）</div>
+      <p>ダウンロードした.zipファイルを、好きな場所に展開（解凍）してください。展開したフォルダの中の「YomiNote.exe」をダブルクリックするだけで、インストール不要でそのまま起動できます。発行元が未確認のためSmart App Control等のセキュリティ機能で警告が出ることがありますが、その場合は詳細を開いて実行を許可してください。</p>
+    </div>
+    <div class="dlc-box">
+      <div class="title">🍎 読みノート デスクトップ版（Mac / .app）</div>
+      <p>お使いのMacに合わせて、Apple Silicon（M1以降）版またはIntel版の.zipをダウンロードしてください。展開し、中の「YomiNote.app」をアプリケーションフォルダなどに移動します。初回起動時は「開発元が未確認」の警告が出ることがあるため、Finderで YomiNote.app を「右クリック（controlクリック）→ 開く」→ 表示されるダイアログで「開く」を選んでください（2回目以降は通常どおり起動できます）。</p>
+    </div>
+    <div class="dlc-box">
+      <div class="title">🧩 DLCについて</div>
+      <p>Windows版・Mac版どちらも、同梱の「DLC」フォルダに、ディスレクシア支援パックとプログラミング追加パックの最新版があらかじめ入っています。アプリ右上の🧩ボタンから取り込めば、ブラウザ版と同じように使えます。</p>
+    </div>
+    <div class="dlc-box">
+      <div class="title">🏠📖📜 ホーム・使い方・利用規約について（v3.5で修正）</div>
+      <p>これまでデスクトップ版では、アプリ内の🏠（ホーム）・📖（使い方）・📜（利用規約）ボタンを押しても何も開かない不具合がありました。v3.5でこれを修正し、ホーム・使い方・利用規約のページを新しいウィンドウで開けるようにしました（ページ本体もデスクトップ版に同梱しています）。※コマンド一覧ページのみ、デスクトップ版には同梱されていません。</p>
+    </div>
+    <div class="warn-box">ノートの内容はこのアプリ専用の保存領域に自動保存されます。フォルダごと別の場所へ移動すると保存済みのデータは引き継がれないため、大切なノートは「PDF書き出し」で書き出して別途保管することをおすすめします。</div>
+  </div>
+
+  <div class="card">
+    <h2>⑥ 困ったときは</h2>
+    <ul style="font-size:13px;color:var(--ink-soft);padding-left:20px;margin:0;">
+      <li>ノートが消えた／保存されない → ブラウザのキャッシュ削除・シークレットモードでは保存されません。通常モードのブラウザでお試しください。</li>
+      <li>OCRの精度が低い → 部分OCRで範囲を絞る、区切り線で段組みを指定する、スライドOCRを使うなどをお試しください。</li>
+      <li>DLCを入れたら動きがおかしい → 🧩ボタンから該当DLCをオフ、または削除してください。</li>
+      <li>その他のご質問・不具合報告 → <a href="https://github.com/suzaki-ao/yomi-note" target="_blank" rel="noopener noreferrer">GitHubリポジトリ</a>からご連絡ください。</li>
+    </ul>
+  </div>
+
+  <footer>
+    読みノート (Yomi-Note) 使い方ガイド ／ © <span id="footerYear">2026</span> Yomi-Note Project. All rights reserved.
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+  /* ページの読み上げ・目次・翻訳（共通モジュール YomiReader v1.0） */
+/* ==== YomiReader v1.0 : 読みノート ページ読み上げ共通モジュール ====
+   ・範囲選択読み上げ（ドラッグした範囲を読む）  ・速度（キー／入力欄／＋－／スライダー／プリセット）
+   ・左端の目次＋「ここだけ大きく表示」  ・ページ翻訳＋ネイティブ音声
+   各ページに同じものを埋め込んで使う（外部ファイル不要）。 */
+(function(){
+'use strict';
+var CAND='h1,h2,h3,h4,p,li,tr,dt,dd,blockquote,figcaption,.cmd-row,.link-card';
+var SKIP='script,style,nav,button,footer,pre,select,input,textarea,.yr-ui,.yr-focus,.yr-menu,.meta-bar,.quicknav,.ver-tabs,.mode-tabs,.skip-read';
+var JA=/[\u3040-\u30ff\u3400-\u9fff]/;
+var EMOJI=/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu;
+var LANGS=[
+ {n:'English',t:'en',g:'en',s:'en-US'},{n:'中文（简体）',t:'zh',g:'zh-CN',s:'zh-CN'},{n:'中文（繁體）',t:'zh-Hant',g:'zh-TW',s:'zh-TW'},
+ {n:'한국어',t:'ko',g:'ko',s:'ko-KR'},{n:'Español',t:'es',g:'es',s:'es-ES'},{n:'Français',t:'fr',g:'fr',s:'fr-FR'},
+ {n:'Deutsch',t:'de',g:'de',s:'de-DE'},{n:'Português (Brasil)',t:'pt',g:'pt',s:'pt-BR'},{n:'Italiano',t:'it',g:'it',s:'it-IT'},
+ {n:'Русский',t:'ru',g:'ru',s:'ru-RU'},{n:'العربية',t:'ar',g:'ar',s:'ar-SA',rtl:1},{n:'हिन्दी',t:'hi',g:'hi',s:'hi-IN'},
+ {n:'ไทย',t:'th',g:'th',s:'th-TH'},{n:'Tiếng Việt',t:'vi',g:'vi',s:'vi-VN'},{n:'Bahasa Indonesia',t:'id',g:'id',s:'id-ID'},
+ {n:'Türkçe',t:'tr',g:'tr',s:'tr-TR'},{n:'Nederlands',t:'nl',g:'nl',s:'nl-NL'},{n:'Polski',t:'pl',g:'pl',s:'pl-PL'},
+ {n:'Українська',t:'uk',g:'uk',s:'uk-UA'},{n:'Filipino',t:'tl',g:'tl',s:'fil-PH'},{n:'Svenska',t:'sv',g:'sv',s:'sv-SE'},
+ {n:'Ελληνικά',t:'el',g:'el',s:'el-GR'}
+];
+var K={rate:'yomiReaderRate',auto:'yomiReaderAutoSel',toc:'yomiReaderToc',zoom:'yomiReaderFocusZoom',voice:'yomiReaderVoice_'};
+function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){} return null; }
+function $(s,r){ return (r||document).querySelector(s); }
+function mk(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+
+var root, readBtn, dock, tocEl, bubble, focusEl, fBody, menu, banner;
+var rate=1, playing=false, items=[], pos=0, token=0, mode='page', keep=[];
+var heads=[], focusK=-2, rateTimer=null;
+var tr={lang:null,list:[],cache:{},busy:false,gen:0};
+
+function css(){
+ var c='.yr-ui,.yr-ui *{box-sizing:border-box}'+
+ '.yr-dock{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:9000;width:min(980px,calc(100vw - 16px));background:#fff;color:#22262E;border:1px solid #DAD3C4;border-radius:14px;box-shadow:0 6px 24px rgba(34,38,46,.22);padding:8px 10px;font:13px/1.4 "Noto Sans JP",sans-serif}'+
+ '.yr-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0}'+
+ '.yr-ui button{font:inherit;cursor:pointer;border:1px solid #DAD3C4;background:#fff;color:#22262E;border-radius:9px;padding:5px 10px;min-height:32px}'+
+ '.yr-ui button:hover{border-color:#3E6E63;background:#f4f8f6}'+
+ '.yr-ui button.yr-main{background:#B5432E;color:#fff;border-color:#B5432E;font-weight:700}'+
+ '.yr-ui button.on{background:#3E6E63;color:#fff;border-color:#3E6E63}'+
+ '.yr-sp{flex:1}'+
+ '.yr-rate input[type=number]{width:62px;font:inherit;padding:4px 6px;border:1px solid #DAD3C4;border-radius:8px;text-align:center}'+
+ '.yr-rate{display:inline-flex;align-items:center;gap:4px}'+
+ '.yr-ui input[type=range]{width:140px;accent-color:#B5432E;vertical-align:middle}'+
+ '.yr-chip{padding:3px 8px!important;min-height:28px!important;font-size:12px}'+
+ '.yr-status{font-size:12px;color:#5B6270}'+
+ '.yr-dock.yr-min .yr-hide{display:none}'+
+ '.yr-toc{position:fixed;left:0;top:0;bottom:0;width:260px;z-index:8900;background:#FBF8F2;border-right:1px solid #DAD3C4;display:none;flex-direction:column;font:13px/1.45 "Noto Sans JP",sans-serif;color:#22262E;box-shadow:4px 0 18px rgba(34,38,46,.12)}'+
+ 'html.yr-toc-on .yr-toc{display:flex}'+
+ '.yr-toc-h{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #DAD3C4;font-size:14px}'+
+ '.yr-toc-list{flex:1;overflow:auto;padding:6px 6px 90px}'+
+ '.yr-toc-f{font-size:11px;color:#5B6270;padding:6px 12px 90px;border-top:1px dashed #DAD3C4}'+
+ '.yr-ti{display:flex;align-items:flex-start;gap:2px;border-radius:8px;padding:2px 2px 2px 6px;border-left:3px solid transparent}'+
+ '.yr-ti a{flex:1;cursor:pointer;padding:4px 2px;color:#22262E;text-decoration:none;word-break:break-all}'+
+ '.yr-ti.lv3{margin-left:14px;font-size:12.5px}'+
+ '.yr-ti.on{background:#EFD9CF;border-left-color:#B5432E;font-weight:700}'+
+ '.yr-ti button{padding:0 6px;min-height:26px;font-size:12px;opacity:.7}.yr-ti:hover button,.yr-ti.on button{opacity:1}'+
+ '@media (min-width:1100px){html.yr-toc-on body{padding-left:268px}}'+
+ 'html.yr-on body{padding-bottom:130px}'+
+ '[data-yr-cur]{background:rgba(255,214,64,.5)!important;outline:2px solid #F0B400;border-radius:4px;scroll-margin-block:35vh}'+
+ '.yr-bubble{position:absolute;z-index:9500;display:none;gap:4px;background:#22262E;border-radius:10px;padding:4px;box-shadow:0 4px 16px rgba(0,0,0,.3)}'+
+ '.yr-bubble button{background:#22262E!important;color:#fff!important;border:0!important;min-height:30px}.yr-bubble button:hover{background:#3E6E63!important}'+
+ '.yr-focus{position:fixed;inset:0;z-index:9800;background:#FBF8F2;display:none;flex-direction:column;color:#22262E}'+
+ '.yr-focus.open{display:flex}'+
+ '.yr-fbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid #DAD3C4;background:#fff;font:13px "Noto Sans JP",sans-serif}'+
+ '.yr-ftitle{font-weight:700;font-size:14px;margin:0 6px}'+
+ '.yr-fbody{flex:1;overflow:auto;padding:24px 4vw 120px}.yr-fin{max-width:900px;margin:0 auto;line-height:1.9}'+
+ '.yr-fin section,.yr-fin .card{margin:0 0 12px}'+
+ '.yr-menu{position:fixed;inset:0;z-index:9900;background:rgba(34,38,46,.45);display:none;align-items:center;justify-content:center;padding:12px}'+
+ '.yr-menu.open{display:flex}'+
+ '.yr-mbox{background:#fff;border-radius:14px;padding:16px;max-width:620px;width:100%;max-height:86vh;overflow:auto;font:13px/1.6 "Noto Sans JP",sans-serif;color:#22262E}'+
+ '.yr-lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin:10px 0}'+
+ '.yr-banner{position:sticky;top:0;z-index:50;margin:0 0 12px;padding:8px 12px;background:#EAF3EF;border:1px solid #3E6E63;border-radius:10px;font:13px/1.6 "Noto Sans JP",sans-serif;color:#22262E;display:flex;flex-wrap:wrap;gap:8px;align-items:center}'+
+ '.yr-banner select{font:inherit;max-width:230px;padding:3px}'+
+ '@media (max-width:640px){.yr-ui input[type=range]{width:100px}.yr-dock{padding:6px}}'+
+ '@media print{.yr-ui,.yr-focus,.yr-menu,.yr-bubble{display:none!important}html.yr-toc-on body{padding-left:0!important}}';
+ var st=mk('style'); st.textContent=c; document.head.appendChild(st);
+}
+
+/* ---------- テキスト ---------- */
+function norm(t){ return String(t||'').replace(EMOJI,'').replace(/[\u00a0\t]+/g,' ').replace(/\s*\n\s*/g,'。').replace(/\s+/g,' ').replace(/([。！？!?、,])。+/g,'$1').replace(/^。+/,'').trim(); }
+function strip(e){ var c=e.cloneNode(true); var x=c.querySelectorAll('button,select,input'); for(var i=0;i<x.length;i++) x[i].remove(); return c; }
+function ownText(e){ var c=e.cloneNode(true); var x=c.querySelectorAll(CAND+',button,select,input'); for(var i=0;i<x.length;i++) x[i].remove(); return norm(c.textContent); }
+function textOf(e){
+ if(e.tagName==='TR') return norm(Array.prototype.map.call(e.cells,function(c){ return norm(c.innerText); }).filter(Boolean).join('、'));
+ if(e.matches('.link-card')) return norm(Array.prototype.map.call(e.children,function(c){ return c.textContent.trim(); }).filter(Boolean).join('。'));
+ if(e.querySelector('button,select,input')) return norm(strip(e).textContent);
+ return norm(e.innerText||e.textContent);
+}
+function visible(e){ return e.getClientRects().length>0; }
+function speechLang(e){
+ var l=(e&&e.closest&&e.closest('[lang]')||document.documentElement).getAttribute('lang')||'ja';
+ if(/^ja/i.test(l)) return 'ja-JP';
+ if(l.length<=2){ for(var i=0;i<LANGS.length;i++) if(LANGS[i].g===l) return LANGS[i].s; }
+ return l;
+}
+function buildUnits(){
+ var old=document.querySelectorAll('[data-yr-i]'); for(var j=0;j<old.length;j++) old[j].removeAttribute('data-yr-i');
+ var all=root.querySelectorAll(CAND), out=[];
+ for(var i=0;i<all.length;i++){
+  var e=all[i];
+  if(e.closest(SKIP)||!visible(e)) continue;
+  if(e.tagName!=='TR'&&e.closest('tr')) continue;
+  var nested=e.tagName!=='TR'&&e.querySelector(CAND);
+  var t=nested?ownText(e):textOf(e);
+  if(!t) continue;
+  e.setAttribute('data-yr-i',out.length);
+  out.push({el:e,text:t,lang:speechLang(e),i:out.length});
+ }
+ return out;
+}
+
+/* ---------- 音声 ---------- */
+function voicesFor(lang){
+ if(!window.speechSynthesis) return [];
+ var vs=speechSynthesis.getVoices()||[], lc=lang.toLowerCase(), pre=lc.split('-')[0];
+ function nl(v){ return v.lang.toLowerCase().replace('_','-'); }
+ var ex=vs.filter(function(v){ return nl(v)===lc; });
+ var pr=vs.filter(function(v){ return nl(v).split('-')[0]===pre; });
+ var pool=ex.length?ex:pr;
+ function sc(v){ return (/natural|neural|online/i.test(v.name)?3:0)+(/google|premium|enhanced/i.test(v.name)?2:0)+(v.default?1:0); }
+ return pool.slice().sort(function(a,b){ return sc(b)-sc(a); });
+}
+function pickVoice(lang){
+ var pool=voicesFor(lang), saved=ls(K.voice+lang);
+ if(saved) for(var i=0;i<pool.length;i++) if(pool[i].voiceURI===saved) return pool[i];
+ return pool[0]||null;
+}
+function chunks(text){
+ var s=text.replace(/([。！？!?]+)/g,'$1\u0001').replace(/([.．])\s+/g,'$1\u0001').split('\u0001'), out=[], cur='';
+ function push(p){ p=p.trim(); if(!p) return; if(cur&&(cur+p).length>140){ out.push(cur); cur=''; } cur+=p; }
+ for(var i=0;i<s.length;i++){
+  if(s[i].length>160){ var sub=s[i].replace(/([、,，;；])/g,'$1\u0002').split('\u0002'); for(var k=0;k<sub.length;k++) push(sub[k]); }
+  else push(s[i]);
+ }
+ if(cur) out.push(cur);
+ return out.length?out:[text];
+}
+function say(msg,ms){ var s=$('#yr-status'); if(!s) return; s.textContent=msg||''; if(ms) setTimeout(function(){ if(s.textContent===msg) s.textContent=''; },ms); }
+function updateBtns(){
+ if(readBtn) readBtn.textContent=playing?'⏹ 読み上げを停止':'🔊 このページを読み上げる';
+ var p=$('[data-a=play]',dock); if(p) p.textContent=playing?'⏹ 止める':'▶ 画面から読む';
+ var fr=$('[data-f=read]',focusEl); if(fr) fr.textContent=playing?'⏹ 止める':'▶ 読む';
+}
+function clearCur(){ var c=document.querySelectorAll('[data-yr-cur]'); for(var i=0;i<c.length;i++) c[i].removeAttribute('data-yr-cur'); }
+function markCur(u){
+ clearCur(); if(!u||u.i==null) return;
+ var els=document.querySelectorAll('[data-yr-i="'+u.i+'"]'), target=null;
+ for(var i=0;i<els.length;i++){ els[i].setAttribute('data-yr-cur','1'); if(focusEl.classList.contains('open')?focusEl.contains(els[i]):!focusEl.contains(els[i])) target=els[i]; }
+ if(target){
+  var r=target.getBoundingClientRect();
+  if(focusEl.classList.contains('open')||r.top<90||r.bottom>innerHeight-150) target.scrollIntoView({block:'center',behavior:'smooth'});
+ }
+ syncToc(u.el);
+}
+function stopSpeech(){ token++; playing=false; try{ speechSynthesis.cancel(); }catch(e){} clearCur(); updateBtns(); }
+function start(list,from,m){
+ if(!window.speechSynthesis){ alert('このブラウザは読み上げに対応していません'); return; }
+ token++; try{ speechSynthesis.cancel(); }catch(e){}
+ items=list; pos=from||0; mode=m||'page'; playing=true; updateBtns();
+ if(!items.length){ playing=false; updateBtns(); return; }
+ var t=token; setTimeout(function(){ if(t===token) run(pos); },40);
+}
+function run(i){
+ if(!playing) return;
+ if(i>=items.length){ playing=false; clearCur(); updateBtns(); return; }
+ pos=i; var it=items[i], t=token, ch=chunks(it.text), k=0;
+ markCur(it.u);
+ (function step(){
+  if(!playing||t!==token) return;
+  if(k>=ch.length){ run(i+1); return; }
+  var u=new SpeechSynthesisUtterance(ch[k++]);
+  u.lang=it.lang; u.rate=rate;
+  var v=pickVoice(it.lang); if(v) u.voice=v;
+  u.onend=step;
+  u.onerror=function(e){ if(e&&(e.error==='interrupted'||e.error==='canceled')) return; step(); };
+  keep.push(u); if(keep.length>6) keep.shift();
+  speechSynthesis.speak(u);
+ })();
+}
+function restartHere(){ if(!playing) return; var t=++token; try{ speechSynthesis.cancel(); }catch(e){} setTimeout(function(){ if(t===token&&playing) run(pos); },60); }
+function pageItems(from){ var us=buildUnits(); return {all:us.map(function(u){ return {text:u.text,lang:u.lang,u:u}; }),units:us}; }
+function firstOnScreen(us){ for(var i=0;i<us.length;i++){ if(us[i].el.getBoundingClientRect().bottom>90) return i; } return 0; }
+function readPage(fromScreen){
+ if(playing){ stopSpeech(); return; }
+ var p=pageItems(); start(p.all,fromScreen?firstOnScreen(p.units):0,'page');
+}
+function readSelection(){
+ var s=getSelection(); if(!s||s.isCollapsed) return;
+ var txt=s.toString(); var a=s.anchorNode; var el=a&&(a.nodeType===1?a:a.parentElement);
+ var lang=speechLang(el), list=[];
+ txt.split(/\n+/).forEach(function(line){ line=norm(line); if(line) list.push({text:line,lang:lang,u:null}); });
+ if(list.length) start(list,0,'sel');
+}
+function jump(d){
+ if(!playing){ readPage(true); return; }
+ pos=Math.max(0,Math.min(items.length-1,pos+d)); restartHere();
+}
+
+/* ---------- 速度 ---------- */
+function setRate(v,quiet){
+ v=parseFloat(v); if(isNaN(v)) return;
+ v=Math.max(0.5,Math.min(3,Math.round(v*10)/10)); rate=v; ls(K.rate,String(v));
+ var i=$('#yr-rate-in'),g=$('#yr-rate-rg'); if(i&&document.activeElement!==i) i.value=v.toFixed(1); if(g) g.value=v;
+ var lb=$('#readRateLabel'); if(lb) lb.textContent='速度 '+v.toFixed(1)+'倍';
+ var chips=dock.querySelectorAll('.yr-chip'); for(var c=0;c<chips.length;c++) chips[c].classList.toggle('on',parseFloat(chips[c].getAttribute('data-r'))===v);
+ if(!quiet){ clearTimeout(rateTimer); rateTimer=setTimeout(restartHere,220); }
+}
+
+/* ---------- 目次 ---------- */
+function buildToc(){
+ var hs=root.querySelectorAll('h2,h3'); heads=[];
+ for(var i=0;i<hs.length;i++){
+  var h=hs[i]; if(h.closest(SKIP)||!visible(h)) continue;
+  var t=norm(h.textContent); if(!t) continue;
+  heads.push({h:h,lv:h.tagName==='H2'?2:3,t:t});
+ }
+ var L=$('.yr-toc-list',tocEl); L.innerHTML='';
+ heads.forEach(function(o,k){
+  var d=mk('div','yr-ti lv'+o.lv); d.setAttribute('data-k',k);
+  var a=mk('a'); a.textContent=o.t; a.title=o.t;
+  var b1=mk('button',null,'▶'); b1.title='ここから読み上げ'; b1.setAttribute('data-t','read');
+  var b2=mk('button',null,'🔍'); b2.title='ここだけ大きく表示'; b2.setAttribute('data-t','zoom');
+  a.addEventListener('click',function(){ o.h.scrollIntoView({block:'start',behavior:'smooth'}); if(innerWidth<1100) toggleToc(false); });
+  b1.addEventListener('click',function(){ readFromHead(k); });
+  b2.addEventListener('click',function(){ openFocus(k); });
+  d.appendChild(a); d.appendChild(b1); d.appendChild(b2); L.appendChild(d);
+ });
+ syncToc();
+}
+function activeHead(el){
+ var best=-1;
+ for(var i=0;i<heads.length;i++){
+  if(el){ if(heads[i].h===el||heads[i].h.contains(el)||(heads[i].h.compareDocumentPosition(el)&4)) best=i; else break; }
+  else { if(heads[i].h.getBoundingClientRect().top<=150) best=i; else break; }
+ }
+ return best;
+}
+function syncToc(el){
+ if(!heads.length||!tocEl) return;
+ var k=focusEl.classList.contains('open')&&focusK>=0?focusK:activeHead(el||null);
+ var rows=tocEl.querySelectorAll('.yr-ti');
+ for(var i=0;i<rows.length;i++) rows[i].classList.toggle('on',i===k);
+ if(k>=0&&rows[k]&&document.documentElement.classList.contains('yr-toc-on')){ var l=$('.yr-toc-list',tocEl),r=rows[k]; if(r.offsetTop<l.scrollTop||r.offsetTop>l.scrollTop+l.clientHeight-40) l.scrollTop=r.offsetTop-60; }
+}
+function toggleToc(on){
+ var h=document.documentElement; if(on===undefined) on=!h.classList.contains('yr-toc-on');
+ h.classList.toggle('yr-toc-on',on); ls(K.toc,on?'1':'0');
+ var b=$('[data-a=toc]',dock); if(b) b.classList.toggle('on',on);
+ if(on) buildToc();
+}
+function headEnd(k){
+ for(var j=k+1;j<heads.length;j++) if(heads[j].lv<=heads[k].lv) return heads[j].h;
+ return null;
+}
+function inSeg(k,el){
+ var h=heads[k].h, e=headEnd(k);
+ if(!(h===el||h.contains(el)||(h.compareDocumentPosition(el)&4))) return false;
+ if(e&&!(e.compareDocumentPosition(el)&2)) return false;
+ return true;
+}
+function readFromHead(k){
+ var p=pageItems(), from=0;
+ for(var i=0;i<p.units.length;i++){ var el=p.units[i].el; if(heads[k].h===el||heads[k].h.contains(el)||(heads[k].h.compareDocumentPosition(el)&4)){ from=i; break; } }
+ start(p.all,from,'page'); if(innerWidth<1100) toggleToc(false);
+}
+
+/* ---------- 大きく表示 ---------- */
+function setZoom(z){ z=Math.max(1,Math.min(4,Math.round(z*10)/10)); ls(K.zoom,String(z)); fBody.firstChild.style.zoom=z; $('#yr-fz').textContent=Math.round(z*100)+'%'; }
+function cleanFrag(f){
+ var d=mk('div'); d.appendChild(f);
+ var x=d.querySelectorAll('script,style,[id]');
+ for(var i=0;i<x.length;i++){ if(x[i].tagName==='SCRIPT'||x[i].tagName==='STYLE') x[i].remove(); else x[i].removeAttribute('id'); }
+ var c=d.querySelectorAll('[data-yr-cur]'); for(var j=0;j<c.length;j++) c[j].removeAttribute('data-yr-cur');
+ var kids=Array.prototype.slice.call(d.children);
+ kids.forEach(function(n){ if(!n.textContent.trim()&&!n.querySelector('img,svg,canvas,table')) n.remove(); });
+ return d;
+}
+function showFocus(title,node){
+ $('.yr-ftitle',focusEl).textContent=title;
+ fBody.innerHTML=''; var inn=mk('div','yr-fin'); inn.appendChild(node); fBody.appendChild(inn);
+ setZoom(parseFloat(ls(K.zoom))||1.8);
+ focusEl.classList.add('open'); fBody.scrollTop=0; document.documentElement.style.overflow='hidden';
+ var pr=$('[data-f=prev]',focusEl), nx=$('[data-f=next]',focusEl);
+ pr.disabled=nx.disabled=focusK<0; updateBtns();
+}
+function openFocus(k){
+ if(k<0||k>=heads.length) return;
+ buildUnits(); focusK=k;
+ var h=heads[k].h, r=document.createRange(), e=headEnd(k);
+ r.setStartBefore(h);
+ if(e) r.setEndBefore(e); else { var f=root.querySelector('footer'); if(f) r.setEndBefore(f); else r.setEndAfter(root.lastChild); }
+ showFocus(heads[k].t,cleanFrag(r.cloneContents()));
+ if(innerWidth<1100) toggleToc(false);
+ syncToc();
+}
+function focusSelection(){
+ var s=getSelection(); if(!s||s.isCollapsed) return;
+ buildUnits(); focusK=-1;
+ showFocus('選んだところ',cleanFrag(s.getRangeAt(0).cloneContents()));
+}
+function closeFocus(){ focusEl.classList.remove('open'); document.documentElement.style.overflow=''; if(mode!=='sel') { clearCur(); } focusK=-2; updateBtns(); }
+function readFocus(){
+ if(playing){ stopSpeech(); return; }
+ var p=pageItems(), list=[];
+ if(focusK>=0){ p.all.forEach(function(it){ if(inSeg(focusK,it.u.el)) list.push(it); }); start(list,0,'focus'); }
+ else { var t=fBody.innerText; var l=speechLang(fBody); var a=[]; t.split(/\n+/).forEach(function(x){ x=norm(x); if(x) a.push({text:x,lang:l,u:null}); }); start(a,0,'sel'); }
+}
+
+/* ---------- 選択バブル ---------- */
+function onSelect(e){
+ if(e&&e.target&&e.target.closest&&e.target.closest('.yr-bubble')) return;
+ setTimeout(function(){
+  var s=getSelection(); if(!s||s.isCollapsed||!s.rangeCount){ bubble.style.display='none'; return; }
+  var txt=s.toString().trim(), a=s.anchorNode, el=a&&(a.nodeType===1?a:a.parentElement);
+  if(!txt||!el||el.closest('input,textarea,.yr-dock,.yr-toc,.yr-menu')||!(root.contains(el)||fBody.contains(el))){ bubble.style.display='none'; return; }
+  var rc=s.getRangeAt(0).getBoundingClientRect();
+  bubble.style.display='flex';
+  var bw=bubble.offsetWidth;
+  bubble.style.top=(window.scrollY+rc.bottom+8)+'px';
+  bubble.style.left=Math.max(6,Math.min(window.scrollX+rc.left,window.scrollX+innerWidth-bw-6))+'px';
+  if(ls(K.auto)==='1') readSelection();
+ },12);
+}
+
+/* ---------- 翻訳 ---------- */
+function oneGtx(tl,s){
+ return fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=ja&tl='+tl+'&dt=t',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'q='+encodeURIComponent(s)})
+ .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+ .then(function(j){ return (j[0]||[]).map(function(x){ return x[0]||''; }).join(''); });
+}
+function gtxEngine(tl){
+ return function(list){
+  return oneGtx(tl,list.join('\n')).then(function(txt){
+   var out=txt.split('\n'); if(out.length===list.length) return out;
+   var res=[],p=Promise.resolve();
+   list.forEach(function(s,i){ p=p.then(function(){ return oneGtx(tl,s); }).then(function(x){ res[i]=x; }); });
+   return p.then(function(){ return res; });
+  });
+ };
+}
+function getEngine(L){
+ var g=gtxEngine(L.g), fb={name:'Google翻訳',fn:g};
+ if(!('Translator' in self)) return Promise.resolve(fb);
+ return Translator.availability({sourceLanguage:'ja',targetLanguage:L.t}).then(function(av){
+  if(av==='unavailable') return fb;
+  return Translator.create({sourceLanguage:'ja',targetLanguage:L.t}).then(function(t){
+   return {name:'Chrome内蔵翻訳（端末内）',fn:function(list){
+    var res=[],p=Promise.resolve();
+    list.forEach(function(s,i){ p=p.then(function(){ return t.translate(s); }).then(function(x){ res[i]=x; }); });
+    return p.then(function(){ return res; }).catch(function(){ return g(list); });
+   }};
+  });
+ }).catch(function(){ return fb; });
+}
+function collectNodes(){
+ var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null), out=[], n;
+ while((n=w.nextNode())){
+  var p=n.parentElement; if(!p||!JA.test(n.nodeValue)) continue;
+  if(p.closest('script,style,textarea,pre,.yr-ui,.yr-focus,.yr-menu,.yr-nt')||!visible(p)) continue;
+  out.push(n);
+ }
+ return out;
+}
+function restoreJa(){
+ tr.gen++;
+ tr.list.forEach(function(o){ if(o.n.isConnected) o.n.nodeValue=o.orig; if(o.p) o.p.removeAttribute('lang'); });
+ tr.list=[]; tr.lang=null; tr.cache={};
+ root.removeAttribute('dir'); if(banner){ banner.remove(); banner=null; }
+ buildToc(); say('日本語に戻しました',2500);
+}
+function translateTo(L){
+ if(tr.busy) return;
+ if(tr.lang) restoreJa();
+ tr.busy=true; var gen=++tr.gen;
+ say('翻訳の準備中…');
+ getEngine(L).then(function(eng){
+  tr.lang=L; tr.engine=eng.name; var cache=tr.cache[L.g]=tr.cache[L.g]||{};
+  return runTranslate(L,eng,cache,gen);
+ }).catch(function(e){
+  say('⚠ 翻訳に失敗しました（ネットワーク接続を確認してください）',8000);
+  if(!tr.list.length) tr.lang=null;
+ }).then(function(){ tr.busy=false; showBanner(); buildToc(); });
+}
+function runTranslate(L,eng,cache,gen){
+ var nodes=collectNodes().filter(function(n){ return !tr.list.some(function(o){ return o.n===n; }); });
+ var jobs=nodes.map(function(n){ var m=n.nodeValue.match(/^(\s*)([\s\S]*?)(\s*)$/); return {n:n,lead:m[1],core:m[2].replace(/\s+/g,' '),trail:m[3],orig:n.nodeValue}; });
+ var chunksList=[],cur=[],len=0;
+ jobs.forEach(function(j){ if(cur.length&&(len+j.core.length>1100||cur.length>=30)){ chunksList.push(cur); cur=[]; len=0; } cur.push(j); len+=j.core.length; });
+ if(cur.length) chunksList.push(cur);
+ var done=0,total=jobs.length||1,idx=0,failed=false;
+ function apply(j,t){
+  if(gen!==tr.gen) return;
+  var p=j.n.parentElement; j.n.nodeValue=j.lead+t+j.trail;
+  if(p){ p.setAttribute('lang',L.s); }
+  tr.list.push({n:j.n,orig:j.orig,p:p});
+ }
+ function worker(){
+  if(idx>=chunksList.length||gen!==tr.gen||failed) return Promise.resolve();
+  var ch=chunksList[idx++], need=[], needJ=[];
+  ch.forEach(function(j){ if(cache[j.core]!=null) apply(j,cache[j.core]); else { need.push(j.core); needJ.push(j); } });
+  var pr=need.length?eng.fn(need):Promise.resolve([]);
+  return pr.then(function(res){
+   needJ.forEach(function(j,i){ var t=(res[i]==null?j.core:res[i]); cache[j.core]=t; apply(j,t); });
+   done+=ch.length; say('翻訳中… '+Math.round(done/total*100)+'%'); return worker();
+  },function(e){ failed=true; throw e; });
+ }
+ if(!jobs.length){ say('このページに翻訳する文章がありません',3000); return Promise.resolve(); }
+ root.setAttribute('dir',L.rtl?'rtl':'');
+ return Promise.all([worker(),worker(),worker()]).then(function(){ if(gen===tr.gen) say('✅ 翻訳が完了しました',4000); });
+}
+function showBanner(){
+ if(banner){ banner.remove(); banner=null; }
+ if(!tr.lang) return;
+ var L=tr.lang;
+ banner=mk('div','yr-ui yr-banner');
+ banner.innerHTML='<span>🌐 <b></b> に翻訳しました（'+tr.engine+'による機械翻訳）。<b>内容は日本語の原文が正</b>です。</span>';
+ banner.querySelector('b').textContent=L.n;
+ var vs=voicesFor(L.s), lab=mk('label',null,'🔊 音声：'), sel=mk('select');
+ if(vs.length){
+  var cur=pickVoice(L.s);
+  vs.forEach(function(v){ var o=mk('option'); o.value=v.voiceURI; o.textContent=v.name+' ('+v.lang+')'; if(cur&&cur.voiceURI===v.voiceURI) o.selected=true; sel.appendChild(o); });
+  sel.addEventListener('change',function(){ ls(K.voice+L.s,sel.value); restartHere(); });
+  lab.appendChild(sel);
+ } else { lab.textContent='⚠ この端末に '+L.n+' の音声が見つかりません。端末（OS／ブラウザ）の設定で音声を追加すると、ネイティブの発音で読めます。'; }
+ var b1=mk('button',null,'🌐 別の言語'), b2=mk('button',null,'日本語に戻す');
+ b1.onclick=function(){ openMenu(); }; b2.onclick=restoreJa;
+ banner.appendChild(lab); banner.appendChild(b1); banner.appendChild(b2);
+ root.insertBefore(banner,root.firstChild);
+}
+function openMenu(){
+ var g=$('.yr-lgrid',menu); g.innerHTML='';
+ var jb=mk('button',null,'日本語（元に戻す）'); jb.onclick=function(){ menu.classList.remove('open'); if(tr.lang) restoreJa(); }; g.appendChild(jb);
+ LANGS.forEach(function(L){ var b=mk('button',null); b.textContent=L.n; if(tr.lang&&tr.lang.g===L.g) b.classList.add('on'); b.onclick=function(){ menu.classList.remove('open'); translateTo(L); }; g.appendChild(b); });
+ menu.classList.add('open');
+}
+function onNewlyVisible(){
+ if(tr.lang&&!tr.busy){ tr.busy=true; getEngine(tr.lang).then(function(eng){ return runTranslate(tr.lang,eng,tr.cache[tr.lang.g]||(tr.cache[tr.lang.g]={}),tr.gen); }).catch(function(){}).then(function(){ tr.busy=false; buildToc(); }); }
+ else buildToc();
+}
+
+/* ---------- 初期化 ---------- */
+function init(o){
+ o=o||{};
+ root=$(o.root||'.wrap')||document.body; readBtn=$(o.readBtn||'#readAloudBtn');
+ css(); document.documentElement.classList.add('yr-on');
+ var sv=parseFloat(ls(K.rate)); rate=isNaN(sv)?1:sv;
+
+ dock=mk('div','yr-ui yr-dock');
+ dock.innerHTML=
+ '<div class="yr-row"><button class="yr-main" data-a="play">▶ 画面から読む</button><button data-a="prev" title="前の段落へ">⏮</button><button data-a="next" title="次の段落へ">⏭</button>'+
+ '<span class="yr-sp"></span><button data-a="slow" title="遅く（−キー）">−</button>'+
+ '<label class="yr-rate" title="数字を入力して Enter（0.5〜3.0）。Rキーでここに移動">速度 <input id="yr-rate-in" type="number" min="0.5" max="3" step="0.1" inputmode="decimal"> 倍</label>'+
+ '<button data-a="fast" title="速く（＋キー）">＋</button><input id="yr-rate-rg" type="range" min="0.5" max="3" step="0.1" aria-label="読み上げ速度">'+
+ '<button data-a="min" title="たたむ／ひらく">▾</button></div>'+
+ '<div class="yr-row yr-hide"><span>よく使う速度：</span>'+[0.8,1,1.2,1.5,2,2.5].map(function(r){ return '<button class="yr-chip" data-r="'+r+'">'+r.toFixed(1)+'</button>'; }).join('')+
+ '<span class="yr-sp"></span><button data-a="toc">📑 目次</button><button data-a="trans">🌐 翻訳</button><button data-a="zoomsel" title="選んだ文章だけを大きく表示">🔍 選択を大きく</button></div>'+
+ '<div class="yr-row yr-hide"><label><input type="checkbox" id="yr-auto"> 文章をドラッグして選んだらすぐ読む</label><span class="yr-sp"></span><span class="yr-status" id="yr-status">文章をドラッグすると「ここを読む」が出ます ／ キー：＋ − 0（速度）・R（速度入力）・Esc（停止）</span></div>';
+ document.body.appendChild(dock);
+
+ tocEl=mk('aside','yr-ui yr-toc'); tocEl.setAttribute('aria-label','目次');
+ tocEl.innerHTML='<div class="yr-toc-h"><b>📑 目次</b><button data-a="toc">✕</button></div><div class="yr-toc-list"></div><div class="yr-toc-f">▶ その章から読み上げ／🔍 その章だけ大きく表示</div>';
+ document.body.appendChild(tocEl);
+
+ bubble=mk('div','yr-ui yr-bubble'); bubble.innerHTML='<button data-b="read">🔊 ここを読む</button><button data-b="stop">⏹</button><button data-b="zoom">🔍 大きく</button>';
+ bubble.addEventListener('mousedown',function(e){ e.preventDefault(); });
+ bubble.addEventListener('touchstart',function(e){ e.preventDefault(); },{passive:false});
+ document.body.appendChild(bubble);
+
+ focusEl=mk('div','yr-focus'); focusEl.setAttribute('role','dialog');
+ focusEl.innerHTML='<div class="yr-fbar yr-ui"><button data-f="prev">◀ 前へ</button><span class="yr-ftitle"></span><button data-f="next">次へ ▶</button><span class="yr-sp"></span>'+
+ '<button data-f="smaller">A−</button><span id="yr-fz">180%</span><button data-f="bigger">A＋</button><button class="yr-main" data-f="read">▶ 読む</button><button data-f="close">✕ 閉じる</button></div><div class="yr-fbody"><div></div></div>';
+ document.body.appendChild(focusEl); fBody=$('.yr-fbody',focusEl);
+
+ menu=mk('div','yr-ui yr-menu'); menu.innerHTML='<div class="yr-mbox"><b style="font-size:15px">🌐 このページを翻訳</b><p style="margin:6px 0;font-size:12px;color:#5B6270">言語を選ぶと、ページの文章を翻訳し、その言語の音声で読み上げます。お使いのChromeに内蔵翻訳があれば端末内で翻訳し、なければ Google翻訳 にこのページの文章だけを送って翻訳します（ノートの内容は送りません）。機械翻訳のため、内容は日本語の原文が正です。</p><div class="yr-lgrid"></div><button data-m="close">閉じる</button></div>';
+ menu.addEventListener('click',function(e){ if(e.target===menu||e.target.getAttribute('data-m')==='close') menu.classList.remove('open'); });
+ document.body.appendChild(menu);
+
+ if(readBtn){
+  readBtn.classList.add('yr-nt'); readBtn.addEventListener('click',function(){ readPage(false); });
+  var tb=readBtn.cloneNode(false); tb.id='yrTransBtn'; tb.textContent='🌐 このページを翻訳'; tb.className=readBtn.className;
+  tb.addEventListener('click',openMenu); readBtn.parentNode.insertBefore(tb,readBtn.nextSibling);
+ }
+ var lb=$('#readRateLabel'); if(lb){ lb.classList.add('yr-nt'); lb.style.cursor='pointer'; lb.title='クリックで速度の入力欄へ'; lb.addEventListener('click',function(){ dock.classList.remove('yr-min'); var i=$('#yr-rate-in'); i.focus(); i.select(); }); }
+
+ dock.addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  var a=b.getAttribute('data-a'), r=b.getAttribute('data-r');
+  if(r){ setRate(r); return; }
+  if(a==='play') readPage(true);
+  else if(a==='prev') jump(-1); else if(a==='next') jump(1);
+  else if(a==='slow') setRate(rate-0.1); else if(a==='fast') setRate(rate+0.1);
+  else if(a==='toc') toggleToc();
+  else if(a==='trans') openMenu();
+  else if(a==='zoomsel'){ var s=getSelection(); if(s&&!s.isCollapsed) focusSelection(); else say('先に文章をドラッグして選んでください',3000); }
+  else if(a==='min'){ dock.classList.toggle('yr-min'); b.textContent=dock.classList.contains('yr-min')?'▴':'▾'; }
+ });
+ tocEl.addEventListener('click',function(e){ var b=e.target.closest('button[data-a=toc]'); if(b) toggleToc(false); });
+ var ri=$('#yr-rate-in'), rg=$('#yr-rate-rg');
+ ri.addEventListener('input',function(){ var v=parseFloat(ri.value); if(!isNaN(v)&&v>=0.5&&v<=3) setRate(v); });
+ ri.addEventListener('change',function(){ setRate(ri.value); ri.value=rate.toFixed(1); });
+ ri.addEventListener('keydown',function(e){ if(e.key==='Enter'){ setRate(ri.value); ri.value=rate.toFixed(1); ri.blur(); } e.stopPropagation(); });
+ rg.addEventListener('input',function(){ setRate(rg.value); });
+ var au=$('#yr-auto'); au.checked=ls(K.auto)==='1'; au.addEventListener('change',function(){ ls(K.auto,au.checked?'1':'0'); });
+ bubble.addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return; var t=b.getAttribute('data-b');
+  if(t==='read') readSelection(); else if(t==='stop') stopSpeech(); else if(t==='zoom') focusSelection();
+  bubble.style.display='none';
+ });
+ focusEl.addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return; var f=b.getAttribute('data-f');
+  if(f==='close') closeFocus(); else if(f==='read') readFocus();
+  else if(f==='prev'){ if(playing) stopSpeech(); openFocus(Math.max(0,focusK-1)); }
+  else if(f==='next'){ if(playing) stopSpeech(); openFocus(Math.min(heads.length-1,focusK+1)); }
+  else if(f==='bigger') setZoom((parseFloat(ls(K.zoom))||1.8)+0.2);
+  else if(f==='smaller') setZoom((parseFloat(ls(K.zoom))||1.8)-0.2);
+ });
+ document.addEventListener('mouseup',onSelect); document.addEventListener('touchend',onSelect); document.addEventListener('keyup',function(e){ if(e.shiftKey) onSelect(e); });
+ document.addEventListener('mousedown',function(e){ if(!e.target.closest('.yr-bubble')) bubble.style.display='none'; });
+ document.addEventListener('keydown',function(e){
+  var t=e.target, tag=(t&&t.tagName)||'';
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable)||e.metaKey||e.ctrlKey||e.altKey) return;
+  if(e.key==='+'||e.key==='='){ e.preventDefault(); setRate(rate+0.1); }
+  else if(e.key==='-'||e.key==='_'){ e.preventDefault(); setRate(rate-0.1); }
+  else if(e.key==='0'){ e.preventDefault(); setRate(1); }
+  else if(e.key==='r'||e.key==='R'){ e.preventDefault(); dock.classList.remove('yr-min'); ri.focus(); ri.select(); }
+  else if(e.key==='Escape'){ if(menu.classList.contains('open')) menu.classList.remove('open'); else if(focusEl.classList.contains('open')) closeFocus(); else if(playing) stopSpeech(); }
+ });
+ var raf=0; window.addEventListener('scroll',function(){ if(raf) return; raf=requestAnimationFrame(function(){ raf=0; if(!playing) syncToc(); }); },{passive:true});
+ var mt=null; new MutationObserver(function(recs){ if(!recs.some(function(r){ return !(r.target.closest&&r.target.closest('.yr-ui,.yr-focus,.yr-menu,.yr-bubble')); })) return; clearTimeout(mt); mt=setTimeout(onNewlyVisible,450); }).observe(root,{subtree:true,attributes:true,attributeFilter:['class','hidden','style']});
+ if(window.speechSynthesis) speechSynthesis.onvoiceschanged=function(){ if(banner) showBanner(); };
+ window.addEventListener('beforeunload',function(){ try{ speechSynthesis.cancel(); }catch(e){} });
+
+ setRate(rate,true); updateBtns(); buildToc();
+ var pref=ls(K.toc), long=heads.length>=6||(root.innerText||'').length>6000;
+ toggleToc(pref==='1'||(pref===null&&long&&innerWidth>=1100));
+}
+window.YomiReader={init:init,version:'1.0'};
+})();
+
+YomiReader.init({root:'body'});
+  (function(){
+    var KEY = 'yomiDlcUdFontEnabled';
+    var btn = document.getElementById('udFontToggleBtn');
+    function apply(){
+      var on = false;
+      try { on = localStorage.getItem(KEY) === 'true'; } catch(e){}
+      document.documentElement.classList.toggle('dlc-ud-font', on);
+      if (btn) btn.style.background = on ? 'var(--accent,#B5432E)' : '';
+      if (btn) btn.style.color = on ? '#fff' : '';
+    }
+    if (btn) btn.addEventListener('click', function(){
+      var on = document.documentElement.classList.contains('dlc-ud-font');
+      try { localStorage.setItem(KEY, on ? 'false' : 'true'); } catch(e){}
+      apply();
+    });
+    apply();
+  })();
+</script>
+</body>
+</html>
