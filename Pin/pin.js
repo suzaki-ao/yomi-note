@@ -1,6 +1,6 @@
 /* ============================================================================
    読みノート (Yomi-Note) 追加DLC
-   ピン止め拡張機能 pin.js v1.2
+   ピン止め拡張機能 pin.js v1.3
    ----------------------------------------------------------------------------
    ▼ これは何？
      今見ているページを画面右側に「固定表示（ピン止め）」しておき、本体で別のページを
@@ -13,6 +13,11 @@
      index.html（アプリ本体）の </body> 直前、本体の <script> より「後」に:
        <script src="pin.js"></script>
      （本体の🧩追加コンテンツ一覧からも追加できます）
+
+   ▼ v1.3 の変更
+     ・本体 v6.6 の「ノートモード」に対応：升目文字（罫線・方眼・原稿用紙などの升目にそろえて打った文字）を、
+       固定側でも本体と同じ位置・文字の間隔で表示する。付箋・図形・チェック欄も、固定側に表示でき、
+       移動・拡大縮小もできる（文字の書き換えや✓の切り替えは、本体側で行う）。
 
    ▼ v1.2 の変更
      ・本体の「AOCRv02」連携に対応：本体側で /aocr2 on にしているとき、固定側の「部分OCR」の結果にも
@@ -63,7 +68,7 @@
    ============================================================================ */
 (function(){
   'use strict';
-  var PIN_VERSION = '1.2';
+  var PIN_VERSION = '1.3';
   window.YomiDlcLoaded = window.YomiDlcLoaded || {};
   window.YomiDlcLoaded.pin = PIN_VERSION;
   if (window.YomiPin && window.YomiPin.__loaded) return; /* 二重読み込み防止 */
@@ -712,6 +717,20 @@
           h.addEventListener('pointerdown', function(e){ selectItem('media', m.id); startResize(e, p, m, el, d, { lock: true, min: 16, media: true }); });
           el.appendChild(h);
         });
+      } else if (window.YomiNote && typeof window.YomiNote.isNoteMedia === 'function' && window.YomiNote.isNoteMedia(m)){
+        /* v1.3：付箋・図形・チェック欄（表示・移動・拡大縮小） */
+        el.appendChild(window.YomiNote.buildMediaDom(m, false));
+        el.addEventListener('pointerdown', function(e){
+          if (tool !== 'select') return;
+          e.stopPropagation();
+          selectItem('media', m.id);
+          startMediaMove(e, p, m, el);
+        });
+        ['nw', 'ne', 'sw', 'se'].forEach(function(d){
+          var h = document.createElement('div'); h.className = 'ypin-hd ' + d;
+          h.addEventListener('pointerdown', function(e){ selectItem('media', m.id); startResize(e, p, m, el, d, { lock: false, min: 20, media: true }); });
+          el.appendChild(h);
+        });
       } else if (m.type === 'link'){
         if (testModeOn_links()){ el.classList.add('lock'); el.textContent = '🔒 テスト中はリンクを開けません'; }
         else {
@@ -761,6 +780,13 @@
       el.style.backgroundColor = tb.fill ? (tb.fillColor || '#fff59d') : 'transparent';
       /* 縦書き：入力中だけ横書きにする（縦書きと入力欄の相性問題を避ける） */
       el.style.writingMode = (tb.vertical && !editing) ? 'vertical-rl' : 'horizontal-tb';
+      /* v1.3：ノートモードの升目文字は、本体と同じ行の高さ・文字の間隔で表示する */
+      if (tb.grid && window.YomiNote && typeof window.YomiNote.applyGridTbStyle === 'function'){
+        window.YomiNote.applyGridTbStyle(el, tb);
+        el.style.width = ''; el.style.height = ''; el.style.writingMode = 'horizontal-tb';
+        el.style.right = (tb.grid.mode === 'cell' ? -Math.max(0, (tb.grid.cw - tb.fontSize) / 2) : 0) + 'px';
+        el.style.overflow = 'hidden';
+      }
     }
     function buildTb(p, tb){
       var holder = document.createElement('div');
@@ -850,7 +876,7 @@
         if (dir.indexOf('w') !== -1) x = ox + (ow - w);
         if (dir.indexOf('n') !== -1) y = oy + (oh - h);
         it.x = x; it.y = y; it.w = w; it.h = h; placeEl(holder, it);
-      }, function(){ afterGeom(p, o.media); });
+      }, function(){ afterGeom(p, o.media); if (o.media) renderStage(); });
     }
 
     /* ======================================================================
